@@ -1,0 +1,7 @@
+{
+  "name": "SkinCo",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
