@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'com.capstone.skinco',  // domain.identifier.app_name
   appName: 'SkinCo',
   webDir: 'www',
   server: {
