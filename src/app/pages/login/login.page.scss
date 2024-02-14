@@ -1,0 +1,42 @@
+ion-avatar {
+  height: 30vh;
+  width: 30vh;
+  margin: 5vh auto;
+
+  ion-img {
+    width: 100&;
+    height: 100%;
+  }
+}
+
+ion-card#primaryCard {
+  padding: 5px;
+
+  ion-card-content {
+    padding: 3px;
+
+    ion-card#secondaryCard  {
+      padding: 10px;
+      margin: 0;
+      border-radius: 0;
+        
+      ion-text#loginHeader {
+        font-size: 25px;
+        font-weight: 600;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        display: block; 
+      }
+
+      ion-text#forgotPassword {
+        font-size: 0.7rem;
+        font-weight: 400;
+        display: block; 
+      }
+
+      ion-text#register {
+        font-size: 0.7rem;
+        display: block; 
+      }
+    }
+  }
+}
