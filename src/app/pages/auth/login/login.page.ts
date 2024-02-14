@@ -14,13 +14,17 @@ export class LoginPage implements OnInit {
   constructor( ) { }
 
   ngOnInit() {
+    this.initializeFormGroup();
+  }
+
+  initializeFormGroup() {
     this.loginForm = new FormGroup({
       email: new FormControl('', { validators: [Validators.required, Validators.email] }),
       password: new FormControl('', { validators: [Validators.required, passwordStandardValidator ] }),
     });
   }
 
-  onLoginSubmit(){
+  onSubmit(){
     console.log("Login Submitted");
   }
 }

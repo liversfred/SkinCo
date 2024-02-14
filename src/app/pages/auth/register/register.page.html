@@ -1,0 +1,177 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login" color="light"></ion-back-button>
+    </ion-buttons>
+    <ion-title color="light">Create Account</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding main">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="8" offset-md="2" size-lg="6" offset-lg="3">
+        <div class="ion-text-center ion-text-uppercase">
+          <ion-text color="primary"><h3>Registration Form</h3></ion-text>
+        </div>
+  
+        <form [formGroup]="registerForm!" (ngSubmit)="onSubmit()">
+          <ion-list color="light" class="ion-padding ion-margin-top">
+
+            <ion-radio-group [value]="userType" (ionChange)="onOptionSelected($event.target.value)">
+              <ion-item lines="none" class="ion-margin-bottom">
+                <ion-radio *ngFor="let role of roles" [value]="role" labelPlacement="start" justify="start">{{ role }}</ion-radio>
+              </ion-item>
+            </ion-radio-group>
+            
+            <ion-item lines="none"  color="light">
+              <ion-input type="text" 
+              formControlName="firstName" 
+              label="First Name"
+              labelPlacement="floating"
+              [counter]="true" 
+              [maxlength]="firstNameMaxLength"
+              [clearInput]="true"></ion-input>
+            </ion-item>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.hasError('required', 'firstName') && registerForm?.get('firstName')?.touched">
+              <div>* First name is required.</div>
+            </ion-text>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.value.firstName.length > firstNameMaxLength && registerForm?.get('firstName')?.touched">
+              <div>* Maximum is {{ firstNameMaxLength }} characters.</div>
+            </ion-text>
+            
+            <ion-item color="light" class="ion-margin-top">
+              <ion-input type="text" 
+              formControlName="middleName" 
+              label="Middle Name"
+              labelPlacement="floating"
+              [counter]="true" 
+              [maxlength]="middleNameMaxLength" 
+              [clearInput]="true"></ion-input>
+            </ion-item>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.hasError('required', 'middleName') && registerForm?.get('middleName')?.touched">
+              <div>* Middle name is required.</div>
+            </ion-text>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.value.middleName.length > middleNameMaxLength && registerForm?.get('middleName')?.touched">
+              <div>* Maximum is {{ middleNameMaxLength }} characters.</div>
+            </ion-text>
+            
+            <ion-item color="light" class="ion-margin-top">
+              <ion-input type="text" 
+              formControlName="lastName" 
+              label="Last Name"
+              labelPlacement="floating"
+              [counter]="true" 
+              [maxlength]="lastNameMaxLength" 
+              [clearInput]="true"></ion-input>
+            </ion-item>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.hasError('required', 'lastName') && registerForm?.get('lastName')?.touched">
+              <div>* Last name is required.</div>
+            </ion-text>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.value.lastName.length > lastNameMaxLength && registerForm?.get('lastName')?.touched">
+              <div>* Maximum is {{ lastNameMaxLength }} characters.</div>
+            </ion-text>
+                    
+            <ion-item color="light" class="ion-margin-top">
+              <ion-input type="number" 
+              formControlName="age" 
+              label="Age"
+              labelPlacement="floating"
+              helperText="1-100"></ion-input>
+            </ion-item>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.hasError('required', 'age') && registerForm?.get('age')?.touched">
+              <div>* Age is required.</div>
+            </ion-text>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.value.age && registerForm?.value.age <= 0 && registerForm?.get('age')?.touched">
+              <div>* Invalid age.</div>
+            </ion-text>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.value.age > maxAge && registerForm?.get('age')?.touched">
+              <div>* Max age is {{ maxAge }}.</div>
+            </ion-text>
+            
+            <ion-item color="light" class="ion-margin-top">
+              <ion-icon name="mail" slot="end"></ion-icon> 
+              <ion-input type="email" 
+              formControlName="email" 
+              label="Email"
+              labelPlacement="floating"
+              helperText="email@domain.com" 
+              [counter]="true" 
+              [maxlength]="emailMaxLength" 
+              [clearInput]="true"></ion-input>
+            </ion-item>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.hasError('required', 'email') && registerForm?.get('email')?.touched">
+              <div>* Email is required.</div>
+            </ion-text>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.hasError('email', 'email') && registerForm?.get('email')?.touched">
+              <div>* Email is invalid.</div>
+            </ion-text>
+            
+            <ion-item color="light" class="ion-margin-top">
+              <ion-icon name="call" slot="end"></ion-icon> 
+              <ion-input type="text" 
+              formControlName="mobileNumber" 
+              label="Mobile Number"
+              labelPlacement="floating"
+              helperText="09*********" 
+              [counter]="true" 
+              [maxlength]="mobileNumberMaxLength" 
+              [clearInput]="true"></ion-input>
+            </ion-item>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.hasError('required', 'mobileNumber') && registerForm?.get('mobileNumber')?.touched">
+              <div>* Mobile number is required.</div>
+            </ion-text>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.value.mobileNumber.length !== mobileNumberMaxLength && registerForm?.get('mobileNumber')?.touched">
+              <div>* Mobile number must be {{ mobileNumberMaxLength }} digits.</div>
+            </ion-text>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.hasError('invalidMobileNumber', 'mobileNumber') && registerForm?.get('mobileNumber')?.touched">
+              <div>* Mobile number is invalid.</div>
+            </ion-text>
+            
+            <ion-item color="light" class="ion-margin-top">
+              <ion-icon name="transgender" slot="end"></ion-icon> 
+              <ion-select formControlName="gender" aria-label="Gender" interface="action-sheet" placeholder="Select a Gender">
+                <ion-select-option *ngFor="let gender of genderOptions" [value]="gender">{{ gender }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.hasError('required', 'gender') && registerForm?.get('gender')?.touched">
+              <div>* Gender is required.</div>
+            </ion-text>
+
+            <ion-item color="light" class="ion-margin-top">
+              <ion-input type="{{ showPassword ? 'text' : 'password' }}" 
+              formControlName="password" 
+              label="Password"
+              labelPlacement="floating"></ion-input>
+              <ion-icon name="{{ showPassword ? 'eye' : 'eye-off' }}" slot="end" (click)="showPassword = !showPassword"></ion-icon>
+            </ion-item>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.hasError('required', 'password') && registerForm?.get('password')?.touched">
+              * Password is required.
+            </ion-text>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.hasError('passwordStandard', 'password') && registerForm?.get('password')?.touched">
+              * Password must contain at least 1 uppercase, lowercase, numeric, special character, and must be at least 8 characters long.
+            </ion-text>
+
+            <ion-item color="light" class="ion-margin-top">
+              <ion-input type="{{ showPassword ? 'text' : 'password' }}" 
+              formControlName="confirmPassword" 
+              label="Confirm Password"
+              labelPlacement="floating"></ion-input>
+              <ion-icon name="{{ showPassword ? 'eye' : 'eye-off' }}" slot="end" (click)="showPassword = !showPassword"></ion-icon>
+            </ion-item>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.value.confirmPassword.length === 0 && registerForm?.get('confirmPassword')?.touched">
+              * Confirm Password is required.
+            </ion-text>
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.hasError('passwordsDoNotMatch', 'confirmPassword') && registerForm?.get('confirmPassword')?.touched">
+              * Passwords do not match.
+            </ion-text>
+          </ion-list>
+
+          <div class="ion-margin-top">
+            <ion-button type="submit" expand="block" color="secondary" shape="round" [disabled]="registerForm?.invalid">Register</ion-button>
+          </div>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
