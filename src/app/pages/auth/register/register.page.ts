@@ -36,24 +36,35 @@ export class RegisterPage implements OnInit {
   rolesOptions: string[] = [Roles.PATIENT, Roles.STAFF];
   roles: Role[] = [];
 
-  constructor(private _trailService: TrailService, private _globalService: GlobalService, private _authService: AuthService, private _router: Router, 
-    private _roleService: RoleService) { }
+  constructor(
+    private _trailService: TrailService, 
+    private _globalService: GlobalService, 
+    private _router: Router, 
+    private _authService: AuthService, 
+    private _roleService: RoleService
+    ) { }
 
   async ngOnInit() {
-    this._globalService.showLoader('Loading...', );
     this.initializeFormGroup();
+    
+    // Redirect if user is logged in
+    const isUserLoggedIn = await this._authService.isUserLoggedIn();
+    if(isUserLoggedIn) return;
+
+    this._globalService.showLoader('Loading...');
     await this.initializeRoles();
 
-    // this.registerForm?.get('firstName')?.setValue('User1');
-    // this.registerForm?.get('middleName')?.setValue('Middle1');
-    // this.registerForm?.get('lastName')?.setValue('Last1');
-    // this.registerForm?.get('email')?.setValue('user1@gmail.com');
-    // this.registerForm?.get('mobileNumber')?.setValue('09878394938');
-    // this.registerForm?.get('gender')?.setValue('Male');
-    // this.registerForm?.get('age')?.setValue(23);
-    // this.registerForm?.get('password')?.setValue('Password123!');
-    // this.registerForm?.get('confirmPassword')?.setValue('Password123!');
-    
+    this.registerForm?.get('firstName')?.setValue('User1');
+    this.registerForm?.get('middleName')?.setValue('Middle1');
+    this.registerForm?.get('lastName')?.setValue('Last1');
+    this.registerForm?.get('email')?.setValue('user1@gmail.com');
+    this.registerForm?.get('mobileNumber')?.setValue('09878394938');
+    this.registerForm?.get('gender')?.setValue('Male');
+    this.registerForm?.get('age')?.setValue(23);
+    this.registerForm?.get('password')?.setValue('Password123!');
+    this.registerForm?.get('confirmPassword')?.setValue('Password123!');
+
+
     this._globalService.hideLoader();
   }
 
@@ -72,25 +83,14 @@ export class RegisterPage implements OnInit {
   }
 
   async initializeRoles(): Promise<void> {
-    this._roleService.roles.subscribe({
-        next: (roles: Role[]) => {
-          this.roles = roles
-        },
-        error: (err: any) => {
-          this._globalService.showToast(`Error fetching roles: ${err}`)
-        }
-      })
-
-    await this._roleService.fetchRoles();
+    this.roles = await this._roleService.fetchRoles();
   }
 
   onOptionSelected(option: string){
     this.userType = option;
   }
 
-  async onSubmit(){
-    this._globalService.showLoader('Processing registration...');
-
+  onSubmit(){
     if(this.registerForm?.valid){
       const firstName = this.registerForm?.value.firstName.trim();
       const middleName = this.registerForm?.value.middleName.trim();
@@ -107,7 +107,7 @@ export class RegisterPage implements OnInit {
 
       const userData: UserData = {
         authId: null,
-        roleId: role?.id!,
+        roleId: role.id!,
         person: {
           firstName, middleName, lastName,
           email: this.registerForm?.value.email.trim(),
@@ -118,23 +118,25 @@ export class RegisterPage implements OnInit {
         ...(this._trailService.createAudit(action))
       }
 
-      await this.register(userData, password);
+      this.register(userData, password);
     }
-
-    this._globalService.hideLoader()
   }
 
   async register(userData: UserData, password: string){
-    await this._authService.registerUser(userData, password).then(res => {
+    this._globalService.showLoader('Processing registration...');
+
+    await this._authService.registerUser(userData, password).then(() => {
       this._globalService.showToast("Registration complete! You can now sign in.", 5000, ColorConstants.SUCCESS);
       this._router.navigateByUrl(`/${RoutesConstants.LOGIN}`);
       this.registerForm?.reset();
     })
     .catch(e => {
-      let errorMessage: string = 'Failed to register.';
+      let errorMessage: string = `Error occured during registration: ${e.code}`;
       if(e.code == 'auth/invalid-credential') errorMessage = 'Check your email and password if correct.';
+      else if(e.code == 'auth/email-already-in-use') errorMessage = 'Email already in use. Choose a different email.';
       this._globalService.showToast(errorMessage);
-      this.registerForm?.reset();
     });
+
+    this._globalService.hideLoader()
   }
 }

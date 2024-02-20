@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AlertButton, AlertController, AlertInput, LoadingController, SpinnerTypes, ToastController, ToastOptions } from '@ionic/angular';
+import { AlertButton, AlertController, AlertInput, LoadingController, SpinnerTypes, ToastController } from '@ionic/angular';
 import { Color } from '../custom-types/colors.type';
 import { ToastPosition } from '../custom-types/toast-positions.type';
 import { ColorConstants } from '../constants/color.constants';
@@ -21,13 +21,16 @@ export class GlobalService {
   }
   
   showLoader(msg?: string, spinner?: SpinnerTypes ) {
-    if(!this.isLoading) this.setLoader();
+    if(this.isLoading) return;
+    this.isLoading = true;
 
     return this._loadingCtrl.create({
       message: msg,
       spinner: spinner ?? 'lines-sharp'
     }).then(res => {
       res.present().then(() => {
+        console.log('Loader showed.')
+
         if(!this.isLoading) {
           res.dismiss().then(() => {});
         }
@@ -36,13 +39,12 @@ export class GlobalService {
   }
   
   hideLoader() {
-    if(this.isLoading) this.setLoader();
+    if(!this.isLoading) return;
+    this.isLoading = false;
 
-    return this._loadingCtrl.dismiss();
-  }
-
-  private setLoader() {
-    this.isLoading = !this.isLoading;
+    return this._loadingCtrl.dismiss()
+    .then(() => console.log('Loader dismissed.'))
+    .catch(e => console.log('Error hiding the loader: ', e));
   }
 
   showAlert(header: string, message: string, buttons?: AlertButton[], inputs?: AlertInput[]) {

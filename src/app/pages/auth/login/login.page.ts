@@ -17,8 +17,12 @@ export class LoginPage implements OnInit {
 
   constructor(private _authService: AuthService, private _globalService: GlobalService, private _router: Router) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.initializeFormGroup();
+    
+    // Redirect if user is logged in
+    const isUserLoggedIn = await this._authService.isUserLoggedIn(); 
+    if(isUserLoggedIn) return;
   }
 
   initializeFormGroup() {
@@ -29,8 +33,6 @@ export class LoginPage implements OnInit {
   }
 
   onSubmit(){
-    this._globalService.showLoader('Logging in...');
-
     if(this.loginForm?.valid){
       const email = this.loginForm?.value.email.trim();
       const password = this.loginForm?.value.password.trim();
@@ -39,17 +41,18 @@ export class LoginPage implements OnInit {
     }
   }
 
-  login(email: string, password: string) {
-    this._authService.login(email, password).then(() => {
-      this._router.navigateByUrl(`/${RoutesConstants.HOME}`);
-      this.loginForm?.reset();
-      this._globalService.hideLoader();
-    })
-    .catch(e => {
-      this._globalService.hideLoader();
-      let errorMessage: string = 'Failed to sign in.';
-      if(e.code == 'auth/invalid-credential') errorMessage = 'Check your email and password if correct.';
-      this._globalService.showToast(errorMessage);
-    });
+  async login(email: string, password: string) {
+    this._globalService.showLoader('Logging in...');
+
+    await this._authService.login(email, password).then(() => {
+        this._router.navigateByUrl(`/${RoutesConstants.HOME}`);
+        this.loginForm?.reset();
+      })
+      .catch(e => {
+        let errorMessage: string = `Error occured:  ${e.code}`;
+        if(e.code == 'auth/invalid-credential') errorMessage = 'Check your email and password if correct.';
+        this._globalService.showToast(errorMessage);
+      });
+    this._globalService.hideLoader();
   }
 }

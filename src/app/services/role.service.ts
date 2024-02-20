@@ -48,6 +48,7 @@ export class RoleService {
       });
   
       this._roles.next(roles); 
+      return roles;
     } catch (error) {
       console.error('Error fetching roles:', error);
       throw error;

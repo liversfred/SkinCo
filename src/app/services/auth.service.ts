@@ -6,6 +6,8 @@ import { Collections } from '../constants/collections.constants';
 import { StorageService } from './storage.service';
 import { map } from 'rxjs';
 import { StorageKeys } from '../constants/storage-key.constants';
+import { Router } from '@angular/router';
+import { RoutesConstants } from '../constants/routes.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +15,21 @@ import { StorageKeys } from '../constants/storage-key.constants';
 export class AuthService {
   private usersCollection: CollectionReference<DocumentData>;
 
-  constructor(private _fireStore: Firestore, private _auth: Auth, private _storageService: StorageService) { 
+  constructor(private _fireStore: Firestore, private _auth: Auth, private _storageService: StorageService, private _router: Router) { 
     this.usersCollection = collection(this._fireStore, Collections.USERS);
   }
 
   async registerUser(userData: UserData, password: string) {
-    const registeredUser = await createUserWithEmailAndPassword(this._auth, userData.person.email, password);
-    userData = {
-      ...userData,
-      authId: registeredUser.user.uid,
+    try{
+      const registeredUser = await createUserWithEmailAndPassword(this._auth, userData.person.email, password);
+      userData = {
+        ...userData,
+        authId: registeredUser.user.uid,
+      }
+      await addDoc(this.usersCollection, userData)
+    }catch(e) {
+      throw(e);
     }
-    await addDoc(this.usersCollection, userData)
   }
 
   async login(email: string, password: string){
@@ -46,6 +52,22 @@ export class AuthService {
     } catch (error) {
       console.error(`Error getting the user data from storage: ${error}`);
       throw error;
+    }
+  }
+
+  async isUserLoggedIn(): Promise<boolean>{
+    try {
+      const userData = await this.getUserData();
+
+      // Navigate if logged in
+      if(userData) {
+        this._router.navigate([RoutesConstants.HOME]);
+        return true;
+      }
+
+      return false;
+    } catch(e) {
+      throw(e);
     }
   }
 

@@ -6,13 +6,13 @@ export const environment = {
   production: false,
   seedData: false,
   firebase: {
-    apiKey: "AIzaSyCw72LrPjCcdONvc04F6d25FLVvqxsWoPo",
-    authDomain: "capstoneskinco-13e85.firebaseapp.com",
-    projectId: "capstoneskinco-13e85",
-    storageBucket: "capstoneskinco-13e85.appspot.com",
-    messagingSenderId: "778879407080",
-    appId: "1:778879407080:web:183c0a434906f1606b4a5d"
-	}, 
+    apiKey: "AIzaSyCZwc3d2U61W-n4pGd3d2xXAdyVCMarSB0",
+    authDomain: "skinco-62ad8.firebaseapp.com",
+    projectId: "skinco-62ad8",
+    storageBucket: "skinco-62ad8.appspot.com",
+    messagingSenderId: "18510123362",
+    appId: "1:18510123362:web:25d511e645293bee021c3b"
+	},
 };
 
 /*
