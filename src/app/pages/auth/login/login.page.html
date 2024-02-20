@@ -18,7 +18,6 @@
                 <div class="ion-text-center ion-text-uppercase ion-padding-bottom">
                   <ion-text id="loginHeader" color="light">LOGIN</ion-text>
                 </div>
-                
                 <form [formGroup]="loginForm!" (ngSubmit)="onSubmit()">
                   <ion-list lines="none" class="ion-padding">
                     <ion-item color="light">
@@ -46,7 +45,7 @@
                   </ion-list>
 
                   <div class="ion-text-end ion-text-uppercase ion-margin-top">
-                    <ion-text id="forgotPassword" color="light">Forgot Password</ion-text>
+                    <ion-text id="forgotPassword" color="light" class="link">Forgot Password</ion-text>
                   </div>
 
                   <div class="ion-margin-top">
@@ -54,7 +53,7 @@
                   </div>
 
                   <div class="ion-text-center ion-text-uppercase ion-margin-top">
-                    <ion-text id="register" color="light">Don't have an account? <b routerLink="/login/register">Register</b></ion-text>
+                    <ion-text id="register" color="light">Don't have an account? <b routerLink="/login/register" class="link">Register</b></ion-text>
                   </div>
                 </form>
               </ion-card-content>

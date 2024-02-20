@@ -1,0 +1,1 @@
+export type ToastPosition = 'bottom' | 'middle' | 'top';

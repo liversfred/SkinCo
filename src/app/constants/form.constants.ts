@@ -1,5 +1,4 @@
-export class Constants {
-  static readonly genderOptions = ["Male", "Female"];
+export class FormConstants {
   static readonly maxAge = 100;
   static readonly firstNameMaxLength = 30;
   static readonly middleNameMaxLength = 30;
