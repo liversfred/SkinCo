@@ -1,21 +1,27 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { UserData } from '../models/user-data.model';
 import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, query, where } from '@angular/fire/firestore';
 import { Collections } from '../constants/collections.constants';
 import { StorageService } from './storage.service';
-import { map } from 'rxjs';
-import { StorageKeys } from '../constants/storage-key.constants';
+import { BehaviorSubject, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { RoutesConstants } from '../constants/routes.constants';
+import { RoleService } from './role.service';
+import { StorageKeys } from '../constants/storage-key.constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private usersCollection: CollectionReference<DocumentData>;
+  private _userData = new BehaviorSubject<UserData | null>(null);
 
-  constructor(private _fireStore: Firestore, private _auth: Auth, private _storageService: StorageService, private _router: Router) { 
+  get userData() {
+    return this._userData.asObservable();
+  }
+
+  constructor(private _fireStore: Firestore, private _auth: Auth, private _storageService: StorageService, private _router: Router, private _roleService: RoleService) { 
     this.usersCollection = collection(this._fireStore, Collections.USERS);
   }
 
@@ -35,46 +41,41 @@ export class AuthService {
   async login(email: string, password: string){
     try {
       const response = await signInWithEmailAndPassword(this._auth, email, password);
-
-      if(response.user) await this.fetchUserData(response.user.uid);
-    } catch(e) {
-      throw(e);
-    }
-  }
-
-  async getUserData(): Promise<UserData | null> {
-    try {
-      const userDataString = await this._storageService.getStorage(StorageKeys.USERDATA);
-      if(!userDataString.value) return null;
       
-      const userData: UserData = JSON.parse(userDataString.value) as UserData;
-      return userData;
-    } catch (error) {
-      console.error(`Error getting the user data from storage: ${error}`);
-      throw error;
-    }
-  }
+      if(!response.user) return;
 
-  async isUserLoggedIn(): Promise<boolean>{
-    try {
-      const userData = await this.getUserData();
-
-      // Navigate if logged in
-      if(userData) {
-        this._router.navigate([RoutesConstants.HOME]);
-        return true;
-      }
-
-      return false;
+      this.storeAuthId(response.user.uid);
+      await this.fetchUserData();
     } catch(e) {
       throw(e);
     }
   }
-
-  private async fetchUserData(authId: string) {
+  
+  async checkUserAuth() {
     try {
+      const user = await this.getAuthState();
+      return user != null;
+    } catch(e) {
+      throw(e);
+    }
+  }
+  
+  private async getAuthState(): Promise<any> {
+    return new Promise((resolve) => {
+      onAuthStateChanged(this._auth, user => {
+        if(user) this.storeAuthId(user.uid);
+        resolve(user)
+      });
+    });
+  }
+
+  async fetchUserData() {
+    try {
+      // Get auth id from local storage
+      const authId = await this.getAuthId();
+      
       const collectionRef = query(this.usersCollection, where('authId', '==', authId));
-      const userData = await new Promise<UserData>((resolve, reject) => {
+      let userData = await new Promise<UserData>((resolve, reject) => {
         collectionData(collectionRef, { idField: 'id'})
           .pipe(
             map((users: any) => {
@@ -96,12 +97,31 @@ export class AuthService {
             }
           });
       });
+      
+      // Fetch and assign role object
+      const roles = await this._roleService.fetchRoles();
+      userData = {
+        ...userData,
+        role: roles.find(x => x.id == userData.roleId)
+      } 
   
-      this._storageService.setStorage(StorageKeys.USERDATA, JSON.stringify(userData));
-      return userData;
+      this._userData.next(userData);
     } catch (error) {
       console.error('Error fetching user data:', error);
       throw error;
     }
+  }
+
+  storeAuthId(authId: string) {
+    this._storageService.setStorage(StorageKeys.AUTHID, authId);
+  }
+
+  async getAuthId(): Promise<string | null>{
+    const storedAuthId = await this._storageService.getStorage(StorageKeys.AUTHID);
+    return storedAuthId.value
+  }
+
+  redirectIfLoggedIn() {
+    this._router.navigate([RoutesConstants.HOME]);
   }
 }

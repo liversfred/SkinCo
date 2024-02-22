@@ -48,8 +48,11 @@ export class RegisterPage implements OnInit {
     this.initializeFormGroup();
     
     // Redirect if user is logged in
-    const isUserLoggedIn = await this._authService.isUserLoggedIn();
-    if(isUserLoggedIn) return;
+    const isAuthenticated = await this._authService.checkUserAuth(); 
+    if(isAuthenticated) {
+      this._authService.redirectIfLoggedIn();
+      return;
+    }
 
     this._globalService.showLoader('Loading...');
     await this.initializeRoles();

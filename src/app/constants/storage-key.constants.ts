@@ -1,3 +1,3 @@
 export class StorageKeys {
-  static readonly USERDATA = "UserData"
+  static readonly AUTHID = "authId"
 }

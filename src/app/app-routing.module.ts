@@ -22,6 +22,11 @@ const routes: Routes = [
     loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule),
     canMatch: [authGuard]
   },
+  {
+    path: 'clinic',
+    loadChildren: () => import('./pages/clinic/clinic.module').then( m => m.ClinicPageModule),
+    canMatch: [authGuard]
+  },
   { path: '**' , redirectTo: RoutesConstants.LOGIN }  // To handle unknown url path
 ];
 

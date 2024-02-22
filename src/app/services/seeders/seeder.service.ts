@@ -11,5 +11,6 @@ export class SeederService {
   async seedAll(){
     console.log("SEEDER FLAG ON... PROCESSING SEED");
     await this._roleSeeder.seedData();
+    return true;
   }
 }

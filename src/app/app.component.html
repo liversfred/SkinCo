@@ -1,3 +1,41 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-router-outlet *ngIf="isAuthenticated === false"></ion-router-outlet>
+  
+  <ion-header [translucent]="true" *ngIf="isAuthenticated">
+    <ion-toolbar>
+      <ion-buttons slot="start" class="ion-margin-start">
+        <ion-avatar>
+          <img alt="company icon" src="../../../assets/logos/company-logo.png" />
+        </ion-avatar>
+        <ion-text size="ion-text-large" color="primary">SkinCo</ion-text>
+      </ion-buttons>
+      <ion-buttons class="toolbar-nav" slot="end" *ngIf="_platformService.isDesktop()">
+        <ion-button tab="home">
+          <ion-icon name="home-outline"></ion-icon>
+          <ion-label *ngIf="!_platformService.screenXS()">HOME</ion-label>
+        </ion-button>
+        <ion-button tab="clinic">
+          <ion-icon name="business-outline"></ion-icon>
+          <ion-label *ngIf="!_platformService.screenXS()">CLINIC</ion-label>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content *ngIf="isAuthenticated">
+    
+    <ion-router-outlet></ion-router-outlet>
+
+    <ion-tabs *ngIf="_platformService.isMobile()">
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button tab="home">
+          <ion-icon name="home-outline"></ion-icon>
+          <ion-label>HOME</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="clinic">
+          <ion-icon name="business-outline"></ion-icon>
+          <ion-label>CLINIC</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-content>
 </ion-app>

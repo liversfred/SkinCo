@@ -6,8 +6,8 @@ import { RoutesConstants } from '../constants/routes.constants';
 export const authGuard: CanMatchFn = async (route, segments) => {
   const _router = inject(Router);
   const _authService = inject(AuthService);
-  const userData = await _authService.getUserData();
+  const isAuthenticated = await _authService.checkUserAuth();
 
-  if(!userData) _router.navigate([RoutesConstants.LOGIN]);
+  if(!isAuthenticated) _router.navigate([RoutesConstants.LOGIN]);
   return true;
 };

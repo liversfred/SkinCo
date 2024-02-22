@@ -21,8 +21,11 @@ export class LoginPage implements OnInit {
     this.initializeFormGroup();
     
     // Redirect if user is logged in
-    const isUserLoggedIn = await this._authService.isUserLoggedIn(); 
-    if(isUserLoggedIn) return;
+    const isAuthenticated = await this._authService.checkUserAuth(); 
+    if(isAuthenticated) {
+      this._authService.redirectIfLoggedIn();
+      return;
+    }
   }
 
   initializeFormGroup() {
