@@ -10,12 +10,12 @@ export class PlatformService {
 
   constructor(private _platform: Platform) { }
 
-  isMobile(){
-    return this._platform.platforms().includes(PlatformConstants.MOBILE);
+  isAndroid(){
+    return this._platform.platforms()[0] == PlatformConstants.ANDROID;
   }
 
   isDesktop(){
-    return this._platform.platforms().includes(PlatformConstants.DESKTOP);
+    return this._platform.platforms()[0] == PlatformConstants.DESKTOP;
   }
 
   screenXS(){

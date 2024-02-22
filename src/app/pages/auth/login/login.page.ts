@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RoutesConstants } from 'src/app/constants/routes.constants';
+import { RouteConstants } from 'src/app/constants/route.constants';
 import { AuthService } from 'src/app/services/auth.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { passwordStandardValidator } from 'src/app/validators/password-standard-validator.directive';
@@ -48,7 +48,7 @@ export class LoginPage implements OnInit {
     this._globalService.showLoader('Logging in...');
 
     await this._authService.login(email, password).then(() => {
-        this._router.navigateByUrl(`/${RoutesConstants.HOME}`);
+        this._router.navigateByUrl(`/${RouteConstants.HOME}`);
         this.loginForm?.reset();
       })
       .catch(e => {

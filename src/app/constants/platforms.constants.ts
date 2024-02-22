@@ -1,4 +1,4 @@
 export class PlatformConstants {
-  static readonly MOBILE = 'mobile';
+  static readonly ANDROID = 'android';
   static readonly DESKTOP = 'desktop';
 }

@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { RoutesConstants } from './constants/routes.constants';
+import { RouteConstants } from './constants/route.constants';
 import { authGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: RoutesConstants.LOGIN,
+    redirectTo: RouteConstants.LOGIN,
     pathMatch: 'full'
   },
   {
@@ -14,20 +14,20 @@ const routes: Routes = [
     loadChildren: () => import('./pages/auth/register/register.module').then( m => m.RegisterPageModule)
   },
   {
-    path: RoutesConstants.LOGIN,
+    path: RouteConstants.LOGIN,
     loadChildren: () => import('./pages/auth/login/login.module').then( m => m.LoginPageModule)
   },
   {
-    path: RoutesConstants.HOME,
+    path: RouteConstants.HOME,
     loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule),
     canMatch: [authGuard]
   },
   {
-    path: 'clinic',
+    path: RouteConstants.CLINIC,
     loadChildren: () => import('./pages/clinic/clinic.module').then( m => m.ClinicPageModule),
     canMatch: [authGuard]
   },
-  { path: '**' , redirectTo: RoutesConstants.LOGIN }  // To handle unknown url path
+  { path: '**' , redirectTo: RouteConstants.LOGIN }  // To handle unknown url path
 ];
 
 @NgModule({

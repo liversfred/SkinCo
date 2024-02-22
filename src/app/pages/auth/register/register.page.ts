@@ -6,7 +6,7 @@ import { FormConstants } from 'src/app/constants/form.constants';
 import { GenderConstants } from 'src/app/constants/gender.constants';
 import { ModifierActions } from 'src/app/constants/modifiers-action.constants';
 import { Roles } from 'src/app/constants/roles.constants';
-import { RoutesConstants } from 'src/app/constants/routes.constants';
+import { RouteConstants } from 'src/app/constants/route.constants';
 import { Role } from 'src/app/models/role.model';
 import { UserData } from 'src/app/models/user-data.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -130,7 +130,7 @@ export class RegisterPage implements OnInit {
 
     await this._authService.registerUser(userData, password).then(() => {
       this._globalService.showToast("Registration complete! You can now sign in.", 5000, ColorConstants.SUCCESS);
-      this._router.navigateByUrl(`/${RoutesConstants.LOGIN}`);
+      this._router.navigateByUrl(`/${RouteConstants.LOGIN}`);
       this.registerForm?.reset();
     })
     .catch(e => {

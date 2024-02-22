@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import { UserData } from '../models/user-data.model';
 import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, query, where } from '@angular/fire/firestore';
 import { Collections } from '../constants/collections.constants';
 import { StorageService } from './storage.service';
 import { BehaviorSubject, map } from 'rxjs';
 import { Router } from '@angular/router';
-import { RoutesConstants } from '../constants/routes.constants';
+import { RouteConstants } from '../constants/route.constants';
 import { RoleService } from './role.service';
 import { StorageKeys } from '../constants/storage-key.constants';
 
@@ -112,6 +112,16 @@ export class AuthService {
     }
   }
 
+  async logout(){
+    signOut(this._auth);
+    // Set userdata to null
+    this._userData.next(null);
+    // Clear local storage
+    this._storageService.clearStorage();
+    // Reload page
+    window.location.reload();
+  }
+
   storeAuthId(authId: string) {
     this._storageService.setStorage(StorageKeys.AUTHID, authId);
   }
@@ -122,6 +132,6 @@ export class AuthService {
   }
 
   redirectIfLoggedIn() {
-    this._router.navigate([RoutesConstants.HOME]);
+    this._router.navigate([RouteConstants.HOME]);
   }
 }
