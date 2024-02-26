@@ -52,7 +52,7 @@ export class LoginPage implements OnInit {
         this.loginForm?.reset();
       })
       .catch(e => {
-        let errorMessage: string = `Error occured:  ${e.code}`;
+        let errorMessage: string = `Error occurred:  ${e.code}`;
         if(e.code == 'auth/invalid-credential') errorMessage = 'Check your email and password if correct.';
         this._globalService.showToast(errorMessage);
       });

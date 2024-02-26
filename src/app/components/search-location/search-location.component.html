@@ -1,0 +1,41 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="dismiss()">
+        <ion-icon name="arrow-back-outline" color="dark" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-searchbar
+      slot="start"
+      animated="true" 
+      debounce="800" 
+      #searchInput 
+      placeholder="Search for area, street..."
+      (ionChange)="onSearchChange($event)">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item (click)="getCurrentPosition()">
+    <ion-icon slot="start" name="locate-outline"></ion-icon>
+    <ion-label>
+      Current location
+      <p>Using GPS</p>
+    </ion-label>
+  </ion-item>
+
+  <ion-list *ngIf="locations.length > 0 && query && query.length > 0">
+    <ion-list-header>
+      <h5>Search results</h5>
+    </ion-list-header>
+    <ion-item *ngFor="let location of locations" (click)="chooseLocation(location)">
+      <ion-icon slot="start" name="location-outline"></ion-icon>
+      <ion-label>
+        {{location?.initial}}
+        <p>{{location?.address}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

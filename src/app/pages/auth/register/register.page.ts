@@ -56,18 +56,6 @@ export class RegisterPage implements OnInit {
 
     this._globalService.showLoader('Loading...');
     await this.initializeRoles();
-
-    this.registerForm?.get('firstName')?.setValue('User1');
-    this.registerForm?.get('middleName')?.setValue('Middle1');
-    this.registerForm?.get('lastName')?.setValue('Last1');
-    this.registerForm?.get('email')?.setValue('user1@gmail.com');
-    this.registerForm?.get('mobileNumber')?.setValue('09878394938');
-    this.registerForm?.get('gender')?.setValue('Male');
-    this.registerForm?.get('age')?.setValue(23);
-    this.registerForm?.get('password')?.setValue('Password123!');
-    this.registerForm?.get('confirmPassword')?.setValue('Password123!');
-
-
     this._globalService.hideLoader();
   }
 
@@ -83,6 +71,18 @@ export class RegisterPage implements OnInit {
       password: new FormControl('', { validators: [Validators.required, passwordStandardValidator ] }),
       confirmPassword: new FormControl('', { validators: [Validators.required, passwordsDoNotMatchValidator.bind(this)] })
     });
+    
+
+    // TODO: DELETE THIS 
+    this.registerForm?.get('firstName')?.setValue('User1');
+    this.registerForm?.get('middleName')?.setValue('Middle1');
+    this.registerForm?.get('lastName')?.setValue('Last1');
+    this.registerForm?.get('email')?.setValue('user1@gmail.com');
+    this.registerForm?.get('mobileNumber')?.setValue('09878394938');
+    this.registerForm?.get('gender')?.setValue('Male');
+    this.registerForm?.get('age')?.setValue(23);
+    this.registerForm?.get('password')?.setValue('Password123!');
+    this.registerForm?.get('confirmPassword')?.setValue('Password123!');
   }
 
   async initializeRoles(): Promise<void> {
@@ -134,7 +134,7 @@ export class RegisterPage implements OnInit {
       this.registerForm?.reset();
     })
     .catch(e => {
-      let errorMessage: string = `Error occured during registration: ${e.code}`;
+      let errorMessage: string = `Error occurred during registration: ${e.code}`;
       if(e.code == 'auth/invalid-credential') errorMessage = 'Check your email and password if correct.';
       else if(e.code == 'auth/email-already-in-use') errorMessage = 'Email already in use. Choose a different email.';
       this._globalService.showToast(errorMessage);

@@ -242,3 +242,10 @@ html {
    */
   --ion-dynamic-font: var(--ion-default-dynamic-font);
 }
+
+.location-modal::part(content) {
+  --height: 50%;
+  position: absolute;
+  bottom: 0;
+  --border-radius: 5px;
+}

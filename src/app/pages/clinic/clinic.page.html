@@ -1,3 +1,5 @@
-<ion-content class="ion-padding">
-  <h1>Clinic</h1>
+<ion-content>
+  <app-clinic-registration-form *ngIf="showClinicSetupForm === true" (hideClinicSetupForm)="onHideClinicSetupForm($event)" [userData]="userData"></app-clinic-registration-form>
+  <div *ngIf="showClinicSetupForm === false">
+  </div>
 </ion-content>

@@ -13,6 +13,9 @@ export const environment = {
     messagingSenderId: "18510123362",
     appId: "1:18510123362:web:25d511e645293bee021c3b"
 	},
+  googleMapsApiKey: 'AIzaSyCrr0hZc7KMkDa96jZidK8aYxbyNS3jraU',
+  defaultLat: 15.484958197991022,
+  defaultLng: 120.97562615856529,
 };
 
 /*

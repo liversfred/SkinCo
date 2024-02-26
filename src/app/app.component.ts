@@ -65,7 +65,8 @@ export class AppComponent implements OnInit{
           text: 'Cancel',
           role: 'cancel',
           cssClass: 'secondary'
-        }, {
+        }, 
+        {
           text: 'Okay',
           handler: async () => {
             await this._authService.logout();

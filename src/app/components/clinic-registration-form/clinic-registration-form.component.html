@@ -1,0 +1,133 @@
+<ion-grid>
+  <ion-row>
+    <ion-col size="12" size-md="8" offset-md="2" size-lg="6" offset-lg="3">
+      <div class="ion-text-center ion-text-uppercase">
+        <ion-text color="secondary"><h3>Register Clinic</h3></ion-text>
+      </div>
+
+      <div class="map">
+        <app-map (location)="fetchLocation($event)"></app-map>
+      </div>
+      
+      <ion-item lines="none">
+        <ion-icon name="location-outline" color="dark" slot="start"></ion-icon>
+        <ion-label>{{location?.initial}}</ion-label>
+        <ion-button slot="end" size="small" color="light" (click)="searchLocation()">
+          <span>CHANGE</span>
+        </ion-button>
+      </ion-item>
+      <ion-row class="ion-padding-horizontal ion-text-justify">
+        <ion-note class="ion-text-wrap ion-padding-horizontal">
+          {{location?.address}}
+        </ion-note>
+      </ion-row>
+
+      <form [formGroup]="registerClinicForm!" (ngSubmit)="onSubmit()">
+        <ion-list color="light" class="ion-padding ion-margin-top">
+          <ion-item  color="light">
+            <ion-input type="text" 
+            formControlName="name" 
+            label="Clinic Name *"
+            labelPlacement="floating"
+            [counter]="true" 
+            [maxlength]="clinicNameMaxLength"
+            [clearInput]="true"></ion-input>
+          </ion-item>
+          <ion-text class="error-message" color="danger" *ngIf="registerClinicForm?.hasError('required', 'name') && registerClinicForm?.get('name')?.touched">
+            <div>* Clinic name is required.</div>
+          </ion-text>
+          <ion-text class="error-message" color="danger" *ngIf="registerClinicForm?.value.name?.length > clinicNameMaxLength && registerClinicForm?.get('name')?.touched">
+            <div>* Maximum is {{ clinicNameMaxLength }} characters.</div>
+          </ion-text>
+
+          <ion-item  color="light" class="ion-margin-top">
+            <ion-input type="text" 
+            formControlName="addressNo" 
+            label="House/Building No. *"
+            labelPlacement="floating"
+            [counter]="true" 
+            [maxlength]="clinicAddressNoMaxLength"
+            [clearInput]="true"></ion-input>
+          </ion-item>
+          <ion-text class="error-message" color="danger" *ngIf="registerClinicForm?.hasError('required', 'addressNo') && registerClinicForm?.get('addressNo')?.touched">
+            <div>* House/Building No. is required.</div>
+          </ion-text>
+          <ion-text class="error-message" color="danger" *ngIf="registerClinicForm?.value.addressNo?.length > clinicAddressNoMaxLength && registerClinicForm?.get('addressNo')?.touched">
+            <div>* Maximum is {{ clinicAddressNoMaxLength }} characters.</div>
+          </ion-text>
+
+          <ion-item color="light" class="ion-margin-top">
+            <ion-input type="text" 
+            formControlName="landmark" 
+            label="Landmark *"
+            labelPlacement="floating"
+            [counter]="true" 
+            [maxlength]="landmarkMaxLength"
+            [clearInput]="true"></ion-input>
+          </ion-item>
+          <ion-text class="error-message" color="danger" *ngIf="registerClinicForm?.hasError('required', 'landmark') && registerClinicForm?.get('landmark')?.touched">
+            <div>* Landmark is required.</div>
+          </ion-text>
+          <ion-text class="error-message" color="danger" *ngIf="registerClinicForm?.value.landmark?.length > landmarkMaxLength && registerClinicForm?.get('landmark')?.touched">
+            <div>* Maximum is {{ landmarkMaxLength }} characters.</div>
+          </ion-text>
+          
+          <ion-item color="light" class="ion-margin-top">
+            <ion-input type="text" 
+            formControlName="telephoneNumber" 
+            label="Tel. No."
+            labelPlacement="floating"
+            helperText="044********" 
+            [counter]="true" 
+            [maxlength]="telephoneNumberMaxLength" 
+            [clearInput]="true"></ion-input>
+          </ion-item>
+          <ion-text class="error-message" color="danger" *ngIf="registerClinicForm?.value.telephoneNumber?.length !== telephoneNumberMaxLength && registerClinicForm?.get('telephoneNumber')?.touched">
+            <div>* Telephone number must be {{ telephoneNumberMaxLength }} digits.</div>
+          </ion-text>
+          <ion-text class="error-message" color="danger" *ngIf="registerClinicForm?.hasError('invalidTelephoneNumber', 'telephoneNumber') && registerClinicForm?.get('telephoneNumber')?.touched">
+            <div>* Telephone number is invalid.</div>
+          </ion-text>
+          
+          <ion-item color="light" class="ion-margin-top">
+            <ion-input type="text" 
+            formControlName="mobileNumber" 
+            label="Mobile No. *"
+            labelPlacement="floating"
+            helperText="09*********" 
+            [counter]="true" 
+            [maxlength]="mobileNumberMaxLength" 
+            [clearInput]="true"></ion-input>
+          </ion-item>
+          <ion-text class="error-message" color="danger" *ngIf="registerClinicForm?.hasError('required', 'mobileNumber') && registerClinicForm?.get('mobileNumber')?.touched">
+            <div>* Mobile number is required.</div>
+          </ion-text>
+          <ion-text class="error-message" color="danger" *ngIf="registerClinicForm?.value.mobileNumber?.length !== mobileNumberMaxLength && registerClinicForm?.get('mobileNumber')?.touched">
+            <div>* Mobile number must be {{ mobileNumberMaxLength }} digits.</div>
+          </ion-text>
+          <ion-text class="error-message" color="danger" *ngIf="registerClinicForm?.hasError('invalidMobileNumber', 'mobileNumber') && registerClinicForm?.get('mobileNumber')?.touched">
+            <div>* Mobile number is invalid.</div>
+          </ion-text>
+                  
+          <ion-item color="light" class="ion-margin-top">
+            <ion-input type="number" 
+            formControlName="dailyVisitLimit" 
+            label="Daily Vislt Limit"
+            labelPlacement="floating"
+            helperText="min. 1"></ion-input>
+          </ion-item>
+          <ion-text class="error-message" color="danger" *ngIf="registerClinicForm?.hasError('required', 'dailyVisitLimit') && registerClinicForm?.get('dailyVisitLimit')?.touched">
+            <div>* Daily vislt limit is required.</div>
+          </ion-text>
+          <ion-text class="error-message" color="danger" *ngIf="registerClinicForm?.value.age && registerClinicForm?.value.dailyVisitLimit < 1 && registerClinicForm?.get('dailyVisitLimit')?.touched">
+            <div>* Minimum is {{ defaultDailyVisitLimit }}.</div>
+          </ion-text>
+        </ion-list>
+        
+        <div class="ion-margin-top">
+          <ion-button type="submit" expand="block" color="secondary" shape="round" [disabled]="registerClinicForm?.invalid">Register</ion-button>
+        </div>
+      </form>
+    </ion-col>
+  </ion-row>
+</ion-grid>

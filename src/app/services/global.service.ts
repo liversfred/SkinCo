@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AlertButton, AlertController, AlertInput, LoadingController, SpinnerTypes, ToastController } from '@ionic/angular';
+import { AlertButton, AlertController, AlertInput, LoadingController, ModalController, SpinnerTypes, ToastController } from '@ionic/angular';
 import { Color } from '../custom-types/colors.type';
 import { ToastPosition } from '../custom-types/toast-positions.type';
 import { ColorConstants } from '../constants/color.constants';
@@ -10,7 +10,12 @@ import { ColorConstants } from '../constants/color.constants';
 export class GlobalService {
   private isLoading: boolean = false;
 
-  constructor(private _loadingCtrl: LoadingController, private _alertCtrl: AlertController, private _toastCtrl: ToastController) { }
+  constructor(
+    private _loadingCtrl: LoadingController, 
+    private _alertCtrl: AlertController, 
+    private _toastCtrl: ToastController,
+    private _modalCtrl: ModalController
+    ) { }
 
   formatFullName(firstName: string, middleName: string, lastName: string, suffix?: string) {
     const formattedMiddleName = middleName.split(' ')
@@ -64,6 +69,18 @@ export class GlobalService {
       color: color,
       position: position
     }).then(toastEl => toastEl.present())
+  }
+  
+  async createModal(options: any) {
+    const modal = await this._modalCtrl.create(options);
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+    if(data) return data;
+  }
+  
+  dismissModal(val?: any) {
+    let data: any = val ? val : null;
+    this._modalCtrl.dismiss(data);
   }
 
   sortData(sort: any, data: any){

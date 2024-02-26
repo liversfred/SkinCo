@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import { UserData } from '../models/user-data.model';
-import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, query, where } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, doc, query, updateDoc, where } from '@angular/fire/firestore';
 import { Collections } from '../constants/collections.constants';
 import { StorageService } from './storage.service';
 import { BehaviorSubject, map } from 'rxjs';
@@ -93,6 +93,7 @@ export class AuthService {
               resolve(userData);
             },
             error: (err: any) => {
+              this.logout();  // Logout if no user record found in db
               reject(err);
             }
           });
@@ -129,6 +130,15 @@ export class AuthService {
   async getAuthId(): Promise<string | null>{
     const storedAuthId = await this._storageService.getStorage(StorageKeys.AUTHID);
     return storedAuthId.value
+  }
+
+  async updateUser(updatedModel: any): Promise<void> {
+    try{
+      const docInstance = doc(this._fireStore, Collections.USERS, updatedModel.id!);
+      return updateDoc(docInstance, updatedModel)
+    }catch(e) {
+      throw(e);
+    }
   }
 
   redirectIfLoggedIn() {
