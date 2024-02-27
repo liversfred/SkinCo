@@ -10,6 +10,7 @@ import { RouteConstants } from 'src/app/constants/route.constants';
 import { Role } from 'src/app/models/role.model';
 import { UserData } from 'src/app/models/user-data.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { ErrorService } from 'src/app/services/error.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { RoleService } from 'src/app/services/role.service';
 import { TrailService } from 'src/app/services/trail.service';
@@ -41,7 +42,8 @@ export class RegisterPage implements OnInit {
     private _globalService: GlobalService, 
     private _router: Router, 
     private _authService: AuthService, 
-    private _roleService: RoleService
+    private _roleService: RoleService,
+    private _errorService: ErrorService
     ) { }
 
   async ngOnInit() {
@@ -129,17 +131,16 @@ export class RegisterPage implements OnInit {
     this._globalService.showLoader('Processing registration...');
 
     await this._authService.registerUser(userData, password).then(() => {
+      this._globalService.hideLoader()
       this._globalService.showToast("Registration complete! You can now sign in.", 5000, ColorConstants.SUCCESS);
       this._router.navigateByUrl(`/${RouteConstants.LOGIN}`);
       this.registerForm?.reset();
     })
     .catch(e => {
-      let errorMessage: string = `Error occurred during registration: ${e.code}`;
+      let errorMessage: string | undefined = undefined;
       if(e.code == 'auth/invalid-credential') errorMessage = 'Check your email and password if correct.';
       else if(e.code == 'auth/email-already-in-use') errorMessage = 'Email already in use. Choose a different email.';
-      this._globalService.showToast(errorMessage);
+      this._errorService.handleError(e, errorMessage);
     });
-
-    this._globalService.hideLoader()
   }
 }

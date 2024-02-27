@@ -5,7 +5,7 @@ export interface Clinic extends Trail {
   id?: string;
   name: string;
   location: LocationData;
-  telephoneNumber: string;
+  telephoneNumber?: string;
   mobileNumber: string;
   dailyVisitLimit: number;
   isApproved: boolean;

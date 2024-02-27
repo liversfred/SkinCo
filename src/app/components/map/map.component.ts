@@ -48,16 +48,15 @@ export class MapComponent  implements AfterViewInit, OnDestroy {
           lat: position?.coords.latitude,
           lng: position?.coords.longitude
         };
-        await this.loadMap();
-        this.getAddress(this.center.lat, this.center.lng);
-      } else {
-        await this.loadMap();
-      }
+      } 
+
+      await this.loadMap();
     } catch(e) {
       console.log(e);
       this.loadMap();
-      this.getAddress(this.center.lat, this.center.lng);
     }
+
+    this.getAddress(this.center.lat, this.center.lng);
   }
 
   async loadMap() {

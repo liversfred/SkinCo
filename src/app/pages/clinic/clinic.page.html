@@ -1,5 +1,46 @@
-<ion-content>
-  <app-clinic-registration-form *ngIf="showClinicSetupForm === true" (hideClinicSetupForm)="onHideClinicSetupForm($event)" [userData]="userData"></app-clinic-registration-form>
-  <div *ngIf="showClinicSetupForm === false">
+<ion-content *ngIf="userData">
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)" *ngIf="showClinicSetupForm === false">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing..."
+    >
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <app-clinic-registration-form 
+    *ngIf="showClinicSetupForm === true" 
+    [isFormUpdate]="isFormUpdate" 
+    [clinic]="clinic" 
+    [userData]="userData"
+    (registrationCompleted)="onRegistrationCompleted($event)" 
+    (updateCompleted)="onUpdateCompleted($event)">
+  </app-clinic-registration-form>
+  
+  <div *ngIf="showClinicSetupForm === false && clinic">
+    <ion-segment [(ngModel)]="selectedSegment">
+      <ion-segment-button [value]="clinicSegments.INFO">
+        <ion-label>{{ clinicSegments.INFO }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button [value]="clinicSegments.SCHEDULE" [disabled]="!clinic.isApproved">
+        <ion-label>{{ clinicSegments.SCHEDULE }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button [value]="clinicSegments.DOCTORS" [disabled]="!clinic.isApproved">
+        <ion-label>{{ clinicSegments.DOCTORS }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <div [ngSwitch]="selectedSegment">
+      <ion-list *ngSwitchCase="clinicSegments.INFO">
+        <app-clinic-info [userData]="userData" [clinic]="clinic" (updateInfo)="onUpdateInfo($event)"></app-clinic-info>
+      </ion-list>
+      <ion-list *ngSwitchCase="clinicSegments.SCHEDULE">
+
+      </ion-list>
+      <ion-list *ngSwitchCase="clinicSegments.DOCTORS">
+
+      </ion-list>
+    </div>
   </div>
 </ion-content>

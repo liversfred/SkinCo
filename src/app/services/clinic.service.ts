@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, DocumentData, Firestore, addDoc, collection } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, collectionGroup, doc, docData, query, updateDoc, where } from '@angular/fire/firestore';
 import { Collections } from '../constants/collections.constants';
 import { Clinic } from '../models/clinic.model';
+import { BehaviorSubject, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +22,48 @@ export class ClinicService {
       throw(e);
     }
    }
+   
+  async updateClinic(updatedModel: any): Promise<void> {
+    try{
+      const docInstance = doc(this._fireStore, Collections.CLINICS, updatedModel.id);
+      return updateDoc(docInstance, updatedModel)
+    }catch(e) {
+      throw(e);
+    }
+  }
 
-  //  async fetchClinic(): Promise<Clinic | null> {
-  //   try{
-  //     const res = await 
-  //   }
-  //  }
+   async fetchClinicById(clinicId: string): Promise<Clinic | null> {
+    try{
+      let clinic = await new Promise<Clinic>((resolve, reject) => {
+        docData(doc(this._fireStore, `${Collections.CLINICS}/${clinicId}`), { idField: 'id'})
+          .pipe(
+            map((clinicRef: any) => {
+              if(!clinicRef) return null;
+              if (clinicRef && clinicRef.isActive === false) {
+                return null;
+              } else {
+                return {
+                  ...clinicRef,
+                  createdAt: clinicRef.createdAt.toDate(),
+                  updatedAt: clinicRef.updatedAt.toDate(),
+                };
+              }
+            })
+          )
+          .subscribe({
+            next: (clinic: Clinic) => {
+              resolve(clinic);
+            },
+            error: (err: any) => {
+              reject(err);
+            }
+          });
+      });
+
+      return clinic;
+    }catch(e) {
+      console.log(`Error occurred: ${e}`);
+      return null;
+    }
+   }
 }

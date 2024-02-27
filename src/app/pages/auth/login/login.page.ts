@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouteConstants } from 'src/app/constants/route.constants';
 import { AuthService } from 'src/app/services/auth.service';
+import { ErrorService } from 'src/app/services/error.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { passwordStandardValidator } from 'src/app/validators/password-standard-validator.directive';
 
@@ -15,7 +16,7 @@ export class LoginPage implements OnInit {
   loginForm: FormGroup | undefined;
   showPassword: boolean = false;
 
-  constructor(private _authService: AuthService, private _globalService: GlobalService, private _router: Router) { }
+  constructor(private _authService: AuthService, private _globalService: GlobalService, private _router: Router, private _errorService: ErrorService) { }
 
   async ngOnInit() {
     this.initializeFormGroup();
@@ -48,14 +49,14 @@ export class LoginPage implements OnInit {
     this._globalService.showLoader('Logging in...');
 
     await this._authService.login(email, password).then(() => {
+        this._globalService.hideLoader();
         this._router.navigateByUrl(`/${RouteConstants.HOME}`);
         this.loginForm?.reset();
       })
       .catch(e => {
-        let errorMessage: string = `Error occurred:  ${e.code}`;
+        let errorMessage: string | undefined = undefined;
         if(e.code == 'auth/invalid-credential') errorMessage = 'Check your email and password if correct.';
-        this._globalService.showToast(errorMessage);
+        this._errorService.handleError(e, errorMessage);
       });
-    this._globalService.hideLoader();
   }
 }

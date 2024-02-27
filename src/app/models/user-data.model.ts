@@ -7,6 +7,7 @@ export interface UserData extends Trail {
   authId: string | null;
   person: Person;
   roleId: string;
+  clinicId?: string;
 
   role?: Role;
 }

@@ -107,6 +107,7 @@ export class AuthService {
       } 
   
       this._userData.next(userData);
+      return userData;
     } catch (error) {
       console.error('Error fetching user data:', error);
       throw error;
@@ -134,7 +135,7 @@ export class AuthService {
 
   async updateUser(updatedModel: any): Promise<void> {
     try{
-      const docInstance = doc(this._fireStore, Collections.USERS, updatedModel.id!);
+      const docInstance = doc(this._fireStore, Collections.USERS, updatedModel.id);
       return updateDoc(docInstance, updatedModel)
     }catch(e) {
       throw(e);

@@ -14,6 +14,7 @@ import { UserData } from 'src/app/models/user-data.model';
 import { ColorConstants } from 'src/app/constants/color.constants';
 import { ClinicService } from 'src/app/services/clinic.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ErrorService } from 'src/app/services/error.service';
 
 @Component({
   selector: 'app-clinic-registration-form',
@@ -22,7 +23,10 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class ClinicRegistrationFormComponent  implements OnInit {
   @Input() userData: UserData | undefined;
-  @Output() hideClinicSetupForm = new EventEmitter<boolean>;
+  @Input() isFormUpdate: boolean = false;
+  @Input() clinic: Clinic | undefined;
+  @Output() registrationCompleted = new EventEmitter<string>;
+  @Output() updateCompleted = new EventEmitter<boolean>;
   registerClinicForm: FormGroup | undefined;
   clinicNameMaxLength: number = FormConstants.clinicNameMaxLength;
   clinicAddressNoMaxLength: number = FormConstants.clinicAddressNoMaxLength;
@@ -31,13 +35,16 @@ export class ClinicRegistrationFormComponent  implements OnInit {
   mobileNumberMaxLength: number = FormConstants.mobileNumberMaxLength;
   defaultDailyVisitLimit: number = FormConstants.defaultDailyVisitLimit;
   location: LocationData | undefined;
+  mapCenterCoordinates: any = {};
+  setCurrentLocation: boolean = true;
 
   constructor(
     private _authService: AuthService,
     private _clinicService: ClinicService,
     private _globalService: GlobalService, 
     private _googleMapsService: GoogleMapsService,
-    private _trailService: TrailService
+    private _trailService: TrailService,
+    private _errorService: ErrorService
     ) { }
 
   ngOnInit() {
@@ -54,13 +61,17 @@ export class ClinicRegistrationFormComponent  implements OnInit {
       dailyVisitLimit: new FormControl(this.defaultDailyVisitLimit, { validators: [Validators.required, Validators.min(1)] }),
     });
 
-    
-    // TODO: DELETE THIS 
-    this.registerClinicForm?.get('name')?.setValue('Clinic 1');
-    this.registerClinicForm?.get('addressNo')?.setValue('614');
-    this.registerClinicForm?.get('landmark')?.setValue('Waltermart');
-    this.registerClinicForm?.get('telephoneNumber')?.setValue('04493848483');
-    this.registerClinicForm?.get('mobileNumber')?.setValue('09748374758');
+    if(this.isFormUpdate){
+      this.registerClinicForm?.get('name')?.setValue(this.clinic?.name);
+      this.registerClinicForm?.get('addressNo')?.setValue(this.clinic?.location?.addressNo);
+      this.registerClinicForm?.get('landmark')?.setValue(this.clinic?.location?.landmark);
+      this.registerClinicForm?.get('telephoneNumber')?.setValue(this.clinic?.telephoneNumber);
+      this.registerClinicForm?.get('mobileNumber')?.setValue(this.clinic?.mobileNumber);
+      this.registerClinicForm?.get('dailyVisitLimit')?.setValue(this.clinic?.dailyVisitLimit);
+      // Set marker to the saved location
+      this.mapCenterCoordinates = { lat: this.clinic?.location?.lat, lng: this.clinic?.location?.lng }
+      this.setCurrentLocation = false;
+    }
   }
   
   async searchLocation() {
@@ -100,32 +111,63 @@ export class ClinicRegistrationFormComponent  implements OnInit {
       const clinic: Clinic = {
         name,
         location: this.location,
-        telephoneNumber: this.registerClinicForm?.value.telephoneNumber,
-        mobileNumber: this.registerClinicForm?.value.mobileNumber,
+        telephoneNumber: this.registerClinicForm?.value.telephoneNumber.trim(),
+        mobileNumber: this.registerClinicForm?.value.mobileNumber.trim(),
         dailyVisitLimit: this.registerClinicForm?.value.dailyVisitLimit,
         isApproved: false,
         staffIds: [this.userData?.id!],
         ...(this._trailService.createAudit(action))
       }
-
-      // const clinicId = await this.saveClinic(clinic);
-      const clinicId = "w4LyRdbPS0ZKZVLj9B2F";
       
-      console.log("CLINIC ID");
-      console.log(clinicId);
-      if(!clinicId) return;
-
-      const userData: any = {
-        id: this.userData?.id!,
-        clinicId: clinicId
-      }
-
-      // const updateRes = await this.updateUserClinicId(userData);
-      console.log(userData);
-
-      this._globalService.showToast("Registration Complete!", 3000, ColorConstants.SUCCESS);
-      this.hideClinicSetupForm.emit(false);
+      this._globalService.showAlert(
+        'Confirm', 
+        'Do you confirm that the details you entered are correct?',
+        [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            cssClass: 'secondary'
+          }, 
+          {
+            text: 'Yes',
+            handler: async () => {
+              this.isFormUpdate ? this.onUpdateClinic(clinic) : this.onSaveClinic(clinic)
+            }
+          }
+        ]
+      )
     }
+  }
+
+  async onSaveClinic(clinic: Clinic){
+    const clinicId = await this.saveClinic(clinic);
+              
+    if(!clinicId) return;
+
+    const userData: any = {
+      id: this.userData?.id!,
+      clinicId: clinicId
+    }
+
+    const updateRes = await this.updateUserClinicId(userData);
+
+    if(!updateRes) this._globalService.showToast("Registration Failed. Try again later.");
+    
+    this._globalService.showToast("Registration Complete!", 3000, ColorConstants.SUCCESS);
+    this.registrationCompleted.emit(clinicId);
+  }
+
+  async onUpdateClinic(clinic: Clinic){
+    const updatedClinic: any = {
+      id: this.clinic?.id!,
+      ...clinic
+    }
+    const updateRes = await this.updateClinic(updatedClinic);
+
+    if(!updateRes) this._globalService.showToast("Clinic info update failed. Try again later.");
+    
+    this._globalService.showToast("Update is Successful!", 3000, ColorConstants.SUCCESS);
+    this.updateCompleted.emit(updateRes);
   }
 
   async saveClinic(clinic: Clinic): Promise<string | null>{
@@ -136,10 +178,21 @@ export class ClinicRegistrationFormComponent  implements OnInit {
       return res;
     })
     .catch(e => {
-      this._globalService.hideLoader()
-      let errorMessage: string = `An error occurred: ${e.code}`;
-      this._globalService.showToast(errorMessage);
+      this._errorService.handleError(e);
       return null;
+    });
+  }
+  
+  async updateClinic(clinic: Clinic): Promise<boolean>{
+    this._globalService.showLoader('Updating clinic info...');
+    
+    return await this._clinicService.updateClinic(clinic).then(() => {
+      this._globalService.hideLoader()
+      return true;
+    })
+    .catch(e => {
+      this._errorService.handleError(e);
+      return false;
     });
   }
 
@@ -151,9 +204,7 @@ export class ClinicRegistrationFormComponent  implements OnInit {
       return true;
     })
     .catch(e => {
-      this._globalService.hideLoader()
-      let errorMessage: string = `An error occurred: ${e.code}`;
-      this._globalService.showToast(errorMessage);
+      this._errorService.handleError(e);
       return false;
     });
   }

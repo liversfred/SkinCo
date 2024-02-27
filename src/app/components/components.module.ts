@@ -5,6 +5,7 @@ import { SearchLocationComponent } from './search-location/search-location.compo
 import { IonicModule } from '@ionic/angular';
 import { ClinicRegistrationFormComponent } from './clinic-registration-form/clinic-registration-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ClinicInfoComponent } from './clinic-info/clinic-info.component';
 
 
 
@@ -12,7 +13,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   declarations: [
     MapComponent,
     SearchLocationComponent,
-    ClinicRegistrationFormComponent
+    ClinicRegistrationFormComponent,
+    ClinicInfoComponent
   ],
   imports: [
     CommonModule,
@@ -22,7 +24,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   exports: [
     MapComponent,
     SearchLocationComponent,
-    ClinicRegistrationFormComponent
+    ClinicRegistrationFormComponent,
+    ClinicInfoComponent
   ]
 })
 export class ComponentsModule { }
