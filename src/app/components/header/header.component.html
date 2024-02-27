@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" class="ion-margin-start">
+      <ion-avatar>
+        <ion-img src="../../../assets/logos/company-logo.png"  alt="company icon"></ion-img>
+      </ion-avatar>
+      <ion-text size="ion-text-large" color="primary">SkinCo</ion-text>
+    </ion-buttons>
+    <ion-buttons class="toolbar-nav" slot="end" *ngIf="_platformService.isDesktop()">
+      <ion-button tab="home" [routerLink]="routes.HOME">
+        <ion-icon name="home-outline"></ion-icon>
+        <ion-label *ngIf="!_platformService.screenXS()">HOME</ion-label>
+      </ion-button>
+      <ion-button tab="clinic" [routerLink]="routes.CLINIC">
+        <ion-icon name="business-outline"></ion-icon>
+        <ion-label *ngIf="!_platformService.screenXS()">CLINIC</ion-label>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>

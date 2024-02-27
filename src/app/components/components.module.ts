@@ -14,7 +14,7 @@ import { ClinicInfoComponent } from './clinic-info/clinic-info.component';
     MapComponent,
     SearchLocationComponent,
     ClinicRegistrationFormComponent,
-    ClinicInfoComponent
+    ClinicInfoComponent,
   ],
   imports: [
     CommonModule,

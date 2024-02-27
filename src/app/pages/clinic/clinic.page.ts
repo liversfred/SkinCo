@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { ViewDidLeave, ViewWillEnter } from '@ionic/angular';
 import { ClinicSegments } from 'src/app/constants/clinic-segmets.constants';
 import { Clinic } from 'src/app/models/clinic.model';
 import { UserData } from 'src/app/models/user-data.model';
@@ -10,7 +11,7 @@ import { ClinicService } from 'src/app/services/clinic.service';
   templateUrl: './clinic.page.html',
   styleUrls: ['./clinic.page.scss'],
 })
-export class ClinicPage implements OnInit {
+export class ClinicPage implements ViewDidLeave, ViewWillEnter {
   clinic: Clinic | undefined;
   userData: UserData | undefined;
   showClinicSetupForm: boolean | undefined;
@@ -23,7 +24,7 @@ export class ClinicPage implements OnInit {
     private _clinicService: ClinicService
     ) { }
 
-  async ngOnInit() {
+  async ionViewWillEnter() {
     // Load user data
     this._authService.userData.subscribe(async userData => {
       this.userData = userData ?? undefined;
@@ -65,5 +66,11 @@ export class ClinicPage implements OnInit {
     if (!event) return;
     this.isFormUpdate = false;
     await this.fetchClinic();
+  }
+
+  ionViewDidLeave(): void {
+    this.showClinicSetupForm = undefined;
+    this.selectedSegment = ClinicSegments.INFO;
+    this.isFormUpdate = false;
   }
 }

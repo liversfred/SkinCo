@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { SeederService } from './services/seeders/seeder.service';
 import { AuthService } from './services/auth.service';
-import { PlatformService } from './services/platform.service';
 import { GlobalService } from './services/global.service';
-import { RouteConstants } from './constants/route.constants';
 
 @Component({
   selector: 'app-root',
@@ -13,12 +11,10 @@ import { RouteConstants } from './constants/route.constants';
 })
 export class AppComponent implements OnInit{
   isAuthenticated: boolean | undefined;
-  routes: any = RouteConstants;
   
   constructor(
     private _seederService: SeederService, 
     private _authService: AuthService, 
-    public _platformService: PlatformService, 
     private _globalService: GlobalService
     ) {}
 

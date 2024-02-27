@@ -1,0 +1,27 @@
+ion-toolbar {
+  --background: transparent;
+  --border-color: transparent;
+  padding: 1vh 2vh 1vh 2vh;
+  margin-top: 1vh;
+
+  ion-text {
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  ion-buttons.toolbar-nav {
+
+    ion-button {
+      font-size: 16px;
+      padding: 0 5px 0 5px;
+
+      ion-icon {
+        margin-right: 5px;
+      }
+
+      ion-label {
+        margin-top: 3px;
+      }
+    }
+  }
+}
