@@ -3,6 +3,7 @@ import { environment } from 'src/environments/environment';
 import { SeederService } from './services/seeders/seeder.service';
 import { AuthService } from './services/auth.service';
 import { GlobalService } from './services/global.service';
+import { UserData } from './models/user-data.model';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,7 @@ import { GlobalService } from './services/global.service';
 })
 export class AppComponent implements OnInit{
   isAuthenticated: boolean | undefined;
+  userData: UserData | undefined;
   
   constructor(
     private _seederService: SeederService, 
@@ -32,6 +34,8 @@ export class AppComponent implements OnInit{
       // Subscribe to detect changes in user data
       this._authService.userData.subscribe(async userData => {
         if(!userData) return;
+
+        this.userData = userData;
         this.isAuthenticated = await this._authService.checkUserAuth();
       });
       

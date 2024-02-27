@@ -1,0 +1,67 @@
+<ion-accordion [value]="clinic?.name">
+  <ion-item slot="header" color="light">
+    <ion-label>{{ clinic?.name }}</ion-label>
+  </ion-item>
+  <div class="ion-padding" slot="content">
+    <ion-row>
+      <ion-col size="6">
+        <app-location-details [location]="clinic?.location"></app-location-details>
+      </ion-col>
+      <ion-col>
+        <div class="ion-margin-bottom">
+          <ion-text class="ion-margin-bottom">
+            Mobile No.:
+            <p>{{ clinic?.mobileNumber }}</p>
+          </ion-text>
+        </div>
+        <div class="ion-margin-bottom">
+          <ion-text>
+            Landline No.:
+            <p>{{ clinic?.telephoneNumber }}</p>
+          </ion-text>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">
+        <div class="ion-margin-bottom">
+          <ion-text>
+            Daily Visit Limit.: 
+            <p>{{ clinic?.dailyVisitLimit }}</p>
+          </ion-text>
+        </div>
+      </ion-col>
+      <ion-col size="6">
+        <div class="ion-margin-bottom">
+          <ion-text [color]="!clinic?.isApproved ? 'danger' : ''">
+            Approved.: 
+            <p>{{ clinic?.isApproved ? 'Yes' : 'No' }}</p>
+          </ion-text>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">
+        <div class="ion-margin-bottom">
+          <ion-text>
+            Created Date.: 
+            <p>{{ clinic?.createdAt | date }}</p>
+          </ion-text>
+        </div>
+      </ion-col>
+      <ion-col size="6">
+        <div class="ion-margin-bottom">
+          <ion-text>
+            Modified Date.: 
+            <p>{{ clinic?.updatedAt | date }}</p>
+          </ion-text>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" *ngIf="!clinic?.isApproved" class="ion-text-end">
+        <ion-button color="secondary" size="medium" (click)="onApproveClinic(clinic?.id ?? '')">Approve</ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-accordion>

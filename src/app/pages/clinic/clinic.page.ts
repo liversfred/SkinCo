@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { ViewDidLeave, ViewWillEnter } from '@ionic/angular';
+import { RefresherCustomEvent, ViewDidLeave, ViewWillEnter } from '@ionic/angular';
 import { ClinicSegments } from 'src/app/constants/clinic-segmets.constants';
 import { Clinic } from 'src/app/models/clinic.model';
 import { UserData } from 'src/app/models/user-data.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ClinicService } from 'src/app/services/clinic.service';
+import { GlobalService } from 'src/app/services/global.service';
 
 @Component({
   selector: 'app-clinic',
@@ -21,7 +22,8 @@ export class ClinicPage implements ViewDidLeave, ViewWillEnter {
 
   constructor(
     private _authService: AuthService,
-    private _clinicService: ClinicService
+    private _clinicService: ClinicService,
+    private _globalService: GlobalService
     ) { }
 
   async ionViewWillEnter() {
@@ -35,7 +37,7 @@ export class ClinicPage implements ViewDidLeave, ViewWillEnter {
     });
   }
 
-  async onRefresh(event: any){
+  async onRefresh(event: RefresherCustomEvent){
     await this.fetchClinic();
     event.target.complete();
   }
@@ -43,9 +45,11 @@ export class ClinicPage implements ViewDidLeave, ViewWillEnter {
   async fetchClinic(){
     const clinicId = this.userData?.clinicId;
     if(!clinicId) { this.showClinicSetupForm = true; return; };
-
+    
+    this._globalService.showLoader('Fetching clinic info...');
     this.clinic = await this._clinicService.fetchClinicById(clinicId) ?? undefined;
     this.showClinicSetupForm = this.clinic == undefined;
+    this._globalService.hideLoader();
   }
 
   async onRegistrationCompleted(clinicId: string){
@@ -56,8 +60,7 @@ export class ClinicPage implements ViewDidLeave, ViewWillEnter {
     await this.fetchClinic();
   }
 
-  onUpdateInfo(event: boolean){
-    if(!event) return;
+  onUpdateInfo(){
     this.isFormUpdate = true;
     this.showClinicSetupForm = true;
   }

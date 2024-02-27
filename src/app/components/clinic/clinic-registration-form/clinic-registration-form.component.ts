@@ -7,7 +7,6 @@ import { GoogleMapsService } from 'src/app/services/google-maps.service';
 import { TrailService } from 'src/app/services/trail.service';
 import { telephoneNumberValidator } from 'src/app/validators/telephone-number-validator';
 import { mobileNumberValidator } from 'src/app/validators/mobile-number-validator';
-import { SearchLocationComponent } from '../search-location/search-location.component';
 import { ModifierActions } from 'src/app/constants/modifiers-action.constants';
 import { Clinic } from 'src/app/models/clinic.model';
 import { UserData } from 'src/app/models/user-data.model';
@@ -15,6 +14,7 @@ import { ColorConstants } from 'src/app/constants/color.constants';
 import { ClinicService } from 'src/app/services/clinic.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
+import { SearchLocationComponent } from '../../search-location/search-location.component';
 
 @Component({
   selector: 'app-clinic-registration-form',

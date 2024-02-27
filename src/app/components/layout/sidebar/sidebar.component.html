@@ -13,6 +13,12 @@
           <ion-label>Home</ion-label>
         </ion-item>
       </ion-menu-toggle>
+      <ion-menu-toggle auto-hide="false" *ngIf="userData && userData.role?.name === roles.ADMIN">
+        <ion-item [routerLink]="routes.MANAGE_CLINICS">
+          <ion-icon slot="start" name="business-outline"></ion-icon>
+          <ion-label>Manage Clinics</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
       <ion-menu-toggle auto-hide="false" class="link">
         <ion-item (click)="onLogout()">
           <ion-icon slot="start" name="log-out"></ion-icon>

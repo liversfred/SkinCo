@@ -1,17 +1,17 @@
 <ion-app>
   <ion-router-outlet *ngIf="isAuthenticated === false"></ion-router-outlet>
   
-  <app-sidebar [isAuthenticated]="isAuthenticated" (logout)="logout()"></app-sidebar>
+  <app-sidebar [isAuthenticated]="isAuthenticated" [userData]="userData" (logout)="logout()"></app-sidebar>
 
   <div class="ion-page" id="main-content" *ngIf="isAuthenticated">
 
-    <app-header></app-header>
+    <app-header [userData]="userData"></app-header>
     
     <ion-content class="ion-padding">
       
       <ion-router-outlet></ion-router-outlet>
       
-      <app-bottom-nav></app-bottom-nav>
+      <app-bottom-nav [userData]="userData"></app-bottom-nav>
     </ion-content>
   </div>
 </ion-app>

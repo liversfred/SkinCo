@@ -4,21 +4,21 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ClinicPageRoutingModule } from './clinic-routing.module';
+import { ManageClinicsPageRoutingModule } from './manage-clinics-routing.module';
 
-import { ClinicPage } from './clinic.page';
-import { ComponentsModule } from 'src/app/components/components.module';
+import { ManageClinicsPage } from './manage-clinics.page';
 import { ClinicModule } from 'src/app/components/clinic/clinic.module';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ClinicPageRoutingModule,
+    ManageClinicsPageRoutingModule,
     ComponentsModule,
     ClinicModule
   ],
-  declarations: [ClinicPage]
+  declarations: [ManageClinicsPage]
 })
-export class ClinicPageModule {}
+export class ManageClinicsPageModule {}

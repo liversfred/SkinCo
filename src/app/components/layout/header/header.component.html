@@ -11,7 +11,7 @@
         <ion-icon name="home-outline"></ion-icon>
         <ion-label *ngIf="!_platformService.screenXS()">HOME</ion-label>
       </ion-button>
-      <ion-button tab="clinic" [routerLink]="routes.CLINIC">
+      <ion-button tab="clinic" [routerLink]="routes.CLINIC" *ngIf="userData && userData.role?.name === roles.STAFF">
         <ion-icon name="business-outline"></ion-icon>
         <ion-label *ngIf="!_platformService.screenXS()">CLINIC</ion-label>
       </ion-button>

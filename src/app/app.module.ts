@@ -12,9 +12,9 @@ import { environment } from 'src/environments/environment';
 import { SharedModule } from './shared/shared.module';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { HttpClientModule } from '@angular/common/http';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { HeaderComponent } from './components/header/header.component';
-import { BottomNavComponent } from './components/bottom-nav/bottom-nav.component';
+import { SidebarComponent } from './components/layout/sidebar/sidebar.component';
+import { HeaderComponent } from './components/layout/header/header.component';
+import { BottomNavComponent } from './components/layout/bottom-nav/bottom-nav.component';
 
 @NgModule({
   declarations: [

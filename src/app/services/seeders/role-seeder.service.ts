@@ -39,7 +39,7 @@ export class RoleSeederService {
       },
     ];
 
-    console.log("SEEDING ROLE DATA");
+    console.log("SEEDING ROLES DATA");
     dataToSeed.forEach(async (item) => {
       await addDoc(this.collection, item)
         .then(() => console.log('Role seeded successfully'))

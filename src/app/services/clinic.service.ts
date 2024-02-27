@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, collectionGroup, doc, docData, query, updateDoc, where } from '@angular/fire/firestore';
 import { Collections } from '../constants/collections.constants';
 import { Clinic } from '../models/clinic.model';
-import { BehaviorSubject, map } from 'rxjs';
+import { map } from 'rxjs';
+import { GlobalService } from './global.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { BehaviorSubject, map } from 'rxjs';
 export class ClinicService {
   private clinicsCollection: CollectionReference<DocumentData>;
 
-  constructor(private _fireStore: Firestore) {
+  constructor(private _fireStore: Firestore, private _globalService: GlobalService) {
     this.clinicsCollection = collection(this._fireStore, Collections.CLINICS);
    }
 
@@ -29,6 +30,40 @@ export class ClinicService {
       return updateDoc(docInstance, updatedModel)
     }catch(e) {
       throw(e);
+    }
+  }
+
+  async fetchClinics(): Promise<Clinic[]> {
+    try{
+      let clinics = await new Promise<Clinic[]>((resolve, reject) => {
+        const collectionRef = query(this.clinicsCollection, where('isActive', '==', true));
+        collectionData(collectionRef, { idField: 'id'})
+          .pipe(
+            map((clinics: any[]) => {
+              return clinics.map((item) => {
+                return { 
+                  ...item, 
+                  createdAt: item.createdAt.toDate(),
+                  updatedAt: item.updatedAt.toDate(),
+                };
+              });
+            }),
+            map((clinics: Clinic[]) => this._globalService.sortData({active: 'baseName', direction: 'asc'}, clinics as Clinic[])),
+          )
+          .subscribe({
+            next: (clinics: Clinic[]) => {
+              resolve(clinics);
+            },
+            error: (err: any) => {
+              reject(err);
+            }
+          });
+      });
+
+      return clinics;
+    }catch(e) {
+      console.log(`Error occurred: ${e}`);
+      return [];
     }
   }
 
@@ -62,8 +97,7 @@ export class ClinicService {
 
       return clinic;
     }catch(e) {
-      console.log(`Error occurred: ${e}`);
-      return null;
+      throw(e);
     }
    }
 }

@@ -4,7 +4,7 @@
       <ion-icon name="home-outline"></ion-icon>
       <ion-label>HOME</ion-label>
     </ion-tab-button>
-    <ion-tab-button [tab]="routes.CLINIC">
+    <ion-tab-button [tab]="routes.CLINIC" *ngIf="userData && userData.role?.name === roles.STAFF">
       <ion-icon name="business-outline"></ion-icon>
       <ion-label>CLINIC</ion-label>
     </ion-tab-button>

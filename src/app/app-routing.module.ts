@@ -27,7 +27,13 @@ const routes: Routes = [
     loadChildren: () => import('./pages/clinic/clinic.module').then( m => m.ClinicPageModule),
     canMatch: [authGuard]
   },
-  { path: '**' , redirectTo: RouteConstants.LOGIN }  // To handle unknown url path
+  {
+    path: RouteConstants.MANAGE_CLINICS,
+    loadChildren: () => import('./pages/manage-clinics/manage-clinics.module').then( m => m.ManageClinicsPageModule),
+    canMatch: [authGuard]
+  },
+  { path: '**' , redirectTo: RouteConstants.LOGIN }
+ // To handle unknown url path
 ];
 
 @NgModule({
