@@ -1,6 +1,4 @@
 <ion-content *ngIf="userData">
-  <app-refresher [showRefresher]="showClinicSetupForm === false" (refresh)="onRefresh($event)"></app-refresher>
-
   <app-clinic-registration-form 
     *ngIf="showClinicSetupForm === true" 
     [isFormUpdate]="isFormUpdate" 
@@ -25,10 +23,10 @@
 
     <div [ngSwitch]="selectedSegment">
       <ion-list *ngSwitchCase="clinicSegments.INFO">
-        <app-clinic-info [userData]="userData" [clinic]="clinic" (updateInfo)="onUpdateInfo()"></app-clinic-info>
+        <app-clinic-info [userData]="userData" [clinic]="clinic" (updateInfo)="onUpdateInfo()" (refresh)="onRefresh()"></app-clinic-info>
       </ion-list>
       <ion-list *ngSwitchCase="clinicSegments.SCHEDULE">
-
+        <app-clinic-schedule [clinic]="clinic"></app-clinic-schedule>
       </ion-list>
       <ion-list *ngSwitchCase="clinicSegments.DOCTORS">
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { InfiniteScrollCustomEvent, RefresherCustomEvent, ViewWillEnter } from '@ionic/angular';
+import { RefresherCustomEvent, ViewWillEnter } from '@ionic/angular';
 import { ColorConstants } from 'src/app/constants/color.constants';
 import { Clinic } from 'src/app/models/clinic.model';
 import { ClinicService } from 'src/app/services/clinic.service';
@@ -40,11 +40,31 @@ export class ManageClinicsPage implements ViewWillEnter {
       id: clinicId,
       isApproved: true
     }
+    
+    this._globalService.showAlert(
+      'Confirm', 
+      'Are you sure you approve this clinic?',
+      [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary'
+        }, 
+        {
+          text: 'Okay',
+          handler: async () => {
+            await this.approveClinic(updatedClinic);
+          }
+        }
+      ]
+    )
+  }
 
+  async approveClinic(updatedClinic: any){
     this._globalService.showLoader('Processing approval...');
     
     await this._clinicService.updateClinic(updatedClinic).then(async () => {
-      const index = this.clinics.findIndex(clinic => clinic.id === clinicId);
+      const index = this.clinics.findIndex(clinic => clinic.id === updatedClinic.id);
       const clinic = this.clinics[index];
       clinic.isApproved = true;
       this._globalService.hideLoader()

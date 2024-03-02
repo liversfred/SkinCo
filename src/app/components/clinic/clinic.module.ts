@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ClinicRegistrationFormComponent } from './clinic-registration-form/clinic-registration-form.component';
 import { ClinicInfoComponent } from './clinic-info/clinic-info.component';
 import { LocationDetailsComponent } from './location-details/location-details.component';
-import { IonicModule } from '@ionic/angular';
 import { ComponentsModule } from '../components.module';
-import { ReactiveFormsModule } from '@angular/forms';
 import { ClinicAccordionComponent } from './clinic-accordion/clinic-accordion.component';
+import { ClinicScheduleComponent } from './clinic-schedule/clinic-schedule.component';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { ClinicService } from 'src/app/services/clinic.service';
+import { ClinicScheduleService } from 'src/app/services/clinic-schedule.service';
+import { ClinicScheduleListComponent } from './clinic-schedule-list/clinic-schedule-list.component';
 
 
 
@@ -15,19 +17,22 @@ import { ClinicAccordionComponent } from './clinic-accordion/clinic-accordion.co
     ClinicRegistrationFormComponent,
     ClinicInfoComponent,
     LocationDetailsComponent,
-    ClinicAccordionComponent
+    ClinicAccordionComponent,
+    ClinicScheduleComponent,
+    ClinicScheduleListComponent
   ],
   imports: [
-    CommonModule,
-    IonicModule,
+    SharedModule,
     ComponentsModule,
-    ReactiveFormsModule
   ],
   exports: [
     ClinicRegistrationFormComponent,
     ClinicInfoComponent,
     LocationDetailsComponent,
-    ClinicAccordionComponent
-  ]
+    ClinicAccordionComponent,
+    ClinicScheduleComponent,
+    ClinicScheduleListComponent
+  ],
+  providers: [ClinicService, ClinicScheduleService]
 })
 export class ClinicModule { }

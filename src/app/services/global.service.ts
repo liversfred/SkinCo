@@ -3,6 +3,7 @@ import { AlertButton, AlertController, AlertInput, LoadingController, ModalContr
 import { Color } from '../custom-types/colors.type';
 import { ToastPosition } from '../custom-types/toast-positions.type';
 import { ColorConstants } from '../constants/color.constants';
+import { DayOfWeek } from '../constants/day-of-week.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -62,12 +63,24 @@ export class GlobalService {
     .then(alertEl => alertEl.present());
   }
 
+  showErrorAlert(message: string, header: string = "Error"){
+    this.showAlert(header, message, 
+      [
+        {
+          text: 'Close',
+          role: 'cancel',
+          cssClass: 'secondary'
+        }
+      ]);
+  }
+
   showToast(message: string, duration = 3000, color: Color = ColorConstants.DANGER, position?: ToastPosition) {
     this._toastCtrl.create({
       message: message,
       duration: duration,
       color: color,
-      position: position
+      position: position,
+      cssClass: 'toast-text'
     }).then(toastEl => toastEl.present())
   }
   
@@ -101,13 +114,85 @@ export class GlobalService {
           return this.compare(a.createdAt, b.createdAt, isAsc);
         case 'updatedAt':
           return this.compare(a.updatedAt, b.updatedAt, isAsc);
+        case 'dayOfWeek':
+          return this.compare(this.getDayOfWeekValue(a.dayOfWeek), this.getDayOfWeekValue(b.dayOfWeek), isAsc);
         default:
           return 0;
       }
     });
   }
   
+  private getDayOfWeekValue(dayOfWeek: string): number {
+    switch (dayOfWeek) {
+      case DayOfWeek.MONDAY:
+        return 1;
+      case DayOfWeek.TUESDAY:
+        return 2;
+      case DayOfWeek.WEDNESDAY:
+        return 3;
+      case DayOfWeek.THURSDAY:
+        return 4;
+      case DayOfWeek.FRIDAY:
+        return 5;
+      case DayOfWeek.SATURDAY:
+        return 6;
+      case DayOfWeek.SUNDAY:
+        return 7;
+      default:
+        return 0;
+    }
+  }
+  
   private compare(a: number | string, b: number | string, isAsc: boolean) {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
+  getCurrentTime(): string{
+    const dateTime = new Date();
+    const hours = dateTime.getHours();
+    const minutes = dateTime.getMinutes();
+    return `${this.padZero(hours)}:${this.padZero(minutes)}`;
+  }
+
+  private padZero(num: number): string {
+    return num < 10 ? `0${num}` : `${num}`;
+  }
+
+  convertTo12HourFormat(time: string): string {
+    const [hours, minutes] = time.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes);
+  
+    return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  }
+
+  convertToMilitaryFormat(time: string): string {
+    const [timePart, ampmPart] = time.split(' ');
+    const [hoursStr, minutesStr] = timePart.split(':');
+    const hours = parseInt(hoursStr, 10);
+    const minutes = parseInt(minutesStr, 10);
+  
+    let militaryHours = hours;
+    if (ampmPart.toLowerCase() === 'pm' && hours < 12) {
+      militaryHours += 12; 
+    } else if (ampmPart.toLowerCase() === 'am' && hours === 12) {
+      militaryHours = 0;
+    }
+  
+    return `${String(militaryHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  }
+
+  isStartTimeAhead(startTime: string, endTime: string): boolean {
+    const startTimeParts = startTime.split(':').map(Number);
+    const endTimeParts = endTime.split(':').map(Number);
+  
+    const startDate = new Date();
+    startDate.setHours(startTimeParts[0], startTimeParts[1], 0);
+  
+    const endDate = new Date();
+    endDate.setHours(endTimeParts[0], endTimeParts[1], 0);
+  
+    return startDate.getTime() > endDate.getTime();
   }
 }

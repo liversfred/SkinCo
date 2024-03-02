@@ -5,24 +5,22 @@ import { Clinic } from '../models/clinic.model';
 import { map } from 'rxjs';
 import { GlobalService } from './global.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ClinicService {
   private clinicsCollection: CollectionReference<DocumentData>;
 
   constructor(private _fireStore: Firestore, private _globalService: GlobalService) {
     this.clinicsCollection = collection(this._fireStore, Collections.CLINICS);
-   }
+  }
 
-   async saveClinic(clinic: Clinic): Promise<string>{
+  async saveClinic(clinic: Clinic): Promise<string>{
     try{
       const res = await addDoc(this.clinicsCollection, clinic);
       return res.id;
     }catch(e) {
       throw(e);
     }
-   }
+  }
    
   async updateClinic(updatedModel: any): Promise<void> {
     try{
@@ -67,7 +65,7 @@ export class ClinicService {
     }
   }
 
-   async fetchClinicById(clinicId: string): Promise<Clinic | null> {
+  async fetchClinicById(clinicId: string): Promise<Clinic | null> {
     try{
       let clinic = await new Promise<Clinic>((resolve, reject) => {
         docData(doc(this._fireStore, `${Collections.CLINICS}/${clinicId}`), { idField: 'id'})
@@ -99,5 +97,5 @@ export class ClinicService {
     }catch(e) {
       throw(e);
     }
-   }
+  }
 }

@@ -1,0 +1,22 @@
+<div class="ion-padding-horizontal" *ngIf="clinic">
+  <app-refresher [showRefresher]="true" (refresh)="onRefresh($event)"></app-refresher>
+
+  <ion-grid class="ion-padding">
+    <ion-row class="ion-margin-bottom ion-justify-content-end">
+      <ion-button class="ion-margin-start" size="medium" color="danger" (click)="onDeleteSchedule()" *ngIf="selectedClinicSchedule">
+        Delete
+        <ion-icon slot="start" name="trash-outline"></ion-icon>
+      </ion-button>
+      <ion-button class="ion-margin-start" size="medium" color="secondary" (click)="onUpdateSchedule()" *ngIf="selectedClinicSchedule">
+        Edit
+        <ion-icon slot="start" name="pencil-outline"></ion-icon>
+      </ion-button>
+      <ion-button class="ion-margin-start" size="medium" color="primary" (click)="onAddSchedule()">
+        Add
+        <ion-icon slot="start" name="create-outline"></ion-icon>
+      </ion-button>
+    </ion-row>
+
+    <app-clinic-schedule-list [clinicSchedules]="clinicSchedules" (selected)="this.selectedClinicSchedule = $event"></app-clinic-schedule-list>
+  </ion-grid>
+</div>

@@ -9,6 +9,7 @@ import { ClinicPageRoutingModule } from './clinic-routing.module';
 import { ClinicPage } from './clinic.page';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { ClinicModule } from 'src/app/components/clinic/clinic.module';
+import { ModalsModule } from 'src/app/components/modals/modals.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { ClinicModule } from 'src/app/components/clinic/clinic.module';
     IonicModule,
     ClinicPageRoutingModule,
     ComponentsModule,
-    ClinicModule
+    ClinicModule,
+    ModalsModule
   ],
   declarations: [ClinicPage]
 })

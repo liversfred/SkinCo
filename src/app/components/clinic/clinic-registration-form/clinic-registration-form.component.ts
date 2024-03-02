@@ -14,7 +14,7 @@ import { ColorConstants } from 'src/app/constants/color.constants';
 import { ClinicService } from 'src/app/services/clinic.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
-import { SearchLocationComponent } from '../../search-location/search-location.component';
+import { SearchLocationComponent } from '../../modals/search-location/search-location.component';
 
 @Component({
   selector: 'app-clinic-registration-form',
@@ -101,7 +101,7 @@ export class ClinicRegistrationFormComponent  implements OnInit {
 
     if(this.registerClinicForm?.valid){
       const name = this.registerClinicForm?.value.name.trim();
-      const action = `${ModifierActions.CREATED} Clinic ${name}`;
+      const action = `${this.isFormUpdate ? ModifierActions.UPDATED : ModifierActions.ADDED} Clinic ${name}`;
       this.location = {
         ...this.location,
         addressNo: this.registerClinicForm?.value.addressNo,
@@ -116,7 +116,7 @@ export class ClinicRegistrationFormComponent  implements OnInit {
         dailyVisitLimit: this.registerClinicForm?.value.dailyVisitLimit,
         isApproved: false,
         staffIds: [this.userData?.id!],
-        ...(this._trailService.createAudit(action))
+        ...(this.isFormUpdate ? this._trailService.updateAudit(action) : this._trailService.createAudit(action))
       }
       
       this._globalService.showAlert(

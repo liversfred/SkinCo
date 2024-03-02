@@ -1,0 +1,11 @@
+.schedule-item {
+  border: 1px solid;
+  margin: 0;
+  text-align: center;
+  cursor: pointer;
+}
+
+.selected {
+  background-color: var(--ion-color-warning-shade); /* Use the primary color as the background */
+  color: var(--ion-color-light); /* Adjust text color as needed */
+}

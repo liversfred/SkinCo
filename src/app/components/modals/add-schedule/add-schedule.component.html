@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Add Schedule</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="done()">Done</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <form [formGroup]="addScheduleForm!">
+    <ion-list>
+      <ion-item>
+        <ion-select formControlName="dayOfWeek" aria-label="dayOfWeek" interface="action-sheet" label="Choose Day">
+          <ion-select-option *ngFor="let dayOfWeek of dayOfWeekOptions" [value]="dayOfWeek">{{ dayOfWeek }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+  
+      <ion-item class="ion-justify-content-between" (click)="onSelectTime('Start Time', 'startTime')" class="link">
+          <ion-label class="ion-text-start">Start Time</ion-label>
+          <ion-label class="ion-text-end">{{ addScheduleForm?.value.startTime}}</ion-label>
+      </ion-item>
+
+      <ion-item class="ion-justify-content-between" (click)="onSelectTime('End Time', 'endTime')" class="link">
+        <ion-label class="ion-text-start">End Time</ion-label>
+        <ion-label class="ion-text-end">{{ addScheduleForm?.value.endTime}}</ion-label>
+      </ion-item>
+    </ion-list>
+  </form>
+</ion-content>

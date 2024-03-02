@@ -249,3 +249,15 @@ html {
   bottom: 0;
   --border-radius: 5px;
 }
+
+.select-time-modal::part(content) {
+  --height: 40%;
+  position: absolute;
+  bottom: 0;
+  --border-radius: 5px;
+  overflow-y: hidden;
+}
+
+.toast-text{
+  text-align: center;
+}
