@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   seedData: false,
+  defaultPassword: 'Password123!',
   firebase: {
     apiKey: "AIzaSyCZwc3d2U61W-n4pGd3d2xXAdyVCMarSB0",
     authDomain: "skinco-62ad8.firebaseapp.com",
