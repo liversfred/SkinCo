@@ -9,6 +9,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ClinicService } from 'src/app/services/clinic.service';
 import { ClinicScheduleService } from 'src/app/services/clinic-schedule.service';
 import { ClinicScheduleListComponent } from './clinic-schedule-list/clinic-schedule-list.component';
+import { ClinicDoctorsComponent } from './clinic-doctors/clinic-doctors.component';
 
 
 
@@ -19,11 +20,12 @@ import { ClinicScheduleListComponent } from './clinic-schedule-list/clinic-sched
     LocationDetailsComponent,
     ClinicAccordionComponent,
     ClinicScheduleComponent,
-    ClinicScheduleListComponent
+    ClinicScheduleListComponent,
+    ClinicDoctorsComponent,
   ],
   imports: [
     SharedModule,
-    ComponentsModule,
+    ComponentsModule
   ],
   exports: [
     ClinicRegistrationFormComponent,
@@ -31,7 +33,8 @@ import { ClinicScheduleListComponent } from './clinic-schedule-list/clinic-sched
     LocationDetailsComponent,
     ClinicAccordionComponent,
     ClinicScheduleComponent,
-    ClinicScheduleListComponent
+    ClinicScheduleListComponent,
+    ClinicDoctorsComponent,
   ],
   providers: [ClinicService, ClinicScheduleService]
 })

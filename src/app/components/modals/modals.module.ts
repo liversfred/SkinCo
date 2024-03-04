@@ -3,6 +3,7 @@ import { SearchLocationComponent } from './search-location/search-location.compo
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AddScheduleComponent } from './add-schedule/add-schedule.component';
 import { SelectTimeComponent } from './select-time/select-time.component';
+import { AddDoctorComponent } from './add-doctor/add-doctor.component';
 
 
 
@@ -10,7 +11,8 @@ import { SelectTimeComponent } from './select-time/select-time.component';
   declarations: [
     SearchLocationComponent,
     AddScheduleComponent,
-    SelectTimeComponent
+    SelectTimeComponent,
+    AddDoctorComponent
   ],
   imports: [
     SharedModule
@@ -18,7 +20,8 @@ import { SelectTimeComponent } from './select-time/select-time.component';
   exports: [
     SearchLocationComponent,
     AddScheduleComponent,
-    SelectTimeComponent
+    SelectTimeComponent,
+    AddDoctorComponent
   ]
 })
 export class ModalsModule { }

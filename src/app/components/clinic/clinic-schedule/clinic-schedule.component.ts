@@ -45,7 +45,7 @@ export class ClinicScheduleComponent implements OnInit{
     event.target.complete();
   }
 
-  async onAddSchedule(){
+  onAddSchedule(){
     this.openAddScheduleModal();
   }
 

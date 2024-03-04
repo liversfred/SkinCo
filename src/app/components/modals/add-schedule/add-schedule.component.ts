@@ -13,15 +13,7 @@ import { ClinicSchedule } from 'src/app/models/clinic-schedule.model';
 export class AddScheduleComponent implements OnInit{
   @Input() data: any;
   addScheduleForm: FormGroup | undefined;
-  dayOfWeekOptions: any[] = [
-    DayOfWeek.MONDAY,
-    DayOfWeek.TUESDAY,
-    DayOfWeek.WEDNESDAY,
-    DayOfWeek.THURSDAY,
-    DayOfWeek.FRIDAY,
-    DayOfWeek.SATURDAY,
-    DayOfWeek.SUNDAY
-  ]
+  dayOfWeekOptions: any[] = [...DayOfWeek.DAY_OF_WEEK_OPTIONS];
 
   constructor(private _globalService: GlobalService) { }
 

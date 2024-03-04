@@ -6,4 +6,5 @@ export class DayOfWeek {
   static readonly FRIDAY = 'Friday';
   static readonly SATURDAY = 'Saturday';
   static readonly SUNDAY = 'Sunday';
+  static readonly DAY_OF_WEEK_OPTIONS = [this.MONDAY, this.TUESDAY, this.WEDNESDAY, this.THURSDAY, this.FRIDAY, this.SATURDAY, this.SUNDAY];
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RefresherCustomEvent, ViewDidLeave, ViewWillEnter } from '@ionic/angular';
+import { ViewDidLeave, ViewWillEnter } from '@ionic/angular';
 import { ClinicSegments } from 'src/app/constants/clinic-segmets.constants';
 import { Clinic } from 'src/app/models/clinic.model';
 import { UserData } from 'src/app/models/user-data.model';
@@ -37,9 +37,8 @@ export class ClinicPage implements ViewDidLeave, ViewWillEnter {
     });
   }
 
-  async onRefresh(event: RefresherCustomEvent){
+  async onRefresh(){
     await this.fetchClinic();
-    event.target.complete();
   }
 
   async fetchClinic(){

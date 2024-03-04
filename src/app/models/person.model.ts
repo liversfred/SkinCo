@@ -6,4 +6,6 @@ export interface Person {
   mobileNumber: string;
   gender: string;
   age: number;
+
+  fullName?: string;
 }

@@ -3,4 +3,6 @@ export class Collections {
   static readonly ROLES = 'roles'
   static readonly CLINICS = 'clinics'
   static readonly CLINIC_SCHEDULES = 'clinic_schedules'
+  static readonly DOCTORS = 'doctors'
+  static readonly SPECIALIZATIONS = 'specializations'
 }

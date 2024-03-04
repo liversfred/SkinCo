@@ -10,4 +10,5 @@ export interface Clinic extends Trail {
   dailyVisitLimit: number;
   isApproved: boolean;
   staffIds: string[];
+  doctorId?: string;
 }

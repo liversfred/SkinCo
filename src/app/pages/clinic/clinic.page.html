@@ -16,8 +16,8 @@
       <ion-segment-button [value]="clinicSegments.SCHEDULE" [disabled]="!clinic.isApproved">
         <ion-label>{{ clinicSegments.SCHEDULE }}</ion-label>
       </ion-segment-button>
-      <ion-segment-button [value]="clinicSegments.DOCTORS" [disabled]="!clinic.isApproved">
-        <ion-label>{{ clinicSegments.DOCTORS }}</ion-label>
+      <ion-segment-button [value]="clinicSegments.DOCTOR" [disabled]="!clinic.isApproved">
+        <ion-label>{{ clinicSegments.DOCTOR }}</ion-label>
       </ion-segment-button>
     </ion-segment>
 
@@ -28,8 +28,8 @@
       <ion-list *ngSwitchCase="clinicSegments.SCHEDULE">
         <app-clinic-schedule [clinic]="clinic"></app-clinic-schedule>
       </ion-list>
-      <ion-list *ngSwitchCase="clinicSegments.DOCTORS">
-
+      <ion-list *ngSwitchCase="clinicSegments.DOCTOR">
+        <app-clinic-doctors [clinic]="clinic"></app-clinic-doctors>
       </ion-list>
     </div>
   </div>

@@ -1,5 +1,5 @@
 export class ClinicSegments {
   static readonly INFO = 'Info'
   static readonly SCHEDULE = 'Schedule'
-  static readonly DOCTORS = 'Doctors'
+  static readonly DOCTOR = 'Doctor'
 }

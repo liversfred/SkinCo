@@ -11,7 +11,9 @@ export class PlatformService {
   constructor(private _platform: Platform) { }
 
   isAndroid(){
-    return this._platform.platforms()[0] == PlatformConstants.ANDROID;
+    return this._platform.platforms()[0] == PlatformConstants.ANDROID
+          || this._platform.platforms()[0] == PlatformConstants.TABLET
+          || this._platform.platforms()[0] == PlatformConstants.PHABLET;
   }
 
   isDesktop(){
