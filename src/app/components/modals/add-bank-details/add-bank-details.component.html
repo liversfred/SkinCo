@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Add Doctor</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="done()">Done</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <form [formGroup]="addBankDetailsForm!">
+    <ion-list color="light">
+      <ion-item lines="none"  color="light">
+        <ion-input type="text" 
+        formControlName="bankName" 
+        label="Bank Name"
+        labelPlacement="floating"
+        [counter]="true" 
+        [maxlength]="bankNameMaxLength"
+        [clearInput]="true"></ion-input>
+      </ion-item>
+      <ion-text class="error-message" color="danger" *ngIf="addBankDetailsForm?.hasError('required', 'bankName') && addBankDetailsForm?.get('bankName')?.touched">
+        <div>* Bank name is required.</div>
+      </ion-text>
+      <ion-text class="error-message" color="danger" *ngIf="addBankDetailsForm?.value.firstName?.length > bankNameMaxLength && addBankDetailsForm?.get('bankName')?.touched">
+        <div>* Maximum is {{ bankNameMaxLength }} characters.</div>
+      </ion-text>
+      
+      <ion-item color="light" class="ion-margin-top">
+        <ion-input type="text" 
+        formControlName="accountName" 
+        label="Account Name"
+        labelPlacement="floating"
+        [counter]="true" 
+        [maxlength]="accountNameMaxLength" 
+        [clearInput]="true"></ion-input>
+      </ion-item>
+      <ion-text class="error-message" color="danger" *ngIf="addBankDetailsForm?.hasError('required', 'accountName') && addBankDetailsForm?.get('accountName')?.touched">
+        <div>* Account name is required.</div>
+      </ion-text>
+      <ion-text class="error-message" color="danger" *ngIf="addBankDetailsForm?.value.middleName?.length > accountNameMaxLength && addBankDetailsForm?.get('accountName')?.touched">
+        <div>* Maximum is {{ accountNameMaxLength }} characters.</div>
+      </ion-text>
+      
+      <ion-item color="light" class="ion-margin-top">
+        <ion-input type="text" 
+        formControlName="accountNumber" 
+        label="Account Number"
+        labelPlacement="floating"
+        [counter]="true" 
+        [maxlength]="accountNumberMaxLength" 
+        [clearInput]="true"></ion-input>
+      </ion-item>
+      <ion-text class="error-message" color="danger" *ngIf="addBankDetailsForm?.hasError('required', 'accountNumber') && addBankDetailsForm?.get('accountNumber')?.touched">
+        <div>* Account number is required.</div>
+      </ion-text>
+      <ion-text class="error-message" color="danger" *ngIf="addBankDetailsForm?.value.lastName?.length > accountNumberMaxLength && addBankDetailsForm?.get('accountNumber')?.touched">
+        <div>* Maximum is {{ accountNumberMaxLength }} characters.</div>
+      </ion-text>
+      <ion-text class="error-message" color="danger" *ngIf="addBankDetailsForm?.hasError('invalidNumericInput', 'accountNumber') && addBankDetailsForm?.get('accountNumber')?.touched">
+        <div>* Account number is invalid.</div>
+      </ion-text>
+    </ion-list>
+  </form>
+</ion-content>

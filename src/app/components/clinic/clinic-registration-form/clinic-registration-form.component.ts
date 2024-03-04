@@ -6,7 +6,6 @@ import { GlobalService } from 'src/app/services/global.service';
 import { GoogleMapsService } from 'src/app/services/google-maps.service';
 import { TrailService } from 'src/app/services/trail.service';
 import { telephoneNumberValidator } from 'src/app/validators/telephone-number-validator';
-import { mobileNumberValidator } from 'src/app/validators/mobile-number-validator';
 import { ModifierActions } from 'src/app/constants/modifiers-action.constants';
 import { Clinic } from 'src/app/models/clinic.model';
 import { UserData } from 'src/app/models/user-data.model';
@@ -15,6 +14,7 @@ import { ClinicService } from 'src/app/services/clinic.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { SearchLocationComponent } from '../../modals/search-location/search-location.component';
+import { numericInputValidator } from 'src/app/validators/numeric-input-validator';
 
 @Component({
   selector: 'app-clinic-registration-form',
@@ -57,7 +57,7 @@ export class ClinicRegistrationFormComponent  implements OnInit {
       addressNo: new FormControl('', { validators: [Validators.required, Validators.maxLength(this.clinicAddressNoMaxLength)] }),
       landmark: new FormControl('', { validators: [Validators.required, Validators.maxLength(this.landmarkMaxLength)] }),
       telephoneNumber: new FormControl('', { validators: [Validators.maxLength(this.telephoneNumberMaxLength), telephoneNumberValidator] }),
-      mobileNumber: new FormControl('', { validators: [Validators.required, Validators.minLength(this.mobileNumberMaxLength), Validators.maxLength(this.mobileNumberMaxLength), mobileNumberValidator()] }),
+      mobileNumber: new FormControl('', { validators: [Validators.required, Validators.minLength(this.mobileNumberMaxLength), Validators.maxLength(this.mobileNumberMaxLength), numericInputValidator()] }),
       dailyVisitLimit: new FormControl(this.defaultDailyVisitLimit, { validators: [Validators.required, Validators.min(1)] }),
     });
 

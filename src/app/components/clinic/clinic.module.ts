@@ -10,6 +10,7 @@ import { ClinicService } from 'src/app/services/clinic.service';
 import { ClinicScheduleService } from 'src/app/services/clinic-schedule.service';
 import { ClinicScheduleListComponent } from './clinic-schedule-list/clinic-schedule-list.component';
 import { ClinicDoctorsComponent } from './clinic-doctors/clinic-doctors.component';
+import { ClinicBankDetailsComponent } from './clinic-bank-details/clinic-bank-details.component';
 
 
 
@@ -22,6 +23,7 @@ import { ClinicDoctorsComponent } from './clinic-doctors/clinic-doctors.componen
     ClinicScheduleComponent,
     ClinicScheduleListComponent,
     ClinicDoctorsComponent,
+    ClinicBankDetailsComponent
   ],
   imports: [
     SharedModule,
@@ -35,6 +37,7 @@ import { ClinicDoctorsComponent } from './clinic-doctors/clinic-doctors.componen
     ClinicScheduleComponent,
     ClinicScheduleListComponent,
     ClinicDoctorsComponent,
+    ClinicBankDetailsComponent
   ],
   providers: [ClinicService, ClinicScheduleService]
 })

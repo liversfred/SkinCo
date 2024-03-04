@@ -112,7 +112,7 @@
       <ion-text class="error-message" color="danger" *ngIf="addDoctorForm?.value.mobileNumber?.length !== mobileNumberMaxLength && addDoctorForm?.get('mobileNumber')?.touched">
         <div>* Mobile number must be {{ mobileNumberMaxLength }} digits.</div>
       </ion-text>
-      <ion-text class="error-message" color="danger" *ngIf="addDoctorForm?.hasError('invalidMobileNumber', 'mobileNumber') && addDoctorForm?.get('mobileNumber')?.touched">
+      <ion-text class="error-message" color="danger" *ngIf="addDoctorForm?.hasError('invalidNumericInput', 'mobileNumber') && addDoctorForm?.get('mobileNumber')?.touched">
         <div>* Mobile number is invalid.</div>
       </ion-text>
       

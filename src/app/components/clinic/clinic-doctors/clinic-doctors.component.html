@@ -1,8 +1,8 @@
-<div class="ion-padding-horizontal" *ngIf="clinic">
+<div *ngIf="clinic">
   <app-refresher [showRefresher]="true" (refresh)="onRefresh($event)"></app-refresher>
 
   <ion-grid>
-    <ion-row class="ion-margin-vertical ion-margin-end ion-justify-content-end" *ngIf="!clinicDoctor">
+    <ion-row class="ion-margin-vertical ion-padding-end ion-margin-end ion-justify-content-end" *ngIf="!clinicDoctor">
       <ion-button class="ion-margin-start" size="medium" color="primary" (click)="onAddDoctor()">
         Add
         <ion-icon slot="start" name="create-outline"></ion-icon>

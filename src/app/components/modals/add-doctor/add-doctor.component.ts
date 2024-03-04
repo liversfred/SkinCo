@@ -7,7 +7,7 @@ import { Person } from 'src/app/models/person.model';
 import { Specialization } from 'src/app/models/speicialization.model';
 import { GlobalService } from 'src/app/services/global.service';
 import { SpecializationService } from 'src/app/services/specialization.service';
-import { mobileNumberValidator } from 'src/app/validators/mobile-number-validator';
+import { numericInputValidator } from 'src/app/validators/numeric-input-validator';
 
 @Component({
   selector: 'app-add-doctor',
@@ -48,7 +48,7 @@ export class AddDoctorComponent  implements OnInit {
       middleName: new FormControl('', { validators: [Validators.required, Validators.maxLength(this.lastNameMaxLength)] }),
       lastName: new FormControl('', { validators: [Validators.required, Validators.maxLength(this.middleNameMaxLength)] }),
       email: new FormControl('', { validators: [Validators.required, Validators.email, Validators.maxLength(this.emailMaxLength)] }),
-      mobileNumber: new FormControl('', { validators: [Validators.required, Validators.minLength(this.mobileNumberMaxLength), Validators.maxLength(this.mobileNumberMaxLength), mobileNumberValidator()] }),
+      mobileNumber: new FormControl('', { validators: [Validators.required, Validators.minLength(this.mobileNumberMaxLength), Validators.maxLength(this.mobileNumberMaxLength), numericInputValidator()] }),
       gender: new FormControl(null, { validators: [Validators.required] }),
       age: new FormControl('', { validators: [Validators.required, Validators.min(1), Validators.max(100)] }),
       specializationId: new FormControl(null, { validators: [Validators.required] }),

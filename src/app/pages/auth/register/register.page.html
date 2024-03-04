@@ -124,7 +124,7 @@
             <ion-text class="error-message" color="danger" *ngIf="registerForm?.value.mobileNumber?.length !== mobileNumberMaxLength && registerForm?.get('mobileNumber')?.touched">
               <div>* Mobile number must be {{ mobileNumberMaxLength }} digits.</div>
             </ion-text>
-            <ion-text class="error-message" color="danger" *ngIf="registerForm?.hasError('invalidMobileNumber', 'mobileNumber') && registerForm?.get('mobileNumber')?.touched">
+            <ion-text class="error-message" color="danger" *ngIf="registerForm?.hasError('invalidNumericInput', 'mobileNumber') && registerForm?.get('mobileNumber')?.touched">
               <div>* Mobile number is invalid.</div>
             </ion-text>
             

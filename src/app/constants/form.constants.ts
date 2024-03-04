@@ -10,4 +10,7 @@ export class FormConstants {
   static readonly landmarkMaxLength = 255;
   static readonly telephoneNumberMaxLength = 11;
   static readonly defaultDailyVisitLimit = 30;
+  static readonly bankNameMaxLength = 20;
+  static readonly accountNameMaxLength = 100;
+  static readonly accountNumberMaxLength = 20;
 }

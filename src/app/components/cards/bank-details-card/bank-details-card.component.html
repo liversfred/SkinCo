@@ -1,0 +1,16 @@
+<ion-card color="light" class="ion-padding" *ngIf="bankDetails">
+  <ion-card-header>
+    <ion-card-title>
+      <ion-row class="ion-justify-content-between">
+        <b>{{ bankDetails.bankName }}</b>
+        <ion-icon class="link" name="pencil-outline" (click)="onUpdateBankDetails(bankDetails)"></ion-icon>
+      </ion-row>
+    </ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-text>
+      <h2>{{ bankDetails.accountNumber }}</h2>
+      <p>{{ bankDetails.accountName }}</p>
+    </ion-text>
+  </ion-card-content>
+</ion-card>

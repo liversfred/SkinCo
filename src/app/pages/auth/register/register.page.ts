@@ -14,7 +14,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { RoleService } from 'src/app/services/role.service';
 import { TrailService } from 'src/app/services/trail.service';
-import { mobileNumberValidator } from 'src/app/validators/mobile-number-validator';
+import { numericInputValidator } from 'src/app/validators/numeric-input-validator';
 import { passwordStandardValidator } from 'src/app/validators/password-standard-validator.directive';
 import { passwordsDoNotMatchValidator } from 'src/app/validators/passwordsDoNotMatchValidator';
 
@@ -67,7 +67,7 @@ export class RegisterPage implements OnInit {
       lastName: new FormControl('', { validators: [Validators.required, Validators.maxLength(this.middleNameMaxLength)] }),
       middleName: new FormControl('', { validators: [Validators.required, Validators.maxLength(this.lastNameMaxLength)] }),
       email: new FormControl('', { validators: [Validators.required, Validators.email, Validators.maxLength(this.emailMaxLength)] }),
-      mobileNumber: new FormControl('', { validators: [Validators.required, Validators.minLength(this.mobileNumberMaxLength), Validators.maxLength(this.mobileNumberMaxLength), mobileNumberValidator()] }),
+      mobileNumber: new FormControl('', { validators: [Validators.required, Validators.minLength(this.mobileNumberMaxLength), Validators.maxLength(this.mobileNumberMaxLength), numericInputValidator()] }),
       gender: new FormControl(null, { validators: [Validators.required] }),
       age: new FormControl('', { validators: [Validators.required, Validators.min(1), Validators.max(100)] }),
       password: new FormControl('', { validators: [Validators.required, passwordStandardValidator ] }),
