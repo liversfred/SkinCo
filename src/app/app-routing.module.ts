@@ -10,8 +10,12 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'register',
+    path: RouteConstants.REGISTER,
     loadChildren: () => import('./pages/auth/register/register.module').then( m => m.RegisterPageModule)
+  },
+  {
+    path: RouteConstants.FORGOT_PASSWORD,
+    loadChildren: () => import('./pages/auth/forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
   },
   {
     path: RouteConstants.LOGIN,
@@ -32,8 +36,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/manage-clinics/manage-clinics.module').then( m => m.ManageClinicsPageModule),
     canMatch: [authGuard]
   },
-  { path: '**' , redirectTo: RouteConstants.LOGIN }
- // To handle unknown url path
+  { path: '**' , redirectTo: RouteConstants.LOGIN }, // To handle unknown url path
 ];
 
 @NgModule({

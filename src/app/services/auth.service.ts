@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import { UserData } from '../models/user-data.model';
 import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, doc, query, updateDoc, where } from '@angular/fire/firestore';
 import { Collections } from '../constants/collections.constants';
@@ -144,5 +144,44 @@ export class AuthService {
 
   redirectIfLoggedIn() {
     this._router.navigate([RouteConstants.HOME]);
+  }
+
+  async getActiveUserByEmail(email: string): Promise<UserData>{
+    try {
+      const collectionRef = query(this.usersCollection, where('person.email', '==', email));
+      let userData = await new Promise<UserData>((resolve, reject) => {
+        collectionData(collectionRef, { idField: 'id'})
+          .pipe(
+            map((users: any) => {
+              if(users.length == 0)  return;
+
+              const firstRes = users[0];
+              const userData: UserData = {
+                ...firstRes,
+                  createdAt: firstRes.createdAt.toDate(),
+                  updatedAt: firstRes.updatedAt.toDate(),
+              }
+              return userData;
+            }),
+          )
+          .subscribe({
+            next: (userData: any) => {
+              resolve(userData);
+            },
+            error: (err: any) => {
+              reject(err);
+            }
+          });
+      });
+      
+      return userData;
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      throw error;
+    }
+  }
+
+  async sendForgotPasswordLink(email: string): Promise<void>{
+    await sendPasswordResetEmail(this._auth, email);
   }
 }
