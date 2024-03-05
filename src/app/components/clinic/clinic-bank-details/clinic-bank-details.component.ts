@@ -76,6 +76,8 @@ export class ClinicBankDetailsComponent implements OnInit {
   }
 
   async saveBankDetails(bankDetails: BankDetails){
+    this._globalService.showLoader('Saving bank details...');
+    
     await this._clinicBankDetailsService.saveBanKDetails(bankDetails)
     .then(async (bankDetailsId) => {
       this._globalService.hideLoader();
@@ -90,6 +92,7 @@ export class ClinicBankDetailsComponent implements OnInit {
   }
 
   async updateBankDetails(id: string, bankDetails: BankDetails) {
+    this._globalService.showLoader('Updating bank details...');
     bankDetails = { id, ...bankDetails };
 
     await this._clinicBankDetailsService.updateBankDetails(bankDetails)

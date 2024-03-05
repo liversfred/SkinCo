@@ -6,17 +6,20 @@
     <ion-text *ngIf="bankDetailsList.length > 0">
       <h1><b>Bank Details</b></h1>
     </ion-text>
-    <ion-button size="medium" color="tertiary" shape="round" (click)="onAddBankDetails()">
-      Add
-      <ion-icon slot="start" name="create-outline"></ion-icon>
-    </ion-button>
   </ion-row>
 
-  <div class="ion-margin">
-    <ion-row>
-      <ion-col size="12" size-md="3" *ngFor="let bankDetails of bankDetailsList">
-        <app-bank-details-card [bankDetails]="bankDetails" (updateBankDetails)="onUpdateBankDetails($event)"></app-bank-details-card>
-      </ion-col>
-    </ion-row>
-  </div>
+  <ion-row>
+    <ion-col size="12" size-md="4" *ngFor="let bankDetails of bankDetailsList">
+      <app-bank-details-card [bankDetails]="bankDetails" (updateBankDetails)="onUpdateBankDetails($event)"></app-bank-details-card>
+    </ion-col>
+  </ion-row>
+  
+  <ion-row>
+    <ion-col size="12" size-md="3" push-md="9">
+      <ion-button type="submit" expand="block" color="tertiary" shape="round" class="ion-margin-top" (click)="onAddBankDetails()">
+        Add
+        <ion-icon class="ion-margin-end" slot="icon-only" name="create-outline"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
 </div>

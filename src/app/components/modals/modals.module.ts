@@ -5,6 +5,7 @@ import { AddScheduleComponent } from './add-schedule/add-schedule.component';
 import { SelectTimeComponent } from './select-time/select-time.component';
 import { AddDoctorComponent } from './add-doctor/add-doctor.component';
 import { AddBankDetailsComponent } from './add-bank-details/add-bank-details.component';
+import { UpdateProfileComponent } from './update-profile/update-profile.component';
 
 
 
@@ -14,7 +15,8 @@ import { AddBankDetailsComponent } from './add-bank-details/add-bank-details.com
     AddScheduleComponent,
     SelectTimeComponent,
     AddDoctorComponent,
-    AddBankDetailsComponent
+    AddBankDetailsComponent,
+    UpdateProfileComponent
   ],
   imports: [
     SharedModule
@@ -24,7 +26,8 @@ import { AddBankDetailsComponent } from './add-bank-details/add-bank-details.com
     AddScheduleComponent,
     SelectTimeComponent,
     AddDoctorComponent,
-    AddBankDetailsComponent
+    AddBankDetailsComponent,
+    UpdateProfileComponent
   ]
 })
 export class ModalsModule { }

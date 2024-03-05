@@ -1,0 +1,63 @@
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="8" offset-md="2">
+        <ion-card mode="ios" color="light">
+          <ion-card-header>
+            <ion-row class="ion-padding ion-justify-content-center">
+              <ion-avatar>
+                <img alt="userData image" [src]="imagePath" />
+              </ion-avatar>
+            </ion-row>
+            <ion-card-title>
+              <ion-row class="ion-justify-content-between">
+                {{ userData?.person?.fullName }}
+              </ion-row>
+            </ion-card-title>
+            <ion-card-subtitle>{{ userData?.role?.name }}</ion-card-subtitle>
+          </ion-card-header>
+        
+          <ion-card-content>
+            <ion-text class="ion-padding-bottom">
+              <h2>Personal Info</h2>
+            </ion-text>
+        
+            <ion-row>
+              <ion-col size="12" size-md="6">
+                <ion-text color="dark">
+                  <h3>Age: {{ userData?.person?.age }}</h3>
+                </ion-text>
+              </ion-col>
+              <ion-col size="12" size-md="6">
+                <ion-text color="dark">
+                  <h3>Gender: {{ userData?.person?.gender }}</h3>
+                </ion-text>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="12" size-md="6">
+                <ion-text color="dark">
+                  <h3>Email: {{ userData?.person?.email }}</h3>
+                </ion-text>
+              </ion-col>
+              <ion-col size="12" size-md="6">
+                <ion-text color="dark">
+                  <h3>Mobile No.: {{ userData?.person?.mobileNumber }}</h3>
+                </ion-text>
+              </ion-col>
+            </ion-row>
+        
+            <ion-row class="ion-margin-top">
+              <ion-col size="12">
+                <ion-button color="secondary" expand="block" size="small" (click)="onUpdateProfile()">
+                  Update
+                  <ion-icon slot="start" name="pencil-outline"></ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

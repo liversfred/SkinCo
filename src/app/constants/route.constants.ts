@@ -5,4 +5,5 @@ export class RouteConstants {
   static readonly HOME = 'home';
   static readonly CLINIC = 'clinic';
   static readonly MANAGE_CLINICS = 'mange-clinics';
+  static readonly PROFILE = 'profile';
 }

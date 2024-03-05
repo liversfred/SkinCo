@@ -9,59 +9,63 @@
 
   <ion-grid class="ion-padding">
     <ion-row>
-      <ion-col size="12" size-md="6">
-        <ion-text color="dark" class="ion-text-start ion-margin-bottom">
-          <h2><b>Clinic Name:</b></h2>
-          <p>{{ clinic.name }}</p>
-        </ion-text>
-      </ion-col>
-      <ion-col size="12" size-md="6">
-        <ion-text color="dark" class="ion-text-start ion-margin-bottom">
-          <h2><b>Daily Visit Limit:</b></h2>
-          <p>{{ clinic.dailyVisitLimit }}</p>
-        </ion-text>
-      </ion-col>
-      <ion-col size="12">
-        <app-location-details [location]="clinic.location" [color]="'dark'"></app-location-details>
-      </ion-col>
-      <ion-col size="12" size-md="6">
-        <ion-text color="dark" class="ion-text-start ion-margin-bottom">
-          <h2><b>Mobile No:</b></h2>
-          <p>{{ clinic.mobileNumber }}</p>
-        </ion-text>
-      </ion-col>
-      <ion-col size="12" size-md="6">
-        <ion-text color="dark" class="ion-text-start ion-margin-bottom">
-          <h2><b>Landline No:</b></h2>
-          <p>{{ !clinic.telephoneNumber || clinic.telephoneNumber === "" ? "N/A" : clinic.telephoneNumber }}</p>
-        </ion-text>
-      </ion-col>
-      <ion-col size="12" size-md="6">
-        <ion-text color="dark" class="ion-text-start ion-margin-bottom">
-          <h2><b>Registration Date:</b></h2>
-          <p>{{ clinic.createdAt | date }}</p>
-        </ion-text>
-      </ion-col>
-      <ion-col size="12" size-md="6">
-        <ion-text color="dark" class="ion-text-start ion-margin-bottom">
-          <h2><b>Date Updated:</b></h2>
-          <p>{{ clinic.updatedAt | date }}</p>
-        </ion-text>
+      <ion-col size="12" size-md="8" offset-md="2">
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <ion-text color="dark" class="ion-text-start ion-margin-bottom">
+              <h2><b>Clinic Name:</b></h2>
+              <p>{{ clinic.name }}</p>
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <ion-text color="dark" class="ion-text-start ion-margin-bottom">
+              <h2><b>Daily Visit Limit:</b></h2>
+              <p>{{ clinic.dailyVisitLimit }}</p>
+            </ion-text>
+          </ion-col>
+          <ion-col size="12">
+            <app-location-details [location]="clinic.location" [color]="'dark'"></app-location-details>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <ion-text color="dark" class="ion-text-start ion-margin-bottom">
+              <h2><b>Mobile No:</b></h2>
+              <p>{{ clinic.mobileNumber }}</p>
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <ion-text color="dark" class="ion-text-start ion-margin-bottom">
+              <h2><b>Landline No:</b></h2>
+              <p>{{ !clinic.telephoneNumber || clinic.telephoneNumber === "" ? "N/A" : clinic.telephoneNumber }}</p>
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <ion-text color="dark" class="ion-text-start ion-margin-bottom">
+              <h2><b>Registration Date:</b></h2>
+              <p>{{ clinic.createdAt | date }}</p>
+            </ion-text>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <ion-text color="dark" class="ion-text-start ion-margin-bottom">
+              <h2><b>Date Updated:</b></h2>
+              <p>{{ clinic.updatedAt | date }}</p>
+            </ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12" size-md="3" push-md="9">
+            <ion-button type="submit" expand="block" color="secondary" shape="round" class="ion-margin-top" (click)="onUpdateInfo()">
+              Update Info
+              <ion-icon class="ion-margin-end" slot="icon-only" name="pencil"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+    
+        <ion-row class="horizontal-line ion-margin-vertical">
+          <ion-col></ion-col>
+        </ion-row>
+    
+        <app-clinic-bank-details [clinic]="clinic"></app-clinic-bank-details>
       </ion-col>
     </ion-row>
-    <ion-row>
-      <ion-col size="12" size-md="4" push-md="8">
-        <ion-button type="submit" expand="block" color="secondary" shape="round" class="ion-margin-top" (click)="onUpdateInfo()">
-          Update Info
-          <ion-icon class="ion-margin-end" slot="icon-only" name="pencil"></ion-icon>
-        </ion-button>
-      </ion-col>
-    </ion-row>
-
-    <ion-row class="horizontal-line ion-margin-vertical">
-      <ion-col></ion-col>
-    </ion-row>
-
-    <app-clinic-bank-details [clinic]="clinic"></app-clinic-bank-details>
   </ion-grid>
 </div>

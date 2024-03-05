@@ -86,6 +86,8 @@ export class ClinicDoctorsComponent  implements OnInit {
   }
   
   async saveDoctor(doctor: Doctor){
+    this._globalService.showLoader('Saving doctor information...');
+
     await this._doctorService.saveDoctor(doctor)
       .then(async (doctorId) => {
         this._globalService.hideLoader();
@@ -115,7 +117,7 @@ export class ClinicDoctorsComponent  implements OnInit {
   }
 
   async updateClinicDoctorId(updatedModel: any): Promise<boolean> {
-    this._globalService.showLoader('Updating clinic docor...');
+    this._globalService.showLoader('Updating clinic doctor...');
 
     return await this._clinicService.updateClinic(updatedModel).then(() => {
       this._globalService.hideLoader()
@@ -128,6 +130,7 @@ export class ClinicDoctorsComponent  implements OnInit {
   }
   
   async updateDoctor(id: string, doctor: Doctor) {
+    this._globalService.showLoader('Updating doctor information...');
     doctor = { id, ...doctor };
 
     await this._doctorService.updateDoctor(doctor)

@@ -14,7 +14,7 @@ export class DoctorCardComponent implements OnInit{
   constructor() { }
 
   ngOnInit(): void {
-    this.imagePath = `../../../assets/images/doctors/${this.doctor?.person.gender.toLocaleLowerCase()}-doctor.png`;
+    this.imagePath = `../../../assets/images/doctors/default_${this.doctor?.person.gender.toLocaleLowerCase()}_doctor.png`;
   }
 
   onUpdateDoctor(){

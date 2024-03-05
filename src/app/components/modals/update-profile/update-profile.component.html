@@ -1,0 +1,130 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Add Doctor</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="done()">Done</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <form [formGroup]="profileForm!">
+    <ion-list color="light">
+      <ion-item lines="none"  color="light">
+        <ion-input type="text" 
+        formControlName="firstName" 
+        label="First Name"
+        labelPlacement="floating"
+        [counter]="true" 
+        [maxlength]="firstNameMaxLength"
+        [clearInput]="true"></ion-input>
+      </ion-item>
+      <ion-text class="error-message" color="danger" *ngIf="profileForm?.hasError('required', 'firstName') && profileForm?.get('firstName')?.touched">
+        <div>* First name is required.</div>
+      </ion-text>
+      <ion-text class="error-message" color="danger" *ngIf="profileForm?.value.firstName?.length > firstNameMaxLength && profileForm?.get('firstName')?.touched">
+        <div>* Maximum is {{ firstNameMaxLength }} characters.</div>
+      </ion-text>
+      
+      <ion-item color="light" class="ion-margin-top">
+        <ion-input type="text" 
+        formControlName="middleName" 
+        label="Middle Name"
+        labelPlacement="floating"
+        [counter]="true" 
+        [maxlength]="middleNameMaxLength" 
+        [clearInput]="true"></ion-input>
+      </ion-item>
+      <ion-text class="error-message" color="danger" *ngIf="profileForm?.hasError('required', 'middleName') && profileForm?.get('middleName')?.touched">
+        <div>* Middle name is required.</div>
+      </ion-text>
+      <ion-text class="error-message" color="danger" *ngIf="profileForm?.value.middleName?.length > middleNameMaxLength && profileForm?.get('middleName')?.touched">
+        <div>* Maximum is {{ middleNameMaxLength }} characters.</div>
+      </ion-text>
+      
+      <ion-item color="light" class="ion-margin-top">
+        <ion-input type="text" 
+        formControlName="lastName" 
+        label="Last Name"
+        labelPlacement="floating"
+        [counter]="true" 
+        [maxlength]="lastNameMaxLength" 
+        [clearInput]="true"></ion-input>
+      </ion-item>
+      <ion-text class="error-message" color="danger" *ngIf="profileForm?.hasError('required', 'lastName') && profileForm?.get('lastName')?.touched">
+        <div>* Last name is required.</div>
+      </ion-text>
+      <ion-text class="error-message" color="danger" *ngIf="profileForm?.value.lastName?.length > lastNameMaxLength && profileForm?.get('lastName')?.touched">
+        <div>* Maximum is {{ lastNameMaxLength }} characters.</div>
+      </ion-text>
+              
+      <ion-item color="light" class="ion-margin-top">
+        <ion-input type="number" 
+        formControlName="age" 
+        label="Age"
+        labelPlacement="floating"
+        helperText="1-100"></ion-input>
+      </ion-item>
+      <ion-text class="error-message" color="danger" *ngIf="profileForm?.hasError('required', 'age') && profileForm?.get('age')?.touched">
+        <div>* Age is required.</div>
+      </ion-text>
+      <ion-text class="error-message" color="danger" *ngIf="profileForm?.value.age && profileForm?.value.age <= 0 && profileForm?.get('age')?.touched">
+        <div>* Invalid age.</div>
+      </ion-text>
+      <ion-text class="error-message" color="danger" *ngIf="profileForm?.value.age > maxAge && profileForm?.get('age')?.touched">
+        <div>* Max age is {{ maxAge }}.</div>
+      </ion-text>
+      
+      <ion-item color="light" class="ion-margin-top">
+        <ion-icon name="mail" slot="end"></ion-icon> 
+        <ion-input type="email" 
+        formControlName="email" 
+        label="Email"
+        labelPlacement="floating"
+        helperText="email@domain.com" 
+        [counter]="true" 
+        [maxlength]="emailMaxLength" 
+        [clearInput]="true"></ion-input>
+      </ion-item>
+      <ion-text class="error-message" color="danger" *ngIf="profileForm?.hasError('required', 'email') && profileForm?.get('email')?.touched">
+        <div>* Email is required.</div>
+      </ion-text>
+      <ion-text class="error-message" color="danger" *ngIf="profileForm?.hasError('email', 'email') && profileForm?.get('email')?.touched">
+        <div>* Email is invalid.</div>
+      </ion-text>
+      
+      <ion-item color="light" class="ion-margin-top">
+        <ion-icon name="call" slot="end"></ion-icon> 
+        <ion-input type="text" 
+        formControlName="mobileNumber" 
+        label="Mobile No."
+        labelPlacement="floating"
+        helperText="09*********" 
+        [counter]="true" 
+        [maxlength]="mobileNumberMaxLength" 
+        [clearInput]="true"></ion-input>
+      </ion-item>
+      <ion-text class="error-message" color="danger" *ngIf="profileForm?.hasError('required', 'mobileNumber') && profileForm?.get('mobileNumber')?.touched">
+        <div>* Mobile number is required.</div>
+      </ion-text>
+      <ion-text class="error-message" color="danger" *ngIf="profileForm?.value.mobileNumber?.length !== mobileNumberMaxLength && profileForm?.get('mobileNumber')?.touched">
+        <div>* Mobile number must be {{ mobileNumberMaxLength }} digits.</div>
+      </ion-text>
+      <ion-text class="error-message" color="danger" *ngIf="profileForm?.hasError('invalidNumericInput', 'mobileNumber') && profileForm?.get('mobileNumber')?.touched">
+        <div>* Mobile number is invalid.</div>
+      </ion-text>
+      
+      <ion-item color="light" class="ion-margin-top">
+        <ion-icon name="transgender" slot="end"></ion-icon> 
+        <ion-select formControlName="gender" aria-label="Gender" interface="action-sheet" placeholder="Select a Gender">
+          <ion-select-option *ngFor="let gender of genderOptions" [value]="gender">{{ gender }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-text class="error-message" color="danger" *ngIf="profileForm?.hasError('required', 'gender') && profileForm?.get('gender')?.touched">
+        <div>* Gender is required.</div>
+      </ion-text>
+    </ion-list>
+  </form>
+</ion-content>

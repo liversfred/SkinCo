@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { RouteConstants } from '../constants/route.constants';
 import { RoleService } from './role.service';
 import { StorageKeys } from '../constants/storage-key.constants';
+import { GlobalService } from './global.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,14 @@ export class AuthService {
     return this._userData.asObservable();
   }
 
-  constructor(private _fireStore: Firestore, private _auth: Auth, private _storageService: StorageService, private _router: Router, private _roleService: RoleService) { 
+  constructor(
+    private _fireStore: Firestore, 
+    private _auth: Auth, 
+    private _storageService: StorageService, 
+    private _router: Router, 
+    private _roleService: RoleService,
+    private _globalService: GlobalService
+    ) { 
     this.usersCollection = collection(this._fireStore, Collections.USERS);
   }
 
@@ -84,6 +92,10 @@ export class AuthService {
                 ...firstRes,
                   createdAt: firstRes.createdAt.toDate(),
                   updatedAt: firstRes.updatedAt.toDate(),
+                  person: {
+                    ...firstRes.person,
+                    fullName: this._globalService.formatFullName(firstRes.person.firstName, firstRes.person.middleName, firstRes.person.lastName)
+                  }
               }
               return userData;
             }),

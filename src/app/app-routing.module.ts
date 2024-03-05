@@ -36,6 +36,11 @@ const routes: Routes = [
     loadChildren: () => import('./pages/manage-clinics/manage-clinics.module').then( m => m.ManageClinicsPageModule),
     canMatch: [authGuard]
   },
+  {
+    path: RouteConstants.PROFILE,
+    loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule),
+    canMatch: [authGuard]
+  },
   { path: '**' , redirectTo: RouteConstants.LOGIN }, // To handle unknown url path
 ];
 
