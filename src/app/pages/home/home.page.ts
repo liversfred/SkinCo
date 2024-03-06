@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ViewDidLeave, ViewWillEnter } from '@ionic/angular';
+import { RefresherCustomEvent, ViewDidLeave, ViewWillEnter } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -12,6 +12,10 @@ export class HomePage implements ViewWillEnter, ViewDidLeave{
   
   ionViewWillEnter(): void {
     console.log("ionViewWillEnter - Home");
+  }
+  
+  async onRefresh(event: RefresherCustomEvent){
+    event.target.complete();
   }
 
   ionViewDidLeave(): void {

@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { ClinicBankDetailsComponent } from './clinic-bank-details.component';
+import { AddClinicServiceComponent } from './add-clinic-service.component';
 
-describe('ClinicBankDetailsComponent', () => {
-  let component: ClinicBankDetailsComponent;
-  let fixture: ComponentFixture<ClinicBankDetailsComponent>;
+describe('AddClinicServiceComponent', () => {
+  let component: AddClinicServiceComponent;
+  let fixture: ComponentFixture<AddClinicServiceComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ClinicBankDetailsComponent ],
+      declarations: [ AddClinicServiceComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ClinicBankDetailsComponent);
+    fixture = TestBed.createComponent(AddClinicServiceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

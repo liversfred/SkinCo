@@ -14,9 +14,9 @@ import { ErrorService } from 'src/app/services/error.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { RoleService } from 'src/app/services/role.service';
 import { TrailService } from 'src/app/services/trail.service';
-import { numericInputValidator } from 'src/app/validators/numeric-input-validator';
+import { numericInputValidator } from 'src/app/validators/numeric-input-validator.directive';
 import { passwordStandardValidator } from 'src/app/validators/password-standard-validator.directive';
-import { passwordsDoNotMatchValidator } from 'src/app/validators/passwordsDoNotMatchValidator';
+import { passwordsDoNotMatchValidator } from 'src/app/validators/password-do-not-match-validator.directive';
 
 @Component({
   selector: 'app-register',

@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">{{ data?.clinicServce ? 'Update' : 'Add' }} Service</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="done()">Done</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <form [formGroup]="clinicServiceForm!">
+    <ion-list color="light">
+      <ion-item lines="none"  color="light">
+        <ion-input type="text" 
+        formControlName="name" 
+        label="Service Name"
+        labelPlacement="floating"
+        [counter]="true" 
+        [maxlength]="serviceNameMaxLength"
+        [clearInput]="true"></ion-input>
+      </ion-item>
+      <ion-text class="error-message" color="danger" *ngIf="clinicServiceForm?.hasError('required', 'name') && clinicServiceForm?.get('name')?.touched">
+        <div>* Service name is required.</div>
+      </ion-text>
+      <ion-text class="error-message" color="danger" *ngIf="clinicServiceForm?.value.name?.length > serviceNameMaxLength && clinicServiceForm?.get('name')?.touched">
+        <div>* Maximum is {{ serviceNameMaxLength }} characters.</div>
+      </ion-text>
+      
+      <ion-item color="light" class="ion-margin-top">
+        <ion-textarea  
+        formControlName="description" 
+        label="Description"
+        labelPlacement="floating"
+        [autoGrow]="true"
+        [counter]="true" 
+        [maxlength]="serviceDescriptionMaxLength"></ion-textarea>
+      </ion-item>
+      <ion-text class="error-message" color="danger" *ngIf="clinicServiceForm?.value.description?.length > serviceDescriptionMaxLength && clinicServiceForm?.get('description')?.touched">
+        <div>* Maximum is {{ serviceDescriptionMaxLength }} characters.</div>
+      </ion-text>
+      
+      <ion-item color="light" class="ion-margin-top">
+        <ion-input type="number" 
+        formControlName="price" 
+        label="Price"
+        labelPlacement="floating"
+        helperText="2 decimal places only" 
+        [counter]="true" 
+        [clearInput]="true"></ion-input>
+      </ion-item>
+      <ion-text class="error-message" color="danger" *ngIf="clinicServiceForm?.hasError('required', 'price') && clinicServiceForm?.get('price')?.touched">
+        <div>* Price is required.</div>
+      </ion-text>
+      <ion-text class="error-message" color="danger" *ngIf="clinicServiceForm?.value.price > servicePriceMax && clinicServiceForm?.get('price')?.touched">
+        <div>* Maximum amount is {{ servicePriceMax }}.</div>
+      </ion-text>
+      <ion-text class="error-message" color="danger" *ngIf="clinicServiceForm?.hasError('invalidPriceFormat', 'price') && clinicServiceForm?.get('price')?.touched">
+        <div>* Price is invalid.</div>
+      </ion-text>
+
+      <ion-item color="light" class="ion-margin-top ion-padding">
+        <input type="file" [accept]="imageExtensions" (change)="onImageUpload($event)">
+      </ion-item>
+    </ion-list>
+  </form>
+</ion-content>

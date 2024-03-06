@@ -41,6 +41,15 @@ const routes: Routes = [
     loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule),
     canMatch: [authGuard]
   },
+  {
+    path: RouteConstants.CLINIC_SERVICES,
+    loadChildren: () => import('./pages/clinic-services/clinic-services.module').then( m => m.ClinicServicesPageModule),
+    canMatch: [authGuard]
+  },
+  {
+    path: RouteConstants.CLINIC_BANK_DETAILS,
+    loadChildren: () => import('./pages/clinic-bank-details/clinic-bank-details.module').then( m => m.ClinicBankDetailsPageModule)
+  },
   { path: '**' , redirectTo: RouteConstants.LOGIN }, // To handle unknown url path
 ];
 

@@ -148,7 +148,7 @@ export class AuthService {
   async updateUser(updatedModel: any): Promise<void> {
     try{
       const docInstance = doc(this._fireStore, Collections.USERS, updatedModel.id);
-      return updateDoc(docInstance, updatedModel)
+      await updateDoc(docInstance, updatedModel)
     }catch(e) {
       throw(e);
     }

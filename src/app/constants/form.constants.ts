@@ -13,4 +13,7 @@ export class FormConstants {
   static readonly bankNameMaxLength = 20;
   static readonly accountNameMaxLength = 100;
   static readonly accountNumberMaxLength = 20;
+  static readonly serviceNameMaxLength = 100;
+  static readonly serviceDescriptionMaxLength = 500;
+  static readonly servicePriceMax = 10000000;
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, collectionGroup, doc, docData, query, updateDoc, where } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, doc, docData, query, updateDoc, where } from '@angular/fire/firestore';
 import { Collections } from '../constants/collections.constants';
 import { Clinic } from '../models/clinic.model';
 import { map } from 'rxjs';
@@ -25,7 +25,7 @@ export class ClinicService {
   async updateClinic(updatedModel: any): Promise<void> {
     try{
       const docInstance = doc(this._fireStore, Collections.CLINICS, updatedModel.id);
-      return updateDoc(docInstance, updatedModel)
+      await updateDoc(docInstance, updatedModel)
     }catch(e) {
       throw(e);
     }
@@ -46,7 +46,7 @@ export class ClinicService {
                 };
               });
             }),
-            map((clinics: Clinic[]) => this._globalService.sortData({active: 'baseName', direction: 'asc'}, clinics as Clinic[])),
+            map((clinics: Clinic[]) => this._globalService.sortData({active: 'baseName', direction: 'asc'}, clinics)),
           )
           .subscribe({
             next: (clinics: Clinic[]) => {

@@ -27,7 +27,7 @@ export class ClinicBankDetailsService {
   async updateBankDetails(updatedModel: any): Promise<void> {
     try{
       const docInstance = doc(this._fireStore, Collections.BANK_DETAILS, updatedModel.id);
-      return updateDoc(docInstance, updatedModel)
+      await updateDoc(docInstance, updatedModel)
     }catch(e) {
       throw(e);
     }
@@ -36,7 +36,12 @@ export class ClinicBankDetailsService {
   async fetchBankDetailsList(clinicId: string): Promise<BankDetails[]> {
     try{
       let bankDetailsList = await new Promise<BankDetails[]>((resolve, reject) => {
-        const collectionRef = query(this.bankDetailssCollection, where('clinicId', '==', clinicId));
+        const collectionRef = query(
+          this.bankDetailssCollection, 
+          where('isActive', '==', true),
+          where('clinicId', '==', clinicId)
+        );
+        
         return collectionData(collectionRef, { idField: 'id'})
           .pipe(
             map((bankDetailsList: any[]) => {

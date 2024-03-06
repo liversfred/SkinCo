@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-card color="light" class="ion-padding" *ngIf="data">
+  <img *ngIf="data?.imageUrl" [src]="data.imageUrl"/>
+  <ion-card-header>
+    <ion-card-title>{{ data.title }}</ion-card-title>
+    <ion-card-subtitle>{{ data.subtitle | currency:'PHP':'symbol':'1.2-2' }}</ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    {{ data.description }}
+  </ion-card-content>
+</ion-card>

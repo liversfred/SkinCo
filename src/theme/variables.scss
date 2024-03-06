@@ -258,6 +258,15 @@ html {
   overflow-y: hidden;
 }
 
+.generic-modal::part(content) {
+  --height: auto;
+  position: absolute;
+  bottom: 0;
+  padding-bottom: 20px;
+  --border-radius: 5px;
+  overflow-y: hidden;
+}
+
 .toast-text{
   text-align: center;
 }

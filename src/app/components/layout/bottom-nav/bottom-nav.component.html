@@ -8,5 +8,9 @@
       <ion-icon name="business-outline"></ion-icon>
       <ion-label>CLINIC</ion-label>
     </ion-tab-button>
+    <ion-tab-button [tab]="routes.CLINIC_SERVICES" *ngIf="userData && userData.clinicId && userData.role?.name === roles.STAFF">
+      <ion-icon name="receipt-outline"></ion-icon>
+      <ion-label>SERVICES</ion-label>
+    </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>

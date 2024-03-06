@@ -1,10 +1,7 @@
 <ion-card color="light" class="ion-padding" *ngIf="bankDetails">
   <ion-card-header>
     <ion-card-title>
-      <ion-row class="ion-justify-content-between">
-        <b>{{ bankDetails.bankName }}</b>
-        <ion-icon class="link" name="pencil-outline" (click)="onUpdateBankDetails(bankDetails)"></ion-icon>
-      </ion-row>
+      <b>{{ bankDetails.bankName }}</b>
     </ion-card-title>
   </ion-card-header>
   <ion-card-content>
@@ -13,4 +10,11 @@
       <p>{{ bankDetails.accountName }}</p>
     </ion-text>
   </ion-card-content>
+    
+  <div class="horizontal-line" *ngIf="enableUpdate"></div>
+
+  <ion-row class="ion-justify-content-between" *ngIf="enableUpdate">
+    <ion-icon class="link" name="trash-outline" color="danger" (click)="onDeleteBankDetails()"></ion-icon>
+    <ion-icon class="link" name="pencil-outline" color="secondary" (click)="onUpdateBankDetails()"></ion-icon>
+  </ion-row>
 </ion-card>

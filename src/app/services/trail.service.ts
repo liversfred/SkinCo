@@ -34,6 +34,15 @@ export class TrailService {
     }
   }
 
+  deleteAudit(action: string): Trail{
+    return{
+      updatedAt: new Date(),
+      modifier: this.getModifier(),
+      modifierAction: action,
+      isActive: false
+    }
+  }
+
   getModifier(){
     return this.user ? `${this.user?.person?.firstName} ${this.user?.person?.lastName}` : 'Super Admin';
   }

@@ -5,7 +5,7 @@ import { GenderConstants } from 'src/app/constants/gender.constants';
 import { Person } from 'src/app/models/person.model';
 import { UserData } from 'src/app/models/user-data.model';
 import { GlobalService } from 'src/app/services/global.service';
-import { numericInputValidator } from 'src/app/validators/numeric-input-validator';
+import { numericInputValidator } from 'src/app/validators/numeric-input-validator.directive';
 
 @Component({
   selector: 'app-update-profile',

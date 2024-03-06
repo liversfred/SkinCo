@@ -12,5 +12,6 @@ export class ErrorService {
     this._globalService.hideLoader();
     let errorMessage: string = customeMessage ?? `An error occurred: ${err.code}`;
     this._globalService.showToast(errorMessage);
+    console.log(err);
   }
 }

@@ -11,9 +11,13 @@
         <ion-icon name="home-outline"></ion-icon>
         <ion-label *ngIf="!_platformService.screenXS()">HOME</ion-label>
       </ion-button>
-      <ion-button tab="clinic" [routerLink]="routes.CLINIC" *ngIf="userData && userData.role?.name === roles.STAFF">
+      <ion-button [routerLink]="routes.CLINIC" *ngIf="userData && userData.role?.name === roles.STAFF">
         <ion-icon name="business-outline"></ion-icon>
         <ion-label *ngIf="!_platformService.screenXS()">CLINIC</ion-label>
+      </ion-button>
+      <ion-button [routerLink]="routes.CLINIC_SERVICES" *ngIf="userData && userData.clinicId && userData.role?.name === roles.STAFF">
+        <ion-icon name="receipt-outline"></ion-icon>
+        <ion-label *ngIf="!_platformService.screenXS()">SERVICES</ion-label>
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">

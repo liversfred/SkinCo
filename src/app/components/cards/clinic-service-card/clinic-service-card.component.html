@@ -1,0 +1,18 @@
+<ion-card color="light" class="ion-padding-horizontal ion-padding-top" *ngIf="clinicService">
+  <img alt="service image" [src]="clinicService.imageUrl" />
+  <ion-card-header>
+    <ion-card-title>{{ clinicService.name }}</ion-card-title>
+    <ion-card-subtitle>{{ clinicService.price | currency:'PHP':'symbol':'1.2-2' }}</ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content (click)="onSeeMore()">
+    {{ clinicService.description | truncateString: 15 }}
+  </ion-card-content>
+
+  <div class="horizontal-line" *ngIf="enableUpdate"></div>
+  
+  <ion-row class="ion-justify-content-between" *ngIf="enableUpdate">
+    <ion-icon class="link" name="trash-outline" color="danger" (click)="onDeleteClinicService()"></ion-icon>
+    <ion-icon class="link" name="pencil-outline" color="secondary" (click)="onUpdateClinicService()"></ion-icon>
+  </ion-row>
+</ion-card>

@@ -27,7 +27,7 @@ export class DoctorService {
   async updateDoctor(updatedModel: any): Promise<void> {
     try{
       const docInstance = doc(this._fireStore, Collections.DOCTORS, updatedModel.id);
-      return updateDoc(docInstance, updatedModel)
+      await updateDoc(docInstance, updatedModel)
     }catch(e) {
       throw(e);
     }

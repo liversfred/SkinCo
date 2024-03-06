@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title class="ion-text-center">Add Doctor</ion-title>
+    <ion-title class="ion-text-center">{{ data?.doctor ? 'Update' : 'Add' }} Doctor</ion-title>
     <ion-buttons slot="start">
       <ion-button (click)="dismiss()">Close</ion-button>
     </ion-buttons>

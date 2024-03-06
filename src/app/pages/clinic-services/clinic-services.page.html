@@ -1,0 +1,26 @@
+<ion-content class="ion-padding">
+  <app-refresher (refresh)="onRefresh($event)"></app-refresher>
+
+  <ion-row>
+    <ion-col size="12" size-md="10" offset-md="1">
+      <ion-text id="page-header">Clinic Services</ion-text>
+
+      <ion-row>
+        <ion-col size="12" size-md="3" *ngFor="let clinicService of clinicServices">
+          <app-clinic-service-card 
+            [clinicService]="clinicService" 
+            (seeMore)="onSeeMore($event)" 
+            (updateClinicService)="onUpdateClinicService($event)" 
+            (deleteClinicService)="onDeleteClinicService($event)">
+          </app-clinic-service-card>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="ion-margin-end ion-margin-bottom">
+    <ion-fab-button (click)="onAddClinicService()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

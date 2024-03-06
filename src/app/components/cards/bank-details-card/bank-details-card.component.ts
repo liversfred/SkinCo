@@ -8,11 +8,17 @@ import { BankDetails } from 'src/app/models/bank-details.model';
 })
 export class BankDetailsCardComponent {
   @Input() bankDetails: BankDetails | undefined;
+  @Input() enableUpdate: boolean = true;
   @Output() updateBankDetails = new EventEmitter<BankDetails>;
+  @Output() deleteBankDetails = new EventEmitter<BankDetails>;
 
   constructor() { }
 
-  onUpdateBankDetails(bankDetails: BankDetails){
-    this.updateBankDetails.emit(bankDetails);
+  onUpdateBankDetails(){
+    this.updateBankDetails.emit(this.bankDetails);
+  }
+
+  onDeleteBankDetails() {
+    this.deleteBankDetails.emit(this.bankDetails);
   }
 }

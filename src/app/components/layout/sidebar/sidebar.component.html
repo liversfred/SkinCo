@@ -19,6 +19,24 @@
           <ion-label>Manage Clinics</ion-label>
         </ion-item>
       </ion-menu-toggle>
+      <ion-menu-toggle auto-hide="false" *ngIf="userData && userData.role?.name === roles.STAFF">
+        <ion-item [routerLink]="routes.CLINIC">
+          <ion-icon slot="start" name="business"></ion-icon>
+          <ion-label>Clinic</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle auto-hide="false" *ngIf="userData && userData.clinicId && userData.role?.name === roles.STAFF">
+        <ion-item [routerLink]="routes.CLINIC_SERVICES">
+          <ion-icon slot="start" name="receipt"></ion-icon>
+          <ion-label>Services</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle auto-hide="false" *ngIf="userData && userData.clinicId && userData.role?.name === roles.STAFF">
+        <ion-item [routerLink]="routes.CLINIC_BANK_DETAILS">
+          <ion-icon slot="start" name="card"></ion-icon>
+          <ion-label>Bank Details</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
       <ion-menu-toggle auto-hide="false" *ngIf="userData">
         <ion-item [routerLink]="routes.PROFILE">
           <ion-icon slot="start" name="person"></ion-icon>

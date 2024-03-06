@@ -7,7 +7,7 @@ import { Person } from 'src/app/models/person.model';
 import { Specialization } from 'src/app/models/speicialization.model';
 import { GlobalService } from 'src/app/services/global.service';
 import { SpecializationService } from 'src/app/services/specialization.service';
-import { numericInputValidator } from 'src/app/validators/numeric-input-validator';
+import { numericInputValidator } from 'src/app/validators/numeric-input-validator.directive';
 
 @Component({
   selector: 'app-add-doctor',

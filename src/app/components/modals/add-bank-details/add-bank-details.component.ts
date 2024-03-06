@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormConstants } from 'src/app/constants/form.constants';
 import { BankDetails } from 'src/app/models/bank-details.model';
 import { GlobalService } from 'src/app/services/global.service';
-import { numericInputValidator } from 'src/app/validators/numeric-input-validator';
+import { numericInputValidator } from 'src/app/validators/numeric-input-validator.directive';
 
 @Component({
   selector: 'app-add-bank-details',
