@@ -26,12 +26,23 @@ export class ManageClinicsPage implements ViewWillEnter {
 
   async fetchClinics(): Promise<void> {
     this._globalService.showLoader('Loading clinics...');
-    this.clinics = await this._clinicService.fetchClinics();
+    this.clinics = await this._clinicService.fetchClinics(50);
     this._globalService.hideLoader();
   }
 
   async onRefresh(event: RefresherCustomEvent){
     await this.fetchClinics();
+    event.target.complete();
+  }
+
+  
+  async onLoadMoreClinics(event: any){
+    const latestClinic = this.clinics[this.clinics.length - 1];
+    const clinics = await this._clinicService.fetchClinics(50, latestClinic.name);
+    const currentList: Clinic[] = this.clinics;
+    clinics.forEach(x => {
+      if(!currentList.some(y => y.id === x.id)) this.clinics.push(x);
+    })
     event.target.complete();
   }
 
