@@ -40,6 +40,10 @@ export class AuthService {
         ...userData,
         authId: registeredUser.user.uid,
       }
+      
+      // To prevent from signing in after registration
+      await signOut(this._auth); 
+
       await addDoc(this.usersCollection, userData)
     }catch(e) {
       throw(e);

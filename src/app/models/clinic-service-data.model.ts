@@ -7,4 +7,5 @@ export interface ClinicServiceData extends Trail {
   price: number;
   imageUrl: string;
   imagePath?: string;
+  clinicId: string;
 }

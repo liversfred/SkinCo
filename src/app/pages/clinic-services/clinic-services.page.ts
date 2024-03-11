@@ -72,7 +72,7 @@ export class ClinicServicesPage implements ViewWillEnter, ViewDidLeave {
 
   async fetchClinicServices(): Promise<void> {
     this._globalService.showLoader('Loading clinics...');
-    this.clinicServices = await this._clinicServicesService.fetchClinicServices();
+    this.clinicServices = await this._clinicServicesService.fetchClinicServices(this.clinic?.id!);
     this._globalService.hideLoader();
   }
 
@@ -112,6 +112,7 @@ export class ClinicServicesPage implements ViewWillEnter, ViewDidLeave {
         description: clinicServiceRes.description,
         price: clinicServiceRes.price,
         imageUrl: this.selectedClinicService?.imageUrl ?? this.getDefaultImagePath(),
+        clinicId: this.clinic?.id!,
         ...(data ? this._trailService.updateAudit(action) : this._trailService.createAudit(action))
       }
 

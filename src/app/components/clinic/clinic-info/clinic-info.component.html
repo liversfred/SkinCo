@@ -1,10 +1,11 @@
 <div class="ion-padding-horizontal" *ngIf="clinic">  
   <app-refresher [showRefresher]="true" (refresh)="onRefresh($event)"></app-refresher>
 
-  <fieldset *ngIf="!clinic.isApproved">
-    <ion-text color="danger" class="ion-text-center">
+  <fieldset *ngIf="!clinic.isApproved" class="ion-text-center">
+    <ion-text color="danger">
       <h4>Not yet approved.</h4>
     </ion-text>
+    <p>Please allow up to 48 hours for processing.</p>
   </fieldset>
 
   <ion-grid class="ion-padding">

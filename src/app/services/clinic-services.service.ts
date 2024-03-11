@@ -33,10 +33,13 @@ export class ClinicServicesService {
     }
   }
 
-  async fetchClinicServices(): Promise<ClinicServiceData[]> {
+  async fetchClinicServices(clinicId: string): Promise<ClinicServiceData[]> {
     try{
       let clinicServices = await new Promise<ClinicServiceData[]>((resolve, reject) => {
-        const collectionRef = query(this.clinicServicessCollection, where('isActive', '==', true));
+        const collectionRef = query(this.clinicServicessCollection, 
+          where('isActive', '==', true),
+          where('clinicId', '==', clinicId)
+        );
         collectionData(collectionRef, { idField: 'id'})
           .pipe(
             map((clinicServices: any[]) => {

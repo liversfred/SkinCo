@@ -73,18 +73,6 @@ export class RegisterPage implements OnInit {
       password: new FormControl('', { validators: [Validators.required, passwordStandardValidator ] }),
       confirmPassword: new FormControl('', { validators: [Validators.required, passwordsDoNotMatchValidator.bind(this)] })
     });
-    
-
-    // TODO: DELETE THIS 
-    this.registerForm?.get('firstName')?.setValue('User1');
-    this.registerForm?.get('middleName')?.setValue('Middle1');
-    this.registerForm?.get('lastName')?.setValue('Last1');
-    this.registerForm?.get('email')?.setValue('user1@gmail.com');
-    this.registerForm?.get('mobileNumber')?.setValue('09878394938');
-    this.registerForm?.get('gender')?.setValue('Male');
-    this.registerForm?.get('age')?.setValue(23);
-    this.registerForm?.get('password')?.setValue('Password123!');
-    this.registerForm?.get('confirmPassword')?.setValue('Password123!');
   }
 
   async initializeRoles(): Promise<void> {

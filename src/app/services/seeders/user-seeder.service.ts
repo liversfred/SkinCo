@@ -7,32 +7,26 @@ import { RoleService } from '../role.service';
 import { Roles } from 'src/app/constants/roles.constants';
 import { GenderConstants } from 'src/app/constants/gender.constants';
 import { environment } from 'src/environments/environment';
-import { Auth, createUserWithEmailAndPassword, signOut } from '@angular/fire/auth';
-import { CollectionReference, DocumentData, Firestore, addDoc, collection } from '@angular/fire/firestore';
-import { Collections } from 'src/app/constants/collections.constants';
+import { AuthService } from '../auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserSeederService {
-  private usersCollection: CollectionReference<DocumentData>;
   private roles: Role[] = [];
 
   constructor(
-    private _fireStore: Firestore,
-    private _auth: Auth,
+    private _authService: AuthService,
     private _trailService: TrailService, 
     private _roleService: RoleService,
-    ) {
-      this.usersCollection = collection(this._fireStore, Collections.USERS);
-  }
+    ) { }
 
   async seedData() {
     // Load roles
     await this.fetchRoles();
     const adminRoleId = this.roles.find(x => x.name == Roles.ADMIN)?.id;
-    const staffRoleId = this.roles.find(x => x.name == Roles.STAFF)!.id;
-    const patientRoleId = this.roles.find(x => x.name == Roles.PATIENT)!.id;
+    const staffRoleId = this.roles.find(x => x.name == Roles.STAFF)?.id;
+    const patientRoleId = this.roles.find(x => x.name == Roles.PATIENT)?.id;
 
     if(!adminRoleId || !staffRoleId || !patientRoleId) {
       console.log("FAILED TO SEED USER DATA. Check Roles.");
@@ -86,22 +80,12 @@ export class UserSeederService {
 
     console.log("SEEDING USER DATA");
     dataToSeed.forEach(async (item) => {
-      try{
-        const registeredUser = await createUserWithEmailAndPassword(this._auth, item.person.email, environment.defaultPassword);
-        item = {
-          ...item,
-          authId: registeredUser.user.uid,
-        }
-  
-        await signOut(this._auth);
-  
-        await addDoc(this.usersCollection, item)
-  
-        console.log('User seeded successfully');
-      }
-      catch(e) {
+      await this._authService.registerUser(item, environment.defaultPassword).then(() => {
+        console.log(`User ${item.person.firstName} seeded successfully`);
+      })
+      .catch(e => {
         console.log(`Failed to save ${item.person.firstName}`);
-      }
+      });
     });
   }
 
