@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, DocumentData, Firestore, addDoc, collection, doc, docData, updateDoc } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, doc, docData, query, updateDoc, where } from '@angular/fire/firestore';
 import { Collections } from '../constants/collections.constants';
 import { Doctor } from '../models/doctor.model';
-import { map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { GlobalService } from './global.service';
 
 @Injectable({
@@ -69,5 +69,26 @@ export class DoctorService {
     }catch(e) {
       throw(e);
     }
+  }
+
+  fetchDoctorsAsync(): Observable<Doctor[]> {
+    const collectionRef = query(this.doctorsCollection, where('isActive', '==', true));
+    return collectionData(collectionRef, { idField: 'id'})
+    .pipe(
+      map((doctors: any[]) => {
+        return doctors.map((item) => {
+          return { 
+            ...item, 
+            createdAt: item.createdAt.toDate(),
+            updatedAt: item.updatedAt.toDate(),
+            person: {
+              ...item.person,
+              fullName: this._globalService.formatFullName(item.person.firstName, item.person.middleName, item.person.lastName)
+            }
+          };
+        });
+      }),
+      map((doctors: Doctor[]) => this._globalService.sortData({active: 'fullName', direction: 'asc'}, doctors)),
+    );
   }
 }

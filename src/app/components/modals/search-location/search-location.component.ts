@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { LocationData } from 'src/app/models/location.model';
+import { ErrorService } from 'src/app/services/error.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { GoogleMapsService } from 'src/app/services/google-maps.service';
 import { LocationService } from 'src/app/services/location.service';
@@ -10,29 +11,20 @@ import { LocationService } from 'src/app/services/location.service';
   templateUrl: './search-location.component.html',
   styleUrls: ['./search-location.component.scss'],
 })
-export class SearchLocationComponent  implements OnInit, OnDestroy {
+export class SearchLocationComponent  implements OnInit {
   query: string | undefined;
-  locations: any[] = [];
-  locationSub: Subscription | undefined;
+  locations$: Observable<LocationData[]> | undefined;
   savedClinicLocations: LocationData[] = [];
 
   constructor(
     private _globalService: GlobalService, 
-    private _maps: GoogleMapsService,
     private _locationService: LocationService,
-    private _googleMapsService: GoogleMapsService
+    private _googleMapsService: GoogleMapsService,
+    private _errorService: ErrorService
   ) { }
 
   ngOnInit() {
-    this.locationSub = this._maps.locations.subscribe(locations => {
-      this.locations = locations;
-    });
-  }
-
-  async getSavedClinicLocations() {
-    this._globalService.showLoader();
-    // TODO: perform near clinics
-    this._globalService.hideLoader();
+    this.locations$ = this._googleMapsService.locations
   }
 
   async onSearchChange(event: any) {
@@ -58,23 +50,11 @@ export class SearchLocationComponent  implements OnInit, OnDestroy {
       if(!position) return;
 
       const {latitude, longitude} = position.coords;
-      const result = await this._googleMapsService.getAddress(latitude, longitude);
-      const location: LocationData = {
-        initial: result.address_components[0].short_name,
-        address: result.formatted_address,
-        lat: latitude,
-        lng: longitude
-      };
+      const location = await this._googleMapsService.getLocation(latitude, longitude);
       this._globalService.hideLoader();
       this.dismiss(location);
-    } catch(e) {
-      console.log(e);
-      this._globalService.hideLoader();
-      this._globalService.showToast('Check whether GPS is enabled & the App has its permissions');
+    } catch(err) {
+      this._errorService.handleError(err, 'Check whether GPS is enabled & the App has its permissions')
     }
-  }
-
-  ngOnDestroy() {
-    if(this.locationSub) this.locationSub.unsubscribe();
   }
 }

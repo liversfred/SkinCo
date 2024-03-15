@@ -15,6 +15,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { SearchLocationComponent } from '../../modals/search-location/search-location.component';
 import { numericInputValidator } from 'src/app/validators/numeric-input-validator.directive';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-clinic-registration-form',
@@ -35,7 +36,7 @@ export class ClinicRegistrationFormComponent  implements OnInit {
   mobileNumberMaxLength: number = FormConstants.mobileNumberMaxLength;
   defaultDailyVisitLimit: number = FormConstants.defaultDailyVisitLimit;
   location: LocationData | undefined;
-  mapCenterCoordinates: any = {};
+  mapCenterCoordinates: any = { lat: environment.defaultLat, lng: environment.defaultLng };
   setCurrentLocation: boolean = true;
 
   constructor(
@@ -209,7 +210,7 @@ export class ClinicRegistrationFormComponent  implements OnInit {
     });
   }
 
-  fetchLocation(event: LocationData) {
+  onLocationUpdated(event: LocationData) {
     this.location = event;
   }
 }

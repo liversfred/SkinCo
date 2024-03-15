@@ -9,7 +9,6 @@ import { LocationData } from '../models/location.model';
   providedIn: 'root'
 })
 export class GoogleMapsService {
-
   googleMaps: any;
   private _locations = new BehaviorSubject<LocationData[]>([]);
   private _markerChange = new BehaviorSubject<any>({});
@@ -48,13 +47,21 @@ export class GoogleMapsService {
     });
   }
 
-  getAddress(lat: number, lng: number): Promise<any> {
-    return new Promise((resolve, reject) => {
+  async getLocation(lat: number, lng: number): Promise<LocationData | null> {
+    return await new Promise((resolve, reject) => {
       this.http.get<any>(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${environment.googleMapsApiKey}`)
         .pipe(
           map(geoData => {
             if(!geoData || !geoData.results || geoData.results.length === 0) throw(null);
             return geoData.results[0];
+          }),
+          map((geoData: any) => {
+            return {
+              initial: geoData.address_components[0].short_name,
+              address: geoData.formatted_address,
+              lat,
+              lng
+            } as LocationData;
           })
         ).subscribe({
           next: (data) => {
@@ -104,7 +111,7 @@ export class GoogleMapsService {
     }
   }
 
-  geoCode(address: any, googleMaps: any) {
+  private geoCode(address: any, googleMaps: any) {
     let latlng = {lat: '', lng: ''};
     
     return new Promise((resolve, reject) => {

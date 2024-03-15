@@ -1,9 +1,45 @@
-<ion-content class="ion-padding">
-  <app-refresher (refresh)="onRefresh($event)"></app-refresher>
+<ion-content #content class="ion-padding">
 
   <ion-row>
     <ion-col size="12" size-md="10" offset-md="1">
-      <ion-text id="page-header">Home</ion-text>
+      <div class="ion-text-center ion-padding-bottom">
+        <ion-text id="page-header">Looking for a clinic?</ion-text>
+      </div>
+
+      <app-map #mapComponent [setCurrentLocation]="true" [markerDraggable]="false"></app-map>
+      
+      <ion-item lines="none" *ngIf="selectedClinic">
+        <ion-icon name="location-outline" color="dark" slot="start"></ion-icon>
+        <ion-label>Selected Location: {{selectedClinic.location.address}}</ion-label>
+      </ion-item>
+
+      <div class="ion-margin-vertical">
+        <ion-searchbar 
+          color="medium"
+          search-icon="search-circle"
+          clear-icon="trash-bin"
+          animated="true" 
+          debounce="500" 
+          #searchInput 
+          placeholder="Search for clinic, doctor, specialization, location..."
+          (ionChange)="onSearch($event)">
+        </ion-searchbar>
+        <ion-text class="ion-margin-start" size="small" *ngIf="loadClinics">
+          Found {{ filteredClinics.length }} clinic{{ filteredClinics.length > 1 ? 's' : '' }}.
+        </ion-text>
+      </div>
+
+      <ion-row class="ion-margin-vertical" *ngIf="loadClinics">
+        <ion-col size="12" size-md="4" class="ion-margin-bottom" *ngFor="let clinic of filteredClinics">
+          <ion-card [ngClass]="{ 'selected': clinic === selectedClinic }">
+            <app-clinic-card class="link" 
+            [clinic]="clinic" 
+            (bookClinic)="onBookClinic($event)" 
+            (click)="onClinicCardClicked(clinic)">
+          </app-clinic-card>
+          </ion-card>
+        </ion-col>
+      </ion-row>
     </ion-col>
   </ion-row>
       

@@ -25,11 +25,11 @@
     </ion-label>
   </ion-item>
 
-  <ion-list *ngIf="locations.length > 0 && query && query.length > 0">
+  <ion-list *ngIf="locations$">
     <ion-list-header>
       <h5>Search results</h5>
     </ion-list-header>
-    <ion-item *ngFor="let location of locations" (click)="chooseLocation(location)">
+    <ion-item *ngFor="let location of locations$ | async" (click)="chooseLocation(location)">
       <ion-icon slot="start" name="location-outline"></ion-icon>
       <ion-label>
         {{location?.initial}}

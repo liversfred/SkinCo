@@ -6,7 +6,7 @@
   </ion-card-header>
 
   <ion-card-content (click)="onSeeMore()">
-    {{ clinicService.description | truncateString: 15 }}
+    {{ clinicService.description | truncateString: 10 }}
   </ion-card-content>
 
   <div class="horizontal-line" *ngIf="enableUpdate"></div>

@@ -1,4 +1,6 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { GoogleMap, Marker } from '@capacitor/google-maps';
+import { CameraConfig } from '@capacitor/google-maps/dist/typings/definitions';
 import { Subscription } from 'rxjs';
 import { LocationData } from 'src/app/models/location.model';
 import { GoogleMapsService } from 'src/app/services/google-maps.service';
@@ -11,127 +13,134 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent  implements AfterViewInit, OnDestroy {
-  @ViewChild('map', {static: true}) mapElementRef: ElementRef | undefined;
+  @ViewChild('map') mapElementRef: ElementRef | undefined;
   @Input() setCurrentLocation = true;
+  @Input() markerDraggable: boolean = false;
   @Input() center: any = { lat: environment.defaultLat, lng: environment.defaultLng };
-  @Output() location = new EventEmitter<LocationData>;
-  googleMaps: any;
-  map: any;
-  marker: any;
-  mapListener: any;
+  @Output() locationUpdated = new EventEmitter<LocationData>;
+  map: GoogleMap | undefined;
+  markerUrl: string = 'assets/icons/location-pin.png';
+  markerWidth: number = 30;
+  markerHeight: number = 30;
   mapChange: Subscription | undefined;
+  currentMarkerId: string | undefined | null;
+  markerIds: string[] = [];
+  defaultCameraZoom: number = 15;
+  cameraZoom: number = 20;
 
   constructor(
     private _googleMapsService: GoogleMapsService,
-    private renderer: Renderer2,
     private locationService: LocationService
     ) { }
-
-  async ngAfterViewInit() {
-    await this.initMap();
+    
+  async ngAfterViewInit(): Promise<void> {
+    // Listener for selected location from search
     this.mapChange = this._googleMapsService.markerChange.subscribe(async(loc) => {
-      if(loc?.lat) {
-        const googleMaps = this.googleMaps;
-        const location = new googleMaps.LatLng(loc.lat, loc.lng);
-        this.map.panTo(location);
-        this.marker.setMap(null);
-        await this.addMarker(location);
+      if(loc?.lat && loc?.lng) {
+        // Remove current marker
+        if(this.currentMarkerId) await this.map?.removeMarker(this.currentMarkerId);
+        // Add new marker
+        this.currentMarkerId = await this.addMarker(loc.lat, loc.lng);
+        // Set new marker and move camera
+        this.setMapCenter(loc.lat, loc.lng);
       }
-    });    
+    });
+    
+    if(this.setCurrentLocation) {
+      const position = await this.locationService.getCurrentLocation();
+      this.center = {
+        lat: position?.coords.latitude,
+        lng: position?.coords.longitude
+      };
+    } 
+
+    await this.initMap();
+    if(this.markerDraggable) await this.addMarker(this.center.lat, this.center.lng, 'Current Location');
+
+    // Get current location
+    const currentLocationData = await this.getLocation(this.center.lat, this.center.lng);
+    if(currentLocationData) this.updateLocation(currentLocationData);
   }
 
-  async initMap() {
-    try {
-      if(this.setCurrentLocation) {
-        const position = await this.locationService.getCurrentLocation();
-        this.center = {
-          lat: position?.coords.latitude,
-          lng: position?.coords.longitude
-        };
-      } 
-
-      await this.loadMap();
-    } catch(e) {
-      console.log(e);
-      this.loadMap();
-    }
-
-    this.getAddress(this.center.lat, this.center.lng);
-  }
-
-  async loadMap() {
-    try {
-      let googleMaps: any = await this._googleMapsService.loadGoogleMaps();
-      this.googleMaps = googleMaps;
-      const style = [
-        {
-          featureType: 'all',
-          elementType: 'all',
-          stylers: [
-            { saturation: 0 }
-          ]
-        }
-      ];
-      const mapEl = this.mapElementRef?.nativeElement;
-      const location = new googleMaps.LatLng(this.center.lat, this.center.lng);
-      this.map = new googleMaps.Map(mapEl, {
-        center: location,
-        zoom: 15,
+  async initMap(){
+    this.map = await GoogleMap.create({
+      id: 'my-map', // Unique identifier for this map instance
+      element: this.mapElementRef?.nativeElement, // reference to the capacitor-google-map element
+      apiKey: environment.googleMapsApiKey, // Your Google Maps API Key
+      config: {
+        center: {
+          // The initial position to be rendered by the map
+          lat: this.center.lat,
+          lng: this.center.lng,
+        },
+        zoom: this.defaultCameraZoom, // The initial zoom level to be rendered by the map
         panControl: true,
         zoomControl: true,
         scaleControl: false,
         streetViewControl: true,
-        overviewMapControl: false,
-        mapTypeControl: true,
-        mapTypeControlOptions: {
-          mapTypeIds: [googleMaps.MapTypeId.ROADMAP, googleMaps.MapTypeId.SATELLITE]
-        }
-      });
-      var mapType = new googleMaps.StyledMapType(style, { name: 'Styled Map' });
-      this.map.mapTypes.set('myMap', mapType);
-      this.map.setMapTypeId('myMap');
-      this.renderer.addClass(mapEl, 'visible');
-      this.addMarker(location);
-    } catch(e) {
-      console.log(e);
-    }
-  }
-
-  addMarker(location: any) {
-    let googleMaps: any = this.googleMaps;
-    const icon = {
-      url: 'assets/icons/location-pin.png',
-      scaledSize: new googleMaps.Size(50, 50), 
-    };
-    this.marker = new googleMaps.Marker({
-      position: location,
-      map: this.map,
-      icon: icon,
-      draggable: true,
-      animation: googleMaps.Animation.DROP
-    });
-    this.mapListener = this.googleMaps.event.addListener(this.marker, 'dragend', () => {
-      this.getAddress(this.marker.position.lat(), this.marker.position.lng());
+      },
     });
   }
-
-  async getAddress(lat: number, lng: number) {
-    try {
-      const result = await this._googleMapsService.getAddress(lat, lng);
-      const locationData: LocationData = {
-        initial: result.address_components[0].short_name,
-        address: result.formatted_address,
-        lat,
-        lng
+  
+  async addMarker(lat: number, lng: number, title?: string): Promise<string | null> {
+    const marker: Marker = {
+        iconUrl: this.markerUrl,
+        iconSize: { width: this.markerWidth, height: this.markerHeight },
+        coordinate: { lat, lng },
+        draggable: this.markerDraggable,
+        title: title
       };
-      this.location.emit(locationData);
+    const markerId = await this.map?.addMarker(marker);
+
+    if(!markerId) return null;
+
+    // Save marker ids for removal
+    this.markerIds.push(markerId);
+
+    // Add drag event listener if enabled
+    if(this.markerDraggable){
+      this.map?.setOnMarkerDragEndListener(async (marker) => {
+        this.getUpdatedLocation(marker.latitude, marker.longitude);
+      });
+    }
+    
+    // Add click listener
+    this.map?.setOnMarkerClickListener(async (marker) => {
+      this.getUpdatedLocation(marker.latitude, marker.longitude);
+    });
+
+    return markerId;
+  }
+
+  async setMapCenter(lat: number, lng: number){
+    const cameraConf: CameraConfig = {
+      coordinate: { lat, lng},
+      zoom: this.cameraZoom
+    };        
+
+    this.map?.setCamera(cameraConf);
+  }
+
+  async getUpdatedLocation(lat: number, lng: number) {
+    const location = await this.getLocation(lat, lng);
+    if(location) this.updateLocation(location);
+  }
+
+  async updateLocation(location: LocationData){
+    this.locationUpdated.emit(location);
+  }
+
+  async getLocation(lat: number, lng: number): Promise<LocationData | null> {
+    try {
+      return await this._googleMapsService.getLocation(lat, lng);
     } catch(e) {
       console.log(e);
+      return null;
     }
   }
 
-  ngOnDestroy() {
-    if(this.mapListener) this.googleMaps.event.removeListener(this.mapListener);
-    if(this.mapChange) this.mapChange.unsubscribe();
+  ngOnDestroy(): void {
+    this.map?.removeAllMapListeners()
+    this.mapChange?.unsubscribe();
   }
 }

@@ -1,3 +1,4 @@
+import { Doctor } from "./doctor.model";
 import { LocationData } from "./location.model";
 import { Trail } from "./trail.model";
 
@@ -11,4 +12,6 @@ export interface Clinic extends Trail {
   isApproved: boolean;
   staffIds: string[];
   doctorId?: string;
+
+  doctor?: Doctor;
 }

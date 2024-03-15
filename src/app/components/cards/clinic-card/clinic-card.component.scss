@@ -1,0 +1,16 @@
+ion-card{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
+  ion-card-title{
+    font-size: 30px;
+    font-weight: 600;
+    padding: 10px;
+  }
+
+  ion-button{
+    margin-top: auto; 
+  }
+}

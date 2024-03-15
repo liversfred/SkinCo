@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, doc, docData, limit, orderBy, query, startAfter, updateDoc } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, doc, docData, limit, orderBy, query, startAfter, updateDoc, where } from '@angular/fire/firestore';
 import { Collections } from '../constants/collections.constants';
 import { Clinic } from '../models/clinic.model';
-import { map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { GlobalService } from './global.service';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class ClinicService {
     }
   }
 
-  async fetchClinics(count: number, clinicName?: string): Promise<Clinic[]> {
+  async fetchClinicsPaginated(count: number, clinicName?: string): Promise<Clinic[]> {
     try{
       let clinics = await new Promise<Clinic[]>((resolve, reject) => {
         const collectionRef = query(this.clinicsCollection, orderBy('name'), startAfter(clinicName ?? ' '), limit(count));
@@ -96,5 +96,26 @@ export class ClinicService {
     }catch(e) {
       throw(e);
     }
+  }
+
+  fetchClinicsAsync(): Observable<Clinic[]> {
+    const collectionRef = query(
+      this.clinicsCollection, 
+      where('isActive', '==', true), 
+      where('isApproved', '==', true)
+    );
+    return collectionData(collectionRef, { idField: 'id'})
+    .pipe(
+      map((clinics: any[]) => {
+        return clinics.map((item) => {
+          return { 
+            ...item, 
+            createdAt: item.createdAt.toDate(),
+            updatedAt: item.updatedAt.toDate(),
+          };
+        });
+      }),
+      map((clinics: Clinic[]) => this._globalService.sortData({active: 'baseName', direction: 'asc'}, clinics)),
+    );
   }
 }

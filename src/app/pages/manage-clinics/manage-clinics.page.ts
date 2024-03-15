@@ -5,6 +5,7 @@ import { Clinic } from 'src/app/models/clinic.model';
 import { ClinicService } from 'src/app/services/clinic.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { GlobalService } from 'src/app/services/global.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-manage-clinics',
@@ -13,6 +14,7 @@ import { GlobalService } from 'src/app/services/global.service';
 })
 export class ManageClinicsPage implements ViewWillEnter {
   clinics: Clinic[] = [];
+  paginatedCount: number = environment.paginatedCount;
 
   constructor(
     private _clinicService: ClinicService, 
@@ -21,29 +23,32 @@ export class ManageClinicsPage implements ViewWillEnter {
     ) { }
 
   ionViewWillEnter(): void {
-    this.fetchClinics();
+    this.fetchClinicsPaginated(this.paginatedCount);
   }
 
-  async fetchClinics(): Promise<void> {
+  async fetchClinicsPaginated(count: number, clinicName?: string): Promise<void> {
     this._globalService.showLoader('Loading clinics...');
-    this.clinics = await this._clinicService.fetchClinics(50);
+    this.clinics = await this._clinicService.fetchClinicsPaginated(count, clinicName);
     this._globalService.hideLoader();
   }
 
   async onRefresh(event: RefresherCustomEvent){
-    await this.fetchClinics();
+    await this.fetchMoreClinics();
     event.target.complete();
   }
 
-  
   async onLoadMoreClinics(event: any){
+    this.fetchMoreClinics();
+    event.target.complete();
+  }
+
+  async fetchMoreClinics(){
     const latestClinic = this.clinics[this.clinics.length - 1];
-    const clinics = await this._clinicService.fetchClinics(50, latestClinic.name);
+    const clinics = await this._clinicService.fetchClinicsPaginated(this.paginatedCount, latestClinic.name);
     const currentList: Clinic[] = this.clinics;
     clinics.forEach(x => {
       if(!currentList.some(y => y.id === x.id)) this.clinics.push(x);
     })
-    event.target.complete();
   }
 
   async onApproveClinic(clinicId: string) {
