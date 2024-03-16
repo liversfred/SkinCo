@@ -39,6 +39,7 @@ export class GoogleMapsService {
       script.onload = () => {
         const loadedGoogleModule = win.google;
         if(loadedGoogleModule && loadedGoogleModule.maps) {
+          this.googleMaps = loadedGoogleModule.maps;
           resolve(loadedGoogleModule.maps);
         } else {
           reject('Google Map SDK is not Available');

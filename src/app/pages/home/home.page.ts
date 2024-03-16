@@ -31,7 +31,7 @@ export class HomePage implements ViewWillEnter, ViewDidLeave{
     private _globalService: GlobalService,
     private _errorService: ErrorService
     ) { }
-  
+
   async ionViewWillEnter(): Promise<void> {
     await this.fetchDoctors();
     await this.fetchClinics();
@@ -69,6 +69,7 @@ export class HomePage implements ViewWillEnter, ViewDidLeave{
   async onSearch(event: any){
     this._globalService.showLoader('Fetching clinics...');
     const searchQuery = event.detail.value.toLowerCase();
+    this.mapComponent?.setZoom(15);
     
     if(searchQuery === '' && this.loadClinics) {
       this.filteredClinics = this.clinics;
@@ -90,10 +91,12 @@ export class HomePage implements ViewWillEnter, ViewDidLeave{
   }
 
   async updateMarkers(){
-    if(this.mapComponent?.markerIds.length != 0) await this.mapComponent?.map?.removeMarkers(this.mapComponent?.markerIds);
+    this.mapComponent?.clearAllMarkers();
 
-    this.filteredClinics.forEach(async clinic => {
-      await this.mapComponent?.addMarker(clinic.location.lat, clinic.location.lng, clinic.name);
+    this.filteredClinics.forEach(async (clinic, index) => {
+      const location = await this.mapComponent?.getLocationByLatLng(clinic.location.lat, clinic.location.lng);
+      await this.mapComponent?.addMarker(location);
+      if(index === 0) this.mapComponent?.setMapCenter(location);
     })
   }
   
@@ -101,9 +104,11 @@ export class HomePage implements ViewWillEnter, ViewDidLeave{
     console.log(clinic);
   }
 
-  onClinicCardClicked(clinic: Clinic){
+  async onClinicCardClicked(clinic: Clinic){
     this.selectedClinic = clinic;
-    this.mapComponent?.setMapCenter(clinic.location.lat, clinic.location.lng);
+    const location = await this.mapComponent?.getLocationByLatLng(clinic.location.lat, clinic.location.lng);
+    this.mapComponent?.setMapCenter(location);
+    this.mapComponent?.setZoom(20);
     this.scrollToTop();
   }
   

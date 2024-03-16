@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ViewDidLeave, ViewWillEnter } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { ClinicSegments } from 'src/app/constants/clinic-segmets.constants';
 import { Clinic } from 'src/app/models/clinic.model';
 import { UserData } from 'src/app/models/user-data.model';
@@ -19,6 +20,7 @@ export class ClinicPage implements ViewDidLeave, ViewWillEnter {
   clinicSegments: any = ClinicSegments;
   selectedSegment: string = this.clinicSegments.INFO;
   isFormUpdate: boolean = false;
+  userDataSubs: Subscription | undefined;
 
   constructor(
     private _authService: AuthService,
@@ -28,7 +30,7 @@ export class ClinicPage implements ViewDidLeave, ViewWillEnter {
 
   async ionViewWillEnter() {
     // Load user data
-    this._authService.userData.subscribe(async userData => {
+    this.userDataSubs = this._authService.userData.subscribe(async userData => {
       this.userData = userData ?? undefined;
 
       if(!this.userData) return;
@@ -73,6 +75,7 @@ export class ClinicPage implements ViewDidLeave, ViewWillEnter {
   ionViewDidLeave(): void {
     this.showClinicSetupForm = undefined;
     this.selectedSegment = ClinicSegments.INFO;
+    this.userDataSubs?.unsubscribe();
     this.isFormUpdate = false;
   }
 }

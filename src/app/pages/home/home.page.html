@@ -6,7 +6,7 @@
         <ion-text id="page-header">Looking for a clinic?</ion-text>
       </div>
 
-      <app-map #mapComponent [setCurrentLocation]="true" [markerDraggable]="false"></app-map>
+      <app-map [setCurrentLocation]="true" [markerDraggable]="false"></app-map>
       
       <ion-item lines="none" *ngIf="selectedClinic">
         <ion-icon name="location-outline" color="dark" slot="start"></ion-icon>
@@ -30,9 +30,9 @@
       </div>
 
       <ion-row class="ion-margin-vertical" *ngIf="loadClinics">
-        <ion-col size="12" size-md="4" class="ion-margin-bottom" *ngFor="let clinic of filteredClinics">
+        <ion-col size="12" size-md="4" *ngFor="let clinic of filteredClinics">
           <ion-card [ngClass]="{ 'selected': clinic === selectedClinic }">
-            <app-clinic-card class="link" 
+            <app-clinic-card class="link"
             [clinic]="clinic" 
             (bookClinic)="onBookClinic($event)" 
             (click)="onClinicCardClicked(clinic)">

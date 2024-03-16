@@ -1,6 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
-import { GoogleMap, Marker } from '@capacitor/google-maps';
-import { CameraConfig } from '@capacitor/google-maps/dist/typings/definitions';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, Renderer2, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LocationData } from 'src/app/models/location.model';
 import { GoogleMapsService } from 'src/app/services/google-maps.service';
@@ -18,34 +16,30 @@ export class MapComponent  implements AfterViewInit, OnDestroy {
   @Input() markerDraggable: boolean = false;
   @Input() center: any = { lat: environment.defaultLat, lng: environment.defaultLng };
   @Output() locationUpdated = new EventEmitter<LocationData>;
-  map: GoogleMap | undefined;
+  map: any;
+  markers: any[] = [];
+  mapListeners: any[] = [];
   markerUrl: string = 'assets/icons/location-pin.png';
-  markerWidth: number = 30;
-  markerHeight: number = 30;
   mapChange: Subscription | undefined;
-  currentMarkerId: string | undefined | null;
-  markerIds: string[] = [];
-  defaultCameraZoom: number = 15;
-  cameraZoom: number = 20;
 
   constructor(
     private _googleMapsService: GoogleMapsService,
-    private locationService: LocationService
+    private locationService: LocationService,
+    private renderer: Renderer2,
     ) { }
     
   async ngAfterViewInit(): Promise<void> {
-    // Listener for selected location from search
+    // Set listener for marker change once the user searched for location
     this.mapChange = this._googleMapsService.markerChange.subscribe(async(loc) => {
       if(loc?.lat && loc?.lng) {
-        // Remove current marker
-        if(this.currentMarkerId) await this.map?.removeMarker(this.currentMarkerId);
-        // Add new marker
-        this.currentMarkerId = await this.addMarker(loc.lat, loc.lng);
-        // Set new marker and move camera
-        this.setMapCenter(loc.lat, loc.lng);
+        const location = await this.getLocationByLatLng(loc.lat, loc.lng);
+        this.clearAllMarkers();
+        this.setMapCenter(location);
+        this.addMarker(location);
       }
-    });
+    });    
     
+    // Set marker to current location if enabled
     if(this.setCurrentLocation) {
       const position = await this.locationService.getCurrentLocation();
       this.center = {
@@ -55,73 +49,91 @@ export class MapComponent  implements AfterViewInit, OnDestroy {
     } 
 
     await this.initMap();
-    if(this.markerDraggable) await this.addMarker(this.center.lat, this.center.lng, 'Current Location');
 
-    // Get current location
+    // Get the current location
     const currentLocationData = await this.getLocation(this.center.lat, this.center.lng);
     if(currentLocationData) this.updateLocation(currentLocationData);
   }
 
   async initMap(){
-    this.map = await GoogleMap.create({
-      id: 'my-map', // Unique identifier for this map instance
-      element: this.mapElementRef?.nativeElement, // reference to the capacitor-google-map element
-      apiKey: environment.googleMapsApiKey, // Your Google Maps API Key
-      config: {
-        center: {
-          // The initial position to be rendered by the map
-          lat: this.center.lat,
-          lng: this.center.lng,
-        },
-        zoom: this.defaultCameraZoom, // The initial zoom level to be rendered by the map
+    try {
+      let googleMaps: any = await this._googleMapsService.loadGoogleMaps();
+      const style = [
+        {
+          featureType: 'all',
+          elementType: 'all',
+          stylers: [
+            { saturation: 0 }
+          ]
+        }
+      ];
+      const mapEl = this.mapElementRef?.nativeElement;
+      const location = await this.getLocationByLatLng(this.center.lat, this.center.lng);
+      this.map = new googleMaps.Map(mapEl, {
+        center: location,
+        zoom: 15,
         panControl: true,
         zoomControl: true,
         scaleControl: false,
         streetViewControl: true,
-      },
-    });
-  }
-  
-  async addMarker(lat: number, lng: number, title?: string): Promise<string | null> {
-    const marker: Marker = {
-        iconUrl: this.markerUrl,
-        iconSize: { width: this.markerWidth, height: this.markerHeight },
-        coordinate: { lat, lng },
-        draggable: this.markerDraggable,
-        title: title
-      };
-    const markerId = await this.map?.addMarker(marker);
-
-    if(!markerId) return null;
-
-    // Save marker ids for removal
-    this.markerIds.push(markerId);
-
-    // Add drag event listener if enabled
-    if(this.markerDraggable){
-      this.map?.setOnMarkerDragEndListener(async (marker) => {
-        this.getUpdatedLocation(marker.latitude, marker.longitude);
+        overviewMapControl: false,
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+          mapTypeIds: [googleMaps.MapTypeId.ROADMAP, googleMaps.MapTypeId.SATELLITE]
+        }
       });
+      var mapType = new googleMaps.StyledMapType(style, { name: 'Styled Map' });
+      this.map.mapTypes.set('appMap', mapType);
+      this.map.setMapTypeId('appMap');
+      this.renderer.addClass(mapEl, 'visible');
+
+      // Initially point the marker if from clinic registration
+      if(this.markerDraggable) this.addMarker(location);
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+  addMarker(location: any) {
+    let googleMaps: any = this._googleMapsService.googleMaps;
+    const icon = {
+      url: this.markerUrl,
+      scaledSize: new googleMaps.Size(50, 50), 
+    };
+    const marker = new googleMaps.Marker({
+      position: location,
+      map: this.map,
+      icon: icon,
+      draggable: this.markerDraggable,
+      animation: googleMaps.Animation.DROP
+    });
+
+    this.markers.push(marker);
+
+    if(this.markerDraggable){
+      this.mapListeners.push(
+        this._googleMapsService.googleMaps.event.addListener(marker, 'dragend', () => {
+          this.getUpdatedLocation(marker.position.lat(), marker.position.lng());
+        })
+      );
     }
     
-    // Add click listener
-    this.map?.setOnMarkerClickListener(async (marker) => {
-      this.getUpdatedLocation(marker.latitude, marker.longitude);
-    });
-
-    return markerId;
+    this.mapListeners.push(
+      this._googleMapsService.googleMaps.event.addListener(marker, 'click', () => {
+        this.getUpdatedLocation(marker.position.lat(), marker.position.lng());
+      })
+    );
   }
 
-  async setMapCenter(lat: number, lng: number){
-    const cameraConf: CameraConfig = {
-      coordinate: { lat, lng},
-      zoom: this.cameraZoom
-    };        
-
-    this.map?.setCamera(cameraConf);
+  async setMapCenter(location: any){
+    this.map.panTo(location);
+  }
+  
+  async getLocationByLatLng(lat: number, lng: number){
+    return await new this._googleMapsService.googleMaps.LatLng(lat, lng);
   }
 
-  async getUpdatedLocation(lat: number, lng: number) {
+  async getUpdatedLocation(lat: any, lng: any) {
     const location = await this.getLocation(lat, lng);
     if(location) this.updateLocation(location);
   }
@@ -130,7 +142,7 @@ export class MapComponent  implements AfterViewInit, OnDestroy {
     this.locationUpdated.emit(location);
   }
 
-  async getLocation(lat: number, lng: number): Promise<LocationData | null> {
+  async getLocation(lat: any, lng: any): Promise<LocationData | null> {
     try {
       return await this._googleMapsService.getLocation(lat, lng);
     } catch(e) {
@@ -139,8 +151,23 @@ export class MapComponent  implements AfterViewInit, OnDestroy {
     }
   }
 
+  setZoom(zoomLevel: number){
+    this.map.setZoom(zoomLevel);
+  }
+
+  clearAllMarkers(){
+    this.markers.forEach(marker => {
+      marker.setMap(null);
+    })
+
+    this.mapListeners.forEach(listener => {
+      this._googleMapsService.googleMaps.event.removeListener(listener);
+    });
+  }
+
   ngOnDestroy(): void {
-    this.map?.removeAllMapListeners()
+    this.clearAllMarkers();
+    this.map = null;
     this.mapChange?.unsubscribe();
   }
 }

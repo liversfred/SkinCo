@@ -29,7 +29,6 @@
     "@capacitor/app": "5.0.7",
     "@capacitor/core": "5.7.0",
     "@capacitor/geolocation": "^5.0.7",
-    "@capacitor/google-maps": "^5.4.1",
     "@capacitor/haptics": "5.0.7",
     "@capacitor/keyboard": "5.0.8",
     "@capacitor/preferences": "^5.0.7",

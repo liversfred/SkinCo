@@ -25,7 +25,7 @@
     </ion-label>
   </ion-item>
 
-  <ion-list *ngIf="locations$">
+  <ion-list *ngIf="locations$ && query && query.length > 0">
     <ion-list-header>
       <h5>Search results</h5>
     </ion-list-header>
