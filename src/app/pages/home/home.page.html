@@ -31,13 +31,13 @@
 
       <ion-row class="ion-margin-vertical" *ngIf="loadClinics">
         <ion-col size="12" size-md="4" *ngFor="let clinic of filteredClinics">
-          <ion-card [ngClass]="{ 'selected': clinic === selectedClinic }">
-            <app-clinic-card class="link"
-            [clinic]="clinic" 
-            (bookClinic)="onBookClinic($event)" 
-            (click)="onClinicCardClicked(clinic)">
-          </app-clinic-card>
-          </ion-card>
+          <app-clinic-card class="link"
+          [highlighted]="clinic === selectedClinic"
+          [clinic]="clinic" 
+          (viewInMap)="onViewInMap($event)"
+          (viewClinic)="onViewClinic($event)"
+          (bookClinic)="onBookClinic($event)">
+        </app-clinic-card>
         </ion-col>
       </ion-row>
     </ion-col>

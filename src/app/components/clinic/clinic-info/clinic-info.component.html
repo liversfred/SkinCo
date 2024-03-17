@@ -46,18 +46,18 @@
           </ion-col>
           <ion-col size="12" size-md="6">
             <ion-text color="dark" class="ion-text-start ion-margin-bottom">
-              <h2><b>Registration Date:</b></h2>
+              <h2><b>Date Joined:</b></h2>
               <p>{{ clinic.createdAt | date }}</p>
             </ion-text>
           </ion-col>
-          <ion-col size="12" size-md="6">
+          <ion-col size="12" size-md="6" *ngIf="!viewOnly">
             <ion-text color="dark" class="ion-text-start ion-margin-bottom">
               <h2><b>Date Updated:</b></h2>
               <p>{{ clinic.updatedAt | date }}</p>
             </ion-text>
           </ion-col>
         </ion-row>
-        <ion-row>
+        <ion-row *ngIf="!viewOnly">
           <ion-col size="12" size-md="3" push-md="9">
             <ion-button type="submit" expand="block" color="secondary" shape="round" class="ion-margin-top" (click)="onUpdateInfo()">
               Update Info

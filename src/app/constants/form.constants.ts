@@ -16,4 +16,5 @@ export class FormConstants {
   static readonly serviceNameMaxLength = 100;
   static readonly serviceDescriptionMaxLength = 500;
   static readonly servicePriceMax = 10000000;
+  static readonly bookingRemarksMaxLength = 500;
 }

@@ -122,7 +122,7 @@ export class GlobalService {
     });
   }
   
-  private getDayOfWeekValue(dayOfWeek: string): number {
+  getDayOfWeekValue(dayOfWeek: string): number {
     switch (dayOfWeek) {
       case DayOfWeek.MONDAY:
         return 1;

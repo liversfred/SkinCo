@@ -1,14 +1,13 @@
-<ion-content *ngIf="userData">
-  <app-clinic-registration-form 
-    *ngIf="showClinicSetupForm === true" 
-    [isFormUpdate]="isFormUpdate" 
-    [clinic]="clinic" 
-    [userData]="userData"
-    (registrationCompleted)="onRegistrationCompleted($event)" 
-    (updateCompleted)="onUpdateCompleted($event)">
-  </app-clinic-registration-form>
-  
-  <div *ngIf="showClinicSetupForm === false && clinic">
+<ion-header>
+  <ion-toolbar>
+    <ion-title color="dark">Clinic Details</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Back</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div *ngIf="clinic">
     <ion-segment [(ngModel)]="selectedSegment">
       <ion-segment-button [value]="clinicSegments.INFO">
         <ion-label>{{ clinicSegments.INFO }}</ion-label>
@@ -20,16 +19,16 @@
         <ion-label>{{ clinicSegments.DOCTOR }}</ion-label>
       </ion-segment-button>
     </ion-segment>
-
+  
     <div [ngSwitch]="selectedSegment">
       <ion-list *ngSwitchCase="clinicSegments.INFO">
-        <app-clinic-info [clinic]="clinic" (updateInfo)="onUpdateInfo()" (refresh)="onRefresh()"></app-clinic-info>
+        <app-clinic-info [clinic]="clinic" [viewOnly]="true"></app-clinic-info>
       </ion-list>
       <ion-list *ngSwitchCase="clinicSegments.SCHEDULE">
-        <app-clinic-schedule [clinic]="clinic"></app-clinic-schedule>
+        <app-clinic-schedule [clinic]="clinic" [viewOnly]="true"></app-clinic-schedule>
       </ion-list>
       <ion-list *ngSwitchCase="clinicSegments.DOCTOR">
-        <app-clinic-doctors [clinic]="clinic"></app-clinic-doctors>
+        <app-clinic-doctors [clinic]="clinic" [viewOnly]="true"></app-clinic-doctors>
       </ion-list>
     </div>
   </div>

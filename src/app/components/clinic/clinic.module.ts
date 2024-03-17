@@ -5,16 +5,16 @@ import { ComponentsModule } from '../components.module';
 import { ClinicAccordionComponent } from './clinic-accordion/clinic-accordion.component';
 import { ClinicScheduleComponent } from './clinic-schedule/clinic-schedule.component';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ClinicService } from 'src/app/services/clinic.service';
-import { ClinicScheduleService } from 'src/app/services/clinic-schedule.service';
 import { ClinicScheduleListComponent } from './clinic-schedule-list/clinic-schedule-list.component';
 import { ClinicDoctorsComponent } from './clinic-doctors/clinic-doctors.component';
+import { ClinicDetailsComponent } from './clinic-details/clinic-details.component';
 
 
 
 @NgModule({
   declarations: [
     ClinicRegistrationFormComponent,
+    ClinicDetailsComponent,
     ClinicInfoComponent,
     ClinicAccordionComponent,
     ClinicScheduleComponent,
@@ -27,12 +27,12 @@ import { ClinicDoctorsComponent } from './clinic-doctors/clinic-doctors.componen
   ],
   exports: [
     ClinicRegistrationFormComponent,
+    ClinicDetailsComponent,
     ClinicInfoComponent,
     ClinicAccordionComponent,
     ClinicScheduleComponent,
     ClinicScheduleListComponent,
     ClinicDoctorsComponent,
-  ],
-  providers: [ClinicService, ClinicScheduleService]
+  ]
 })
 export class ClinicModule { }

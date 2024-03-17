@@ -1,13 +1,22 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonContent, ViewDidLeave, ViewWillEnter } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { ClinicDetailsComponent } from 'src/app/components/clinic/clinic-details/clinic-details.component';
 import { MapComponent } from 'src/app/components/map/map.component';
+import { BookingComponent } from 'src/app/components/modals/booking/booking.component';
+import { ColorConstants } from 'src/app/constants/color.constants';
+import { ModifierActions } from 'src/app/constants/modifiers-action.constants';
+import { BookingDetails } from 'src/app/models/booking-details.model';
 import { Clinic } from 'src/app/models/clinic.model';
 import { Doctor } from 'src/app/models/doctor.model';
+import { UserData } from 'src/app/models/user-data.model';
+import { AuthService } from 'src/app/services/auth.service';
+import { BookingService } from 'src/app/services/booking.service';
 import { ClinicService } from 'src/app/services/clinic.service';
 import { DoctorService } from 'src/app/services/doctor.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { GlobalService } from 'src/app/services/global.service';
+import { TrailService } from 'src/app/services/trail.service';
 
 @Component({
   selector: 'app-home',
@@ -16,25 +25,37 @@ import { GlobalService } from 'src/app/services/global.service';
 })
 export class HomePage implements ViewWillEnter, ViewDidLeave{
   clinics: Clinic[] = [];
+  userData: UserData | undefined;
   doctors: Doctor[] = [];
   filteredClinics: Clinic[] = [];
   loadClinics: boolean = false;
   selectedClinic: Clinic | undefined;
   doctorsSubs: Subscription | undefined;
   clinicsSubs: Subscription | undefined;
+  userDataSubs: Subscription | undefined;
   @ViewChild('content') content: IonContent | undefined;
   @ViewChild(MapComponent) mapComponent: MapComponent | undefined;
 
   constructor(
+    private _authService: AuthService,
     private _clinicService: ClinicService,
     private _doctorService: DoctorService,
+    private _bookingService: BookingService,
     private _globalService: GlobalService,
+    private _trailService: TrailService,
     private _errorService: ErrorService
     ) { }
 
   async ionViewWillEnter(): Promise<void> {
+    this._globalService.showLoader('Loading page...');
+
+    // Load user data
+    this.userDataSubs = this._authService.userData.subscribe(async userData => this.userData = userData ?? undefined );
+
     await this.fetchDoctors();
     await this.fetchClinics();
+
+    this._globalService.hideLoader();
   }
   
   async fetchDoctors(){
@@ -100,11 +121,66 @@ export class HomePage implements ViewWillEnter, ViewDidLeave{
     })
   }
   
-  onBookClinic(clinic: Clinic){
-    console.log(clinic);
+  async onBookClinic(clinic: Clinic){
+    this.selectedClinic = clinic;
+    const data = { clinic };
+
+    this.openBookingModal(data)
   }
 
-  async onClinicCardClicked(clinic: Clinic){
+  onViewClinic(clinic: Clinic){
+    this.selectedClinic = clinic;
+    const data = { clinic }
+
+    this.openClinicDetailsModal(data);
+  }
+
+  async openBookingModal(data?: any) {
+    try {
+      const options = {
+        component: BookingComponent,
+        swipeToClose: false,
+        canDismiss: true,
+        backdropDismiss: false,
+        componentProps: { data },
+      };
+      
+      const bookingDetailsRes = await this._globalService.createModal(options);
+
+      if(!bookingDetailsRes) return;
+
+      const action = `${data.bookingDetails ? ModifierActions.UPDATED : ModifierActions.CREATED} Booking with Clinic ${data.clinic.name}`;
+      const bookingDetails: BookingDetails = {
+        ...bookingDetailsRes,
+        userId: this.userData?.id,
+        ...(data ? this._trailService.updateAudit(action) : this._trailService.createAudit(action))
+      }
+
+      this.saveBooking(bookingDetails)
+      // data.bookingDetails ? this.updateBookingDetails(this.clinicDoctor?.id!, clinicDoctor) : this.saveDoctor(clinicDoctor);
+    } catch(e) {
+      this._errorService.handleError(e);
+    }
+  }
+
+  async openClinicDetailsModal(data?: any) {
+    console.log(data);
+    try {
+      const options = {
+        component: ClinicDetailsComponent,
+        swipeToClose: false,
+        canDismiss: true,
+        backdropDismiss: true,
+        componentProps: { data },
+      };
+      
+      await this._globalService.createModal(options);
+    } catch(e) {
+      this._errorService.handleError(e);
+    }
+  }
+
+  async onViewInMap(clinic: Clinic){
     this.selectedClinic = clinic;
     const location = await this.mapComponent?.getLocationByLatLng(clinic.location.lat, clinic.location.lng);
     this.mapComponent?.setMapCenter(location);
@@ -115,8 +191,38 @@ export class HomePage implements ViewWillEnter, ViewDidLeave{
   scrollToTop() {
     this.content?.scrollToTop();
   }
+
+  async saveBooking(bookingDetails: BookingDetails){
+    this._globalService.showLoader('Saving booking details...');
+
+    await this._bookingService.saveBooking(bookingDetails)
+      .then(async (bookingId) => {
+      this._globalService.hideLoader();
+      // TODO: NAVIGATE and show alert
+      this._globalService.showToast(`Booking Saved!.`, 3000, ColorConstants.SUCCESS);
+      })
+      .catch(e => {
+        this._errorService.handleError(e);
+      });
+  }
+  
+  // async updateBooking(id: string, bookingDetails: BookingDetails) {
+  //   this._globalService.showLoader('Updating booking details...');
+  //   bookingDetails = { id, ...bookingDetails };
+
+  //   await this._bookingService.updateBooking(bookingDetails)
+  //     .then(async () => {
+  //       this._globalService.hideLoader()
+  //       // TODO: NAVIGATE and show alert
+  //       // this._globalService.showToast(`Booking Saved!.`, 3000, ColorConstants.SUCCESS);
+  //     })
+  //     .catch((e) => {
+  //       this._errorService.handleError(e);
+  //     });
+  // }
   
   ionViewDidLeave(): void {
+    this.userDataSubs?.unsubscribe();
     this.doctorsSubs?.unsubscribe();
     this.clinicsSubs?.unsubscribe();
   }

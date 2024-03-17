@@ -5,7 +5,9 @@ import { Clinic } from '../models/clinic.model';
 import { Observable, map } from 'rxjs';
 import { GlobalService } from './global.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ClinicService {
   private clinicsCollection: CollectionReference<DocumentData>;
 

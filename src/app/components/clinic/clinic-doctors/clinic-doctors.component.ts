@@ -18,6 +18,7 @@ import { ClinicService } from 'src/app/services/clinic.service';
 })
 export class ClinicDoctorsComponent  implements OnInit {
   @Input() clinic: Clinic | undefined;
+  @Input() viewOnly: boolean = false;
   clinicDoctor: Doctor | undefined | null;
 
   constructor(

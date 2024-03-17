@@ -5,7 +5,9 @@ import { ClinicSchedule } from '../models/clinic-schedule.model';
 import { GlobalService } from './global.service';
 import { Collections } from '../constants/collections.constants';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ClinicScheduleService {
   private clinicSchedulesCollection: CollectionReference<DocumentData>;
   private _clinicSchedules = new BehaviorSubject<ClinicSchedule[]>([]);

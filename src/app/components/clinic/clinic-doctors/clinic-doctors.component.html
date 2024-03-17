@@ -3,8 +3,8 @@
 
   <ion-grid>
     <ion-row>
-      <ion-col size="12" size-md="8" offset-md="2" class="ion-margin-top">
-        <ion-row class="ion-margin-vertical ion-padding-end ion-margin-end ion-justify-content-end" *ngIf="!clinicDoctor">
+      <ion-col size="12" size-md="8" offset-md="2">
+        <ion-row class="ion-margin-vertical ion-padding-end ion-margin-end ion-justify-content-end" *ngIf="!clinicDoctor && !viewOnly">
           <ion-button class="ion-margin-start" size="medium" color="primary" (click)="onAddDoctor()">
             Register a doctor
             <ion-icon slot="start" name="create-outline"></ion-icon>
@@ -13,7 +13,7 @@
         
         <ion-row>
           <ion-col size="12" size-md="8" offset-md="2">
-            <app-doctor-card *ngIf="clinicDoctor" [doctor]="clinicDoctor" (updateDoctor)="onUpdateDoctor()"></app-doctor-card>
+            <app-doctor-card *ngIf="clinicDoctor" [doctor]="clinicDoctor" (updateDoctor)="onUpdateDoctor()" [viewOnly]="viewOnly"></app-doctor-card>
           </ion-col>
         </ion-row>
       </ion-col>

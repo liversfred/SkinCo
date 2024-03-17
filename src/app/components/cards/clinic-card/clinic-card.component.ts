@@ -8,11 +8,22 @@ import { Clinic } from 'src/app/models/clinic.model';
 })
 export class ClinicCardComponent {
   @Input() clinic: Clinic | undefined;
+  @Input() highlighted: boolean = false;
   @Output() bookClinic = new EventEmitter<Clinic>;
+  @Output() viewInMap = new EventEmitter<Clinic>;
+  @Output() viewClinic = new EventEmitter<Clinic>;
 
   constructor() { }
 
   onBookClinic(){
     this.bookClinic.emit(this.clinic);
+  }
+
+  onViewInMap() {
+    this.viewInMap.emit(this.clinic)
+  }
+
+  onViewClinic(){
+    this.viewClinic.emit(this.clinic)
   }
 }

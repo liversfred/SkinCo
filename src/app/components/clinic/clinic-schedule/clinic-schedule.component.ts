@@ -17,6 +17,7 @@ import { RefresherCustomEvent } from '@ionic/angular';
 })
 export class ClinicScheduleComponent implements OnInit{
   @Input() clinic: Clinic | undefined;
+  @Input() viewOnly: boolean = false;
   clinicSchedules: ClinicSchedule[] = [];
   selectedClinicSchedule: ClinicSchedule | undefined;
 

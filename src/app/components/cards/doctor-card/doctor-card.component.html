@@ -43,7 +43,7 @@
       </ion-col>
     </ion-row>
 
-    <ion-row>
+    <ion-row *ngIf="!viewOnly">
       <ion-col size="12">
         <ion-button color="secondary" expand="block" size="small" (click)="onUpdateDoctor()">
           Update

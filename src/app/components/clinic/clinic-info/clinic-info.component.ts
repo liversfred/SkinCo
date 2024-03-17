@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RefresherCustomEvent } from '@ionic/angular';
 import { Clinic } from 'src/app/models/clinic.model';
-import { UserData } from 'src/app/models/user-data.model';
 
 @Component({
   selector: 'app-clinic-info',
@@ -10,7 +9,7 @@ import { UserData } from 'src/app/models/user-data.model';
 })
 export class ClinicInfoComponent {
   @Input() clinic: Clinic | undefined;
-  @Input() userData: UserData | undefined;
+  @Input() viewOnly: boolean = false;
   @Output() updateInfo = new EventEmitter<void>;
   @Output() refresh = new EventEmitter<void>;
 

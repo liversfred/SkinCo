@@ -8,6 +8,7 @@ import { Doctor } from 'src/app/models/doctor.model';
 })
 export class DoctorCardComponent implements OnInit{
   @Input() doctor: Doctor | undefined;
+  @Input() viewOnly: boolean = false;
   @Output() updateDoctor = new EventEmitter<void>;
   imagePath: string = "";
 

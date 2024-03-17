@@ -8,6 +8,8 @@ import { AddBankDetailsComponent } from './add-bank-details/add-bank-details.com
 import { UpdateProfileComponent } from './update-profile/update-profile.component';
 import { AddClinicServiceComponent } from './add-clinic-service/add-clinic-service.component';
 import { GenericComponent } from './generic/generic.component';
+import { BookingComponent } from './booking/booking.component';
+import { SelectDateComponent } from './select-date/select-date.component';
 
 
 
@@ -16,11 +18,13 @@ import { GenericComponent } from './generic/generic.component';
     SearchLocationComponent,
     AddScheduleComponent,
     SelectTimeComponent,
+    SelectDateComponent,
     AddDoctorComponent,
     AddBankDetailsComponent,
     UpdateProfileComponent,
     AddClinicServiceComponent,
-    GenericComponent
+    GenericComponent,
+    BookingComponent
   ],
   imports: [
     SharedModule
@@ -29,11 +33,13 @@ import { GenericComponent } from './generic/generic.component';
     SearchLocationComponent,
     AddScheduleComponent,
     SelectTimeComponent,
+    SelectDateComponent,
     AddDoctorComponent,
     AddBankDetailsComponent,
     UpdateProfileComponent,
     AddClinicServiceComponent,
-    GenericComponent
+    GenericComponent,
+    BookingComponent
   ]
 })
 export class ModalsModule { }
