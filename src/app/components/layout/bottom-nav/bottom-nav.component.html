@@ -12,5 +12,9 @@
       <ion-icon name="receipt-outline"></ion-icon>
       <ion-label>SERVICES</ion-label>
     </ion-tab-button>
+    <ion-tab-button [tab]="routes.BOOKINGS" *ngIf="userData && userData.role?.name === roles.PATIENT">
+      <ion-icon name="book-outline"></ion-icon>
+      <ion-label>BOOKINGS</ion-label>
+    </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>

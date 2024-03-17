@@ -31,8 +31,8 @@
           <ion-label>Services</ion-label>
         </ion-item>
       </ion-menu-toggle>
-      <ion-menu-toggle auto-hide="false" *ngIf="userData && userData.clinicId && userData.role?.name === roles.PATIENT">
-        <ion-item [routerLink]="routes.BOOKING_HISTORY">
+      <ion-menu-toggle auto-hide="false" *ngIf="userData">
+        <ion-item [routerLink]="routes.BOOKINGS">
           <ion-icon slot="start" name="book"></ion-icon>
           <ion-label>Bookings</ion-label>
         </ion-item>

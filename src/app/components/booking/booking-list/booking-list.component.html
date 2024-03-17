@@ -1,0 +1,6 @@
+
+<ion-row class="ion-justify-content-center">
+    <ion-col size="12" size-md="8" *ngFor="let booking of bookings">
+      <app-booking-card [booking]="booking" (viewClinic)="onViewClinic($event)"></app-booking-card>
+    </ion-col>
+</ion-row>

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title class="ion-text-center">{{ bookingDetails ? 'Update' : 'Book' }} Appointment</ion-title>
+    <ion-title class="ion-text-center">{{ booking ? 'Update' : 'Book' }} Appointment</ion-title>
     <ion-buttons slot="start">
       <ion-button (click)="dismiss()">Close</ion-button>
     </ion-buttons>
@@ -10,74 +10,78 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
-  <form [formGroup]="bookingForm!" class="ion-margin-top">
-    <ion-list color="light">
-      <ion-item color="light" class="ion-justify-content-between link" (click)="onSelectDate()">
-          <ion-label class="ion-text-start">{{ bookingForm?.value.bookingDate ? 'Booking Date' : 'Select Date' }}</ion-label>
-          <ion-label class="ion-text-end">{{ bookingForm?.value.bookingDate | date: 'longDate'}}</ion-label>
-      </ion-item>
-      <ion-text class="error-message" color="danger" *ngIf="bookingForm?.hasError('required', 'bookingDate') && bookingForm?.get('bookingDate')?.touched">
-        <div>* Booking date is required.</div>
-      </ion-text>
-  
-      <ion-item class="ion-margin-top">
-        <ion-select mode="ios" 
-          aria-label="Clinic Services" 
-          label="Clinic Services" 
-          placeholder="Select services" 
-          [multiple]="true" 
-          formControlName="clinicServiceIds" 
-          (ionChange)="onClinicServicesChanged()">
-          <ion-select-option *ngFor="let service of clinicServices" [value]="service.id">{{ service.name }}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-text class="error-message" color="danger" *ngIf="bookingForm?.hasError('required', 'clinicServiceIds') && bookingForm?.get('clinicServiceIds')?.touched">
-        <div>* Service is required.</div>
-      </ion-text>
-
-      <div class="services-list" *ngIf="selectedClinicServices.length !== 0">
-        <ion-list>
-          <ion-row>
-            <ion-item>
-              <h1>
-                Selected Services
-              </h1>
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12" size-md="8">
+        <form [formGroup]="bookingForm!" class="ion-margin-top">
+          <ion-list color="light">
+            <ion-item color="light" class="ion-justify-content-between link" (click)="onSelectDate()">
+                <ion-label class="ion-text-start">{{ bookingForm?.value.bookingDate ? 'Booking Date' : 'Select Date' }}</ion-label>
+                <ion-label class="ion-text-end">{{ bookingForm?.value.bookingDate | date: 'longDate'}}</ion-label>
             </ion-item>
-          </ion-row>
-          <ion-row *ngFor="let service of selectedClinicServices">
-            <ion-col size="6">
-              <ion-item>{{ service.name }}</ion-item>
-            </ion-col>
-            <ion-col size="6">
-              <ion-item>{{ service.price | currency: 'PHP' }}</ion-item>
-            </ion-col>
-          </ion-row>
+            <ion-text class="error-message" color="danger" *ngIf="bookingForm?.hasError('required', 'bookingDate') && bookingForm?.get('bookingDate')?.touched">
+              <div>* Booking date is required.</div>
+            </ion-text>
+        
+            <ion-item color="light" class="ion-margin-top">
+              <ion-select mode="ios" 
+                aria-label="Clinic Services" 
+                label="Clinic Services" 
+                placeholder="Select services" 
+                [multiple]="true" 
+                formControlName="clinicServiceIds" 
+                (ionChange)="onClinicServicesChanged()">
+                <ion-select-option *ngFor="let service of clinicServices" [value]="service.id">{{ service.name }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-text class="error-message" color="danger" *ngIf="bookingForm?.hasError('required', 'clinicServiceIds') && bookingForm?.get('clinicServiceIds')?.touched">
+              <div>* Service is required.</div>
+            </ion-text>
+      
+            <div class="ion-padding-horizontal ion-padding-bottom ion-margin" *ngIf="selectedClinicServices.length !== 0">
+              <ion-row>
+                <ion-text>
+                  <h4>
+                    Selected Services
+                  </h4>
+                </ion-text>
+              </ion-row>
+              <ion-row *ngFor="let service of selectedClinicServices">
+                <ion-col size="6">
+                  <ion-text>{{ service.name }}</ion-text>
+                </ion-col>
+                <ion-col size="6">
+                  <ion-text>{{ service.price | currency: 'PHP' }}</ion-text>
+                </ion-col>
+              </ion-row>
 
-          <div class="horizontal-line"></div>
+              <div class="horizontal-line"></div>
 
-          <ion-row>
-            <ion-col size="6">
-              <ion-item>Total</ion-item>
-            </ion-col>
-            <ion-col size="6">
-              <ion-item>{{ totalServicesPrice | currency: 'PHP' }}</ion-item>
-            </ion-col>
-          </ion-row>
-        </ion-list>
-      </div>
-
-      <ion-item color="light" class="ion-margin-top">
-        <ion-textarea  
-        formControlName="remarks" 
-        label="Remarks"
-        labelPlacement="floating"
-        [autoGrow]="true"
-        [counter]="true" 
-        [maxlength]="bookingRemarksMaxLength"></ion-textarea>
-      </ion-item>
-      <ion-text class="error-message" color="danger" *ngIf="bookingForm?.value.remarks?.length > bookingRemarksMaxLength && bookingForm?.get('remarks')?.touched">
-        <div>* Maximum is {{ bookingRemarksMaxLength }} characters.</div>
-      </ion-text>
-    </ion-list>
-  </form>
+              <ion-row>
+                <ion-col size="6">
+                  <ion-text>Total</ion-text>
+                </ion-col>
+                <ion-col size="6">
+                  <ion-text>{{ totalServicesPrice | currency: 'PHP' }}</ion-text>
+                </ion-col>
+              </ion-row>
+            </div>
+      
+            <ion-item color="light" class="ion-margin-top">
+              <ion-textarea  
+              formControlName="remarks" 
+              label="Remarks"
+              labelPlacement="floating"
+              [autoGrow]="true"
+              [counter]="true" 
+              [maxlength]="bookingRemarksMaxLength"></ion-textarea>
+            </ion-item>
+            <ion-text class="error-message" color="danger" *ngIf="bookingForm?.value.remarks?.length > bookingRemarksMaxLength && bookingForm?.get('remarks')?.touched">
+              <div>* Maximum is {{ bookingRemarksMaxLength }} characters.</div>
+            </ion-text>
+          </ion-list>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

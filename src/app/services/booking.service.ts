@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BookingDetails } from '../models/booking-details.model';
-import { CollectionReference, DocumentData, Firestore, addDoc, collection, doc, updateDoc } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, doc, query, updateDoc, where } from '@angular/fire/firestore';
 import { Collections } from '../constants/collections.constants';
 import { GlobalService } from './global.service';
+import { map } from 'rxjs';
+import { Booking } from '../models/booking-details.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +15,9 @@ export class BookingService {
     this.bookingsCollection = collection(this._fireStore, Collections.BOOKINGS);
   }
   
-  async saveBooking(bookingDetails: BookingDetails): Promise<string>{
+  async saveBooking(booking: Booking): Promise<string>{
     try{
-      const res = await addDoc(this.bookingsCollection, bookingDetails);
+      const res = await addDoc(this.bookingsCollection, booking);
       return res.id;
     }catch(e) {
       throw(e);
@@ -27,6 +28,39 @@ export class BookingService {
     try{
       const docInstance = doc(this._fireStore, Collections.BOOKINGS, updatedModel.id);
       await updateDoc(docInstance, updatedModel)
+    }catch(e) {
+      throw(e);
+    }
+  }
+  
+  async fetchBookingsById(userId: string): Promise<Booking[]> {
+    try{
+      let bookings = await new Promise<Booking[]>((resolve, reject) => {
+        const collectionRef = query(this.bookingsCollection, where('userId', '==', userId));
+        return collectionData(collectionRef, { idField: 'id'})
+          .pipe(
+            map((bookings: any[]) => {
+              return bookings.map((item) => {
+                return { 
+                  ...item, 
+                  createdAt: item.createdAt.toDate(),
+                  updatedAt: item.updatedAt.toDate(),
+                };
+              });
+            }),
+            map((bookings: Booking[]) => this._globalService.sortData({active: 'bookingDate', direction: 'asc'}, bookings))
+          )
+          .subscribe({
+            next: (bookings: Booking[]) => {
+              resolve(bookings);
+            },
+            error: (err: any) => {
+              reject(err);
+            }
+          });
+      });
+  
+      return bookings;
     }catch(e) {
       throw(e);
     }

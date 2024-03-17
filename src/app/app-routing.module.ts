@@ -51,7 +51,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/clinic-bank-details/clinic-bank-details.module').then( m => m.ClinicBankDetailsPageModule)
   },
   {
-    path: RouteConstants.BOOKING_HISTORY,
+    path: RouteConstants.BOOKINGS,
     loadChildren: () => import('./pages/booking-history/booking-history.module').then( m => m.BookingHistoryPageModule)
   },
   { path: '**' , redirectTo: RouteConstants.LOGIN }, // To handle unknown url path

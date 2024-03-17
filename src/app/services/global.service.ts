@@ -122,6 +122,8 @@ export class GlobalService {
           return this.compare(a.modifierAction.toLowerCase(), b.modifierAction.toLowerCase(), isAsc);
         case 'fullName':
           return this.compare(a.person.fullName.toLowerCase(), b.person.fullName.toLowerCase(), isAsc);
+        case 'bookingDate':
+          return this.compare(a.bookingDate, b.bookingDate, isAsc);
         case 'createdAt':
           return this.compare(a.createdAt, b.createdAt, isAsc);
         case 'updatedAt':

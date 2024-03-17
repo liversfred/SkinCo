@@ -9,7 +9,8 @@ import { ClinicServicesService } from 'src/app/services/clinic-services.service'
 import { GlobalService } from 'src/app/services/global.service';
 import { SelectDateComponent } from '../select-date/select-date.component';
 import { FormConstants } from 'src/app/constants/form.constants';
-import { BookingDetails } from 'src/app/models/booking-details.model';
+import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
+import { Booking } from 'src/app/models/booking-details.model';
 
 @Component({
   selector: 'app-booking',
@@ -19,7 +20,7 @@ import { BookingDetails } from 'src/app/models/booking-details.model';
 export class BookingComponent implements OnInit {
   @Input() data: any;
   clinic: Clinic | undefined;
-  bookingDetails: BookingDetails | undefined;
+  booking: Booking | undefined;
   bookingForm: FormGroup | undefined;
   clinicSchedules: ClinicSchedule[] = [];
   clinicServices: ClinicServiceData[] = [];
@@ -62,11 +63,11 @@ export class BookingComponent implements OnInit {
       remarks: new FormControl('', { validators: [Validators.maxLength(this.bookingRemarksMaxLength)] })
     });
 
-    if(this.data?.bookingDetails) {
-      this.bookingDetails = this.data.bookingDetails;
-      this.bookingForm?.get('bookingDate')?.setValue(this.bookingDetails?.bookingDate);
-      this.bookingForm?.get('clinicServiceIds')?.setValue(this.bookingDetails?.clinicServiceIds);
-      this.bookingForm?.get('remarks')?.setValue(this.bookingDetails?.remarks);
+    if(this.data?.booking) {
+      this.booking = this.data.booking;
+      this.bookingForm?.get('bookingDate')?.setValue(this.booking?.bookingDate);
+      this.bookingForm?.get('clinicServiceIds')?.setValue(this.booking?.clinicServiceIds);
+      this.bookingForm?.get('remarks')?.setValue(this.booking?.remarks);
     }
   }
   
@@ -127,14 +128,30 @@ export class BookingComponent implements OnInit {
       return;
     }
 
-    const bookingDetails: any = {
-      bookingNo: this.generateRandomBookingNumber(),
-      bookingDate: this.bookingForm?.value.bookingDate,
-      clinicId: this.clinic?.id!,
-      clinicServiceIds: this.bookingForm?.value.clinicServiceIds,
-      remarks: this.bookingForm?.value.remarks
-    }
-
-    this.dismiss(bookingDetails);
+    this._globalService.showAlert(
+      AlertTypeEnum.CONFIRM, 
+      'Arey you sure you want to submit?',
+      [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary'
+        }, 
+        {
+          text: 'Submit',
+          handler: () => {
+            const booking: any = {
+              bookingNo: this.generateRandomBookingNumber(),
+              bookingDate: this.bookingForm?.value.bookingDate,
+              clinicId: this.clinic?.id!,
+              clinicServiceIds: this.bookingForm?.value.clinicServiceIds,
+              remarks: this.bookingForm?.value.remarks
+            }
+        
+            this.dismiss(booking);
+          }
+        }
+      ]
+    )
   }
 }

@@ -4,6 +4,8 @@ import { Collections } from '../constants/collections.constants';
 import { Clinic } from '../models/clinic.model';
 import { Observable, map } from 'rxjs';
 import { GlobalService } from './global.service';
+import { ClinicDetailsComponent } from '../components/clinic/clinic-details/clinic-details.component';
+import { ErrorService } from './error.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +13,7 @@ import { GlobalService } from './global.service';
 export class ClinicService {
   private clinicsCollection: CollectionReference<DocumentData>;
 
-  constructor(private _fireStore: Firestore, private _globalService: GlobalService) {
+  constructor(private _fireStore: Firestore, private _globalService: GlobalService, private _errorService: ErrorService) {
     this.clinicsCollection = collection(this._fireStore, Collections.CLINICS);
   }
 
@@ -117,7 +119,24 @@ export class ClinicService {
           };
         });
       }),
-      map((clinics: Clinic[]) => this._globalService.sortData({active: 'baseName', direction: 'asc'}, clinics)),
+      map((clinics: Clinic[]) => this._globalService.sortData({active: 'baseName', direction: 'desc'}, clinics)),
     );
+  }
+
+  async openClinicDetailsModal(data?: any) {
+    try {
+      const options = {
+        component: ClinicDetailsComponent,
+        swipeToClose: false,
+        canDismiss: true,
+        backdropDismiss: true,
+        cssClass: 'view-clinic',
+        componentProps: { data },
+      };
+      
+      await this._globalService.createModal(options);
+    } catch(e) {
+      this._errorService.handleError(e);
+    }
   }
 }

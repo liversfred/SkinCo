@@ -8,6 +8,7 @@ import { ClinicServiceCardComponent } from './cards/clinic-service-card/clinic-s
 import { TruncateStringPipe } from '../pipes/truncate-string.pipe';
 import { ClinicCardComponent } from './cards/clinic-card/clinic-card.component';
 import { HomePatientComponent } from './home-patient/home-patient.component';
+import { BookingCardComponent } from './cards/booking-card/booking-card.component';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { HomePatientComponent } from './home-patient/home-patient.component';
     DoctorCardComponent,
     BankDetailsCardComponent,
     ClinicServiceCardComponent,
+    BookingCardComponent,
     TruncateStringPipe,
     ClinicCardComponent,
     HomePatientComponent
@@ -31,6 +33,7 @@ import { HomePatientComponent } from './home-patient/home-patient.component';
     DoctorCardComponent,
     BankDetailsCardComponent,
     ClinicServiceCardComponent,
+    BookingCardComponent,
     TruncateStringPipe,
     ClinicCardComponent,
     HomePatientComponent

@@ -11,12 +11,12 @@ import { ErrorService } from 'src/app/services/error.service';
 import { Router } from '@angular/router';
 import { TrailService } from 'src/app/services/trail.service';
 import { BookingComponent } from '../modals/booking/booking.component';
-import { BookingDetails } from 'src/app/models/booking-details.model';
 import { ModifierActions } from 'src/app/constants/modifiers-action.constants';
 import { UserData } from 'src/app/models/user-data.model';
-import { ClinicDetailsComponent } from '../clinic/clinic-details/clinic-details.component';
 import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
 import { RouteConstants } from 'src/app/constants/route.constants';
+import { Booking } from 'src/app/models/booking-details.model';
+import { BookingStatus } from 'src/app/constants/booking-status.enum';
 
 @Component({
   selector: 'app-home-patient',
@@ -24,7 +24,7 @@ import { RouteConstants } from 'src/app/constants/route.constants';
   styleUrls: ['./home-patient.component.scss'],
 })
 export class HomePatientComponent  implements OnInit, OnDestroy {
-  @Input() user: UserData | undefined;
+  @Input() userData: UserData | undefined;
   clinics: Clinic[] = [];
   doctors: Doctor[] = [];
   filteredClinics: Clinic[] = [];
@@ -127,7 +127,7 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
     this.selectedClinic = clinic;
     const data = { clinic }
 
-    this.openClinicDetailsModal(data);
+    this._clinicService.openClinicDetailsModal(data);
   }
 
   async openBookingModal(data?: any) {
@@ -141,37 +141,21 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
         componentProps: { data },
       };
       
-      const bookingDetailsRes = await this._globalService.createModal(options);
+      const bookingRes = await this._globalService.createModal(options);
 
-      if(!bookingDetailsRes) return;
+      if(!bookingRes) return;
 
-      const action = `${data.bookingDetails ? ModifierActions.UPDATED : ModifierActions.CREATED} Booking with Clinic ${data.clinic.name}`;
-      const bookingDetails: BookingDetails = {
-        ...bookingDetailsRes,
-        userId: this.user?.id,
-        ...(data ? this._trailService.updateAudit(action) : this._trailService.createAudit(action))
+      const action = `${data.booking ? ModifierActions.UPDATED : ModifierActions.CREATED} Booking with Clinic ${data.clinic.name}`;
+      const booking: Booking = {
+        ...bookingRes,
+        bookingStatus: BookingStatus.QUEUED,
+        userId: this.userData?.id,
+        ...(data.booking ? this._trailService.updateAudit(action) : this._trailService.createAudit(action))
       }
-
-      this.saveBooking(bookingDetails)
-      // data.bookingDetails ? this.updateBookingDetails(this.clinicDoctor?.id!, clinicDoctor) : this.saveDoctor(clinicDoctor);
-    } catch(e) {
-      this._errorService.handleError(e);
-    }
-  }
-
-  async openClinicDetailsModal(data?: any) {
-    console.log(data);
-    try {
-      const options = {
-        component: ClinicDetailsComponent,
-        swipeToClose: false,
-        canDismiss: true,
-        backdropDismiss: true,
-        cssClass: 'full-screen-modal',
-        componentProps: { data },
-      };
       
-      await this._globalService.createModal(options);
+      this.saveBooking(booking)
+      // TODO: DO THE UPDATE
+      // data.booking ? this.updateBookingDetails(this.clinicDoctor?.id!, clinicDoctor) : this.saveDoctor(clinicDoctor);
     } catch(e) {
       this._errorService.handleError(e);
     }
@@ -185,16 +169,16 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
     this.scrollToTop.emit();
   }
 
-  async saveBooking(bookingDetails: BookingDetails){
+  async saveBooking(booking: Booking){
     this._globalService.showLoader('Saving booking details...');
 
-    await this._bookingService.saveBooking(bookingDetails)
+    await this._bookingService.saveBooking(booking)
       .then(async (bookingId) => {
         this._globalService.hideLoader();
         
         this._globalService.showAlert(
           AlertTypeEnum.SUCCESS, 
-          `Your booking has been saved with booking number <b>${bookingDetails.bookingNo}</b>`, 
+          `Your booking has been saved with booking number <b>${booking.bookingNo}</b>`, 
           [
             {
               text: 'Okay',
@@ -212,7 +196,7 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
   }
 
   navigateToBookingHistory(){
-    this._router.navigateByUrl(RouteConstants.BOOKING_HISTORY, {replaceUrl: true});
+    this._router.navigateByUrl(RouteConstants.BOOKINGS, {replaceUrl: true});
   }
   
   // async updateBooking(id: string, bookingDetails: BookingDetails) {

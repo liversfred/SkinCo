@@ -8,5 +8,5 @@ export class RouteConstants {
   static readonly PROFILE = 'profile';
   static readonly CLINIC_SERVICES = 'clinic_services';
   static readonly CLINIC_BANK_DETAILS = 'clinic_bank_details';
-  static readonly BOOKING_HISTORY = 'booking_history';
+  static readonly BOOKINGS = 'bookings';
 }

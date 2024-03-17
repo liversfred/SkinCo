@@ -1,0 +1,25 @@
+<ion-content *ngIf="userData">
+  <app-refresher (refresh)="onRefresh($event)"></app-refresher>
+
+  <ion-row class="ion-margin-top">
+    <ion-col size="12" size-md="10" offset-md="1">
+      <ion-segment [(ngModel)]="selectedSegment" mode="ios" color="primary" >
+        <ion-segment-button [value]="bookingSegments.ACTIVE_BOOKINGS">
+          <ion-label>{{ bookingSegments.ACTIVE_BOOKINGS }}</ion-label>
+        </ion-segment-button>
+        <ion-segment-button [value]="bookingSegments.BOOKING_HISTORY">
+          <ion-label>{{ bookingSegments.BOOKING_HISTORY }}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+  
+      <div [ngSwitch]="selectedSegment">
+        <ion-list *ngSwitchCase="bookingSegments.ACTIVE_BOOKINGS">
+          <app-booking-list [userData]="userData" [bookings]="activeBookings"></app-booking-list>
+        </ion-list>
+        <ion-list *ngSwitchCase="bookingSegments.BOOKING_HISTORY">
+          <app-booking-list [userData]="userData" [bookings]="previousBookings"></app-booking-list>
+        </ion-list>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-content>

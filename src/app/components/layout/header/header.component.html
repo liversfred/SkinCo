@@ -19,6 +19,10 @@
         <ion-icon name="receipt-outline"></ion-icon>
         <ion-label *ngIf="!_platformService.screenXS()">SERVICES</ion-label>
       </ion-button>
+      <ion-button [routerLink]="routes.BOOKINGS" *ngIf="userData && userData.role?.name === roles.PATIENT">
+        <ion-icon name="book-outline"></ion-icon>
+        <ion-label *ngIf="!_platformService.screenXS()">BOOKINGS</ion-label>
+      </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
       <ion-menu-button></ion-menu-button>

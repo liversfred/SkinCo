@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements ViewWillEnter, OnDestroy{
-  user: UserData | undefined;
+  userData: UserData | undefined;
   roles: any = Roles;
   userSubs: Subscription | undefined;
   @ViewChild('content') content: IonContent | undefined;
@@ -22,7 +22,7 @@ export class HomePage implements ViewWillEnter, OnDestroy{
 
   async ionViewWillEnter(): Promise<void> {
     // Load user data
-    this.userSubs = this._authService.userData.subscribe(async userData => this.user = userData ?? undefined );
+    this.userSubs = this._authService.userData.subscribe(async userData => this.userData = userData ?? undefined );
   }
 
   scrollToTop() {
