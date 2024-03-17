@@ -124,7 +124,7 @@ export class BookingComponent implements OnInit {
 
   done(){
     if(this.bookingForm?.invalid) {
-      this._globalService.showErrorAlert("Please fill in all the fields.");
+      this._globalService.showCloseAlert("Please fill in all the fields.");
       return;
     }
 

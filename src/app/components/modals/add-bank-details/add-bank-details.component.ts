@@ -46,7 +46,7 @@ export class AddBankDetailsComponent  implements OnInit {
 
   done(){
     if(this.addBankDetailsForm?.invalid) {
-      this._globalService.showErrorAlert("Please fill in all the fields.");
+      this._globalService.showCloseAlert("Please fill in all the fields.");
       return;
     }
 

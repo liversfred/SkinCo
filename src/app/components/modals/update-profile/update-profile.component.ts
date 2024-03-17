@@ -58,7 +58,7 @@ export class UpdateProfileComponent  implements OnInit {
 
   done(){
     if(this.profileForm?.invalid) {
-      this._globalService.showErrorAlert("Please fill in all the fields.");
+      this._globalService.showCloseAlert("Please fill in all the fields.");
       return;
     }
 

@@ -191,7 +191,8 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
         this.navigateToBookingHistory();
       })
       .catch(e => {
-        this._errorService.handleError(e);
+        console.log(e);
+        this._globalService.showCloseAlert('Failed to save the booking request. Try again later.')
       });
   }
 

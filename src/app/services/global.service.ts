@@ -75,7 +75,7 @@ export class GlobalService {
     .then(alertEl => alertEl.present());
   }
 
-  showErrorAlert(message: string, header: AlertTypeEnum = AlertTypeEnum.ERROR){
+  showCloseAlert(message: string, header: AlertTypeEnum = AlertTypeEnum.ERROR){
     this.showAlert(header, message, 
       [
         {

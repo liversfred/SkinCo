@@ -42,7 +42,7 @@ export class AddScheduleComponent implements OnInit{
 
   done(){
     if(this.addScheduleForm?.invalid) {
-      this._globalService.showErrorAlert("Please complete the required fields.");
+      this._globalService.showCloseAlert("Please complete the required fields.");
       return;
     }
 
@@ -59,7 +59,7 @@ export class AddScheduleComponent implements OnInit{
     );
     
     if(isStartTimeAhead || clinicSchedule.startTime === clinicSchedule.endTime) {
-      this._globalService.showErrorAlert("Start time must not be equal or ahead.");
+      this._globalService.showCloseAlert("Start time must not be equal or ahead.");
       return;
     }
     

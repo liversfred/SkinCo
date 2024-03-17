@@ -47,7 +47,7 @@ export class AddClinicServiceComponent  implements OnInit {
 
   done(){
     if(this.clinicServiceForm?.invalid) {
-      this._globalService.showErrorAlert("Please fill in all the fields.");
+      this._globalService.showCloseAlert("Please fill in all the fields.");
       return;
     }
 

@@ -75,7 +75,7 @@ export class ClinicScheduleComponent implements OnInit{
       // Check if the selected day already exists
       const isDayOfWeekExisting = this.clinicSchedules.some(x => x.dayOfWeek === schedule.dayOfWeek && x.id != data?.clinicSchedule?.id);
       if(isDayOfWeekExisting){
-        this._globalService.showErrorAlert("The selected day of the week already exists.")
+        this._globalService.showCloseAlert("The selected day of the week already exists.")
         return;
       }
 
