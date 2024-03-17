@@ -58,3 +58,18 @@
   background-color: var(--ion-color-light-shade);
   padding: 20px;
 }
+
+.toast-text{
+  text-align: center;
+}
+
+.alert-modal {
+  ion-img{
+    height: 70px;
+    width: 100%;
+  }
+
+  ion-label{
+    font-size: 16px;
+  }
+}

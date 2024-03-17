@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RefresherCustomEvent, ViewWillEnter } from '@ionic/angular';
+import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
 import { ColorConstants } from 'src/app/constants/color.constants';
 import { Clinic } from 'src/app/models/clinic.model';
 import { ClinicService } from 'src/app/services/clinic.service';
@@ -58,7 +59,7 @@ export class ManageClinicsPage implements ViewWillEnter {
     }
     
     this._globalService.showAlert(
-      'Confirm', 
+      AlertTypeEnum.CONFIRM, 
       'Are you sure you approve this clinic?',
       [
         {

@@ -159,7 +159,7 @@ export class AuthService {
   }
 
   redirectIfLoggedIn() {
-    this._router.navigate([RouteConstants.HOME]);
+    this._router.navigateByUrl(RouteConstants.HOME, { replaceUrl: true });
   }
 
   async getActiveUserByEmail(email: string): Promise<UserData>{

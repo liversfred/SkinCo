@@ -50,7 +50,7 @@ export class LoginPage implements OnInit {
 
     await this._authService.login(email, password).then(() => {
         this._globalService.hideLoader();
-        this._router.navigateByUrl(`/${RouteConstants.HOME}`);
+        this._router.navigateByUrl(RouteConstants.HOME, { replaceUrl: true });
         this.loginForm?.reset();
       })
       .catch(e => {

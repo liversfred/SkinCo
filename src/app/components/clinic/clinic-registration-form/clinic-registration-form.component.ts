@@ -16,6 +16,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { SearchLocationComponent } from '../../modals/search-location/search-location.component';
 import { numericInputValidator } from 'src/app/validators/numeric-input-validator.directive';
 import { environment } from 'src/environments/environment';
+import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
 
 @Component({
   selector: 'app-clinic-registration-form',
@@ -121,7 +122,7 @@ export class ClinicRegistrationFormComponent  implements OnInit {
       }
       
       this._globalService.showAlert(
-        'Confirm', 
+        AlertTypeEnum.CONFIRM, 
         'Do you confirm that the details you entered are correct?',
         [
           {
@@ -167,7 +168,7 @@ export class ClinicRegistrationFormComponent  implements OnInit {
 
     if(!updateRes) this._globalService.showToast("Clinic info update failed. Try again later.");
     
-    this._globalService.showToast("Update is Successful!", 3000, ColorConstants.SUCCESS);
+    this._globalService.showToast("Clinic info has been updated!", 3000, ColorConstants.SUCCESS);
     this.updateCompleted.emit(updateRes);
   }
 

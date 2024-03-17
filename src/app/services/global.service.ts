@@ -4,6 +4,7 @@ import { Color } from '../custom-types/colors.type';
 import { ToastPosition } from '../custom-types/toast-positions.type';
 import { ColorConstants } from '../constants/color.constants';
 import { DayOfWeek } from '../constants/day-of-week.constants';
+import { AlertTypeEnum } from '../constants/alert-logo.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -53,17 +54,28 @@ export class GlobalService {
     .catch(e => console.log('Error hiding the loader: ', e));
   }
 
-  showAlert(header: string, message: string, buttons?: AlertButton[], inputs?: AlertInput[]) {
+  showAlert(header: AlertTypeEnum, message: string, buttons?: AlertButton[], inputs?: AlertInput[]) {
+    const formattedMessage = `<div class="alert-modal">
+                                <div class="ion-text-center ion-padding">
+                                  <ion-img class="alert-logo" src="../../assets/logos/${header.toLowerCase()}.png"></ion-img>
+                                </div>
+                                <div class="ion-text-center ion-margin-top">
+                                  <ion-label>
+                                    ${message}
+                                  </ion-label>
+                                </div>
+                              </div>`;
+
     this._alertCtrl.create({
-      header: header ? header : 'Authentication failed',
-      message: message,
+      header,
+      message: formattedMessage,
       inputs: inputs ? inputs : [],
       buttons: buttons ? buttons : ['Okay']
     })
     .then(alertEl => alertEl.present());
   }
 
-  showErrorAlert(message: string, header: string = "Error"){
+  showErrorAlert(message: string, header: AlertTypeEnum = AlertTypeEnum.ERROR){
     this.showAlert(header, message, 
       [
         {

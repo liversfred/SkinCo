@@ -7,6 +7,7 @@ import { BankDetailsCardComponent } from './cards/bank-details-card/bank-details
 import { ClinicServiceCardComponent } from './cards/clinic-service-card/clinic-service-card.component';
 import { TruncateStringPipe } from '../pipes/truncate-string.pipe';
 import { ClinicCardComponent } from './cards/clinic-card/clinic-card.component';
+import { HomePatientComponent } from './home-patient/home-patient.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { ClinicCardComponent } from './cards/clinic-card/clinic-card.component';
     BankDetailsCardComponent,
     ClinicServiceCardComponent,
     TruncateStringPipe,
-    ClinicCardComponent
+    ClinicCardComponent,
+    HomePatientComponent
   ],
   imports: [
     SharedModule,
@@ -30,7 +32,8 @@ import { ClinicCardComponent } from './cards/clinic-card/clinic-card.component';
     BankDetailsCardComponent,
     ClinicServiceCardComponent,
     TruncateStringPipe,
-    ClinicCardComponent
+    ClinicCardComponent,
+    HomePatientComponent
   ]
 })
 export class ComponentsModule { }

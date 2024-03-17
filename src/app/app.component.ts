@@ -4,6 +4,7 @@ import { SeederService } from './services/seeders/seeder.service';
 import { AuthService } from './services/auth.service';
 import { GlobalService } from './services/global.service';
 import { UserData } from './models/user-data.model';
+import { AlertTypeEnum } from './constants/alert-logo.enum';
 
 @Component({
   selector: 'app-root',
@@ -58,7 +59,7 @@ export class AppComponent implements OnInit{
 
   async logout(){
     this._globalService.showAlert(
-      'Confirm', 
+      AlertTypeEnum.CONFIRM, 
       'Are you sure you want to logout?',
       [
         {

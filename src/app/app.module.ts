@@ -26,7 +26,7 @@ import { BottomNavComponent } from './components/layout/bottom-nav/bottom-nav.co
   ],
   imports: [
     BrowserModule, 
-    IonicModule.forRoot(), 
+    IonicModule.forRoot({ innerHTMLTemplatesEnabled: true }), 
     AppRoutingModule,
     SharedModule,
     HttpClientModule,

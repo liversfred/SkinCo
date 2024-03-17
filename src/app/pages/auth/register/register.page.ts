@@ -121,7 +121,7 @@ export class RegisterPage implements OnInit {
     await this._authService.registerUser(userData, password).then(() => {
       this._globalService.hideLoader()
       this._globalService.showToast("Registration complete! You can now sign in.", 5000, ColorConstants.SUCCESS);
-      this._router.navigateByUrl(`/${RouteConstants.LOGIN}`);
+      this._router.navigateByUrl(RouteConstants.LOGIN, { replaceUrl: true });
       this.registerForm?.reset();
     })
     .catch(e => {

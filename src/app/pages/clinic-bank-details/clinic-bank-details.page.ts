@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserData } from 'src/app/models/user-data.model';
 import { ClinicService } from 'src/app/services/clinic.service';
+import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
 
 @Component({
   selector: 'app-clinic-bank-details',
@@ -142,7 +143,7 @@ export class ClinicBankDetailsPage implements ViewWillEnter, ViewDidLeave {
 
   onDeleteBankDetails(bankDetails: BankDetails){
     this._globalService.showAlert(
-      'Confirm', 
+      AlertTypeEnum.CONFIRM, 
       `Are you sure you delete ${bankDetails.bankName} details?`,
       [
         {

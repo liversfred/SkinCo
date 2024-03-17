@@ -58,6 +58,7 @@ export class MapComponent  implements AfterViewInit, OnDestroy {
   async initMap(){
     try {
       let googleMaps: any = await this._googleMapsService.loadGoogleMaps();
+      this._googleMapsService.googleMaps = googleMaps
       const style = [
         {
           featureType: 'all',

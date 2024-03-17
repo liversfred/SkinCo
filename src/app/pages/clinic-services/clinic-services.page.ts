@@ -3,6 +3,7 @@ import { RefresherCustomEvent, ViewDidLeave, ViewWillEnter } from '@ionic/angula
 import { Subscription } from 'rxjs';
 import { AddClinicServiceComponent } from 'src/app/components/modals/add-clinic-service/add-clinic-service.component';
 import { GenericComponent } from 'src/app/components/modals/generic/generic.component';
+import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
 import { ColorConstants } from 'src/app/constants/color.constants';
 import { DefaultFileNames } from 'src/app/constants/default-file-names.constants';
 import { ModifierActions } from 'src/app/constants/modifiers-action.constants';
@@ -189,7 +190,7 @@ export class ClinicServicesPage implements ViewWillEnter, ViewDidLeave {
 
   onDeleteClinicService(clinicService: ClinicServiceData){
     this._globalService.showAlert(
-      'Confirm', 
+      AlertTypeEnum.CONFIRM, 
       `Are you sure you delete ${clinicService.name}?`,
       [
         {

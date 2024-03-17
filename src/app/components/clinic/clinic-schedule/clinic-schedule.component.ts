@@ -9,6 +9,7 @@ import { ModifierActions } from 'src/app/constants/modifiers-action.constants';
 import { ErrorService } from 'src/app/services/error.service';
 import { ColorConstants } from 'src/app/constants/color.constants';
 import { RefresherCustomEvent } from '@ionic/angular';
+import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
 
 @Component({
   selector: 'app-clinic-schedule',
@@ -120,7 +121,7 @@ export class ClinicScheduleComponent implements OnInit{
 
   onDeleteSchedule(){
     this._globalService.showAlert(
-      'Confirm', 
+      AlertTypeEnum.CONFIRM, 
       'Are you sure you delete this schedule?',
       [
         {
