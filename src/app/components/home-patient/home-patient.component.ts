@@ -118,14 +118,17 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
   
   async onBookClinic(clinic: Clinic){
     this.selectedClinic = clinic;
-    const data = { clinic };
+    const data = { 
+      clinic,
+      userData: this.userData
+    }
 
     this.openBookingModal(data)
   }
 
   onViewClinic(clinic: Clinic){
     this.selectedClinic = clinic;
-    const data = { clinic }
+    const data = { clinic };
 
     this._clinicService.openClinicDetailsModal(data);
   }

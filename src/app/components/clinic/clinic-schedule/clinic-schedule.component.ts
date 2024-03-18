@@ -98,6 +98,7 @@ export class ClinicScheduleComponent implements OnInit{
         this._globalService.hideLoader();
         if(!res) return;
         await this.fetchSchedules();
+        this.selectedClinicSchedule = clinicSchedule;
         this._globalService.showToast("Schedule has been saved.", 3000, ColorConstants.SUCCESS)
       })
       .catch(e => {
@@ -112,6 +113,7 @@ export class ClinicScheduleComponent implements OnInit{
       .then(async () => {
         this._globalService.hideLoader()
         await this.fetchSchedules();
+        this.selectedClinicSchedule = clinicSchedule;
         this._globalService.showToast("Clinic schedule has been updated.", 3000, ColorConstants.SUCCESS);
       })
       .catch((e) => {

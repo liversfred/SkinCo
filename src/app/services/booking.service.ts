@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, DocumentData, Firestore, addDoc, collection, collectionData, doc, query, updateDoc, where } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, Query, addDoc, collection, collectionData, doc, query, updateDoc, where } from '@angular/fire/firestore';
 import { Collections } from '../constants/collections.constants';
 import { GlobalService } from './global.service';
-import { map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Booking } from '../models/booking-details.model';
 
 @Injectable({
@@ -32,37 +32,30 @@ export class BookingService {
       throw(e);
     }
   }
-  
-  async fetchBookingsById(userId: string): Promise<Booking[]> {
-    try{
-      let bookings = await new Promise<Booking[]>((resolve, reject) => {
-        const collectionRef = query(this.bookingsCollection, where('userId', '==', userId));
-        return collectionData(collectionRef, { idField: 'id'})
-          .pipe(
-            map((bookings: any[]) => {
-              return bookings.map((item) => {
-                return { 
-                  ...item, 
-                  createdAt: item.createdAt.toDate(),
-                  updatedAt: item.updatedAt.toDate(),
-                };
-              });
-            }),
-            map((bookings: Booking[]) => this._globalService.sortData({active: 'bookingDate', direction: 'asc'}, bookings))
-          )
-          .subscribe({
-            next: (bookings: Booking[]) => {
-              resolve(bookings);
-            },
-            error: (err: any) => {
-              reject(err);
-            }
+
+  fetchBookingsByClinicIdAsync(clinicId: string): Observable<Booking[]> {
+    const collectionRef = query(this.bookingsCollection, where('clinicId', '==', clinicId));
+    return this.fetchBookingsAsync(collectionRef);
+  }
+
+  fetchBookingsByUserIdAsync(userId: string): Observable<Booking[]> {
+    const collectionRef = query(this.bookingsCollection, where('userId', '==', userId));
+    return this.fetchBookingsAsync(collectionRef);
+  }
+
+  fetchBookingsAsync(query: Query): Observable<Booking[]> {
+    return collectionData(query, { idField: 'id'})
+      .pipe(
+        map((bookings: any[]) => {
+          return bookings.map((item) => {
+            return { 
+              ...item, 
+              createdAt: item.createdAt.toDate(),
+              updatedAt: item.updatedAt.toDate(),
+            };
           });
-      });
-  
-      return bookings;
-    }catch(e) {
-      throw(e);
-    }
+        }),
+        map((bookings: Booking[]) => this._globalService.sortData({active: 'bookingDate', direction: 'asc'}, bookings))
+      )
   }
 }

@@ -151,9 +151,9 @@ export class GlobalService {
       case DayOfWeek.SATURDAY:
         return 6;
       case DayOfWeek.SUNDAY:
-        return 7;
-      default:
         return 0;
+      default:
+        return -1;
     }
   }
   
@@ -195,6 +195,13 @@ export class GlobalService {
     }
   
     return `${String(militaryHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  }
+
+  convertMilitaryToDateFormat(militaryTime: string): Date {
+    const [hourString, minuteString] = militaryTime.split(":");
+    const date = new Date();
+    date.setHours(parseInt(hourString), parseInt(minuteString), 0, 0);
+    return date;
   }
 
   isStartTimeAhead(startTime: string, endTime: string): boolean {

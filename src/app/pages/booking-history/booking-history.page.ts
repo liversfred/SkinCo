@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { BookingService } from 'src/app/services/booking.service';
 import { ClinicServicesService } from 'src/app/services/clinic-services.service';
 import { ClinicService } from 'src/app/services/clinic.service';
-import { GlobalService } from 'src/app/services/global.service';
+import { ErrorService } from 'src/app/services/error.service';
 
 @Component({
   selector: 'app-booking-history',
@@ -29,13 +29,14 @@ export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
   userDataSubs: Subscription | undefined;
   clinicSubs: Subscription | undefined;
   clinicServiceSubs: Subscription | undefined;
+  bookingSubs: Subscription | undefined;
 
   constructor(
     private _authService: AuthService, 
     private _bookingService: BookingService,
     private _clinicService: ClinicService,
     private _clinicServicesService: ClinicServicesService,
-    private _globalService: GlobalService
+    private _errorService: ErrorService
     ) { }
 
   async ionViewWillEnter() {
@@ -47,8 +48,8 @@ export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
       this.userData = userData ?? undefined;
 
       if(!this.userData) return;
-      
-      await this.fetchBookings();
+
+      this.fetchBookings();
     });
   }
   
@@ -70,29 +71,34 @@ export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
   }
 
   async fetchBookings(){
-    this._globalService.showLoader('Fetching booking history...');
     this.activeBookings = [];
     this.previousBookings = [];
 
-    const bookings = await this._bookingService.fetchBookingsById(this.userData?.id!);
-    bookings.forEach(booking => {
-      booking.clinic = this.clinics.find(x => x.id === booking.clinicId),
-      booking.clinicServices = this.clinicServices.filter(x => booking.clinicServiceIds.includes(x.id!))
-
-      if(booking.bookingStatus === BookingStatus.COMPLETED){
-        this.previousBookings.push(booking);
-      }
-      else{
-        this.activeBookings.push(booking);
-      }
-    });
-
-    this._globalService.hideLoader();
+    this.bookingSubs = this._bookingService.fetchBookingsByUserIdAsync(this.userData?.id!)
+      .subscribe({
+        next: (bookings: Booking[]) => {
+          bookings.forEach(booking => {
+            booking.clinic = this.clinics.find(x => x.id === booking.clinicId),
+            booking.clinicServices = this.clinicServices.filter(x => booking.clinicServiceIds.includes(x.id!))
+      
+            if(booking.bookingStatus === BookingStatus.COMPLETED){
+              this.previousBookings.push(booking);
+            }
+            else{
+              this.activeBookings.push(booking);
+            }
+          });
+        },
+        error: (err: any) => {
+          this._errorService.handleError(err);
+        }
+      });
   }
   
   ngOnDestroy(): void {
     this.userDataSubs?.unsubscribe();
     this.clinicSubs?.unsubscribe();
     this.clinicServiceSubs?.unsubscribe();
+    this.bookingSubs?.unsubscribe();
   }
 }

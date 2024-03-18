@@ -10,20 +10,22 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
-  <ion-grid>
     <ion-row class="ion-justify-content-center">
       <ion-datetime presentation="date" [isDateEnabled]="isClinicOpen" [min]="minDate" [max]="maxDate" [value]="selectedDate" (ionChange)="onSelecteDateChanged($event)">
-        <span slot="title">Reservation Date</span>
+        <span slot="title">
+          <ion-row class="ion-justify-content-between">
+            <ion-label>
+              Reservation Date
+            </ion-label>
+            <ion-label *ngIf="availableSlot && availableSlot !== 0">
+              Available Slot: <b>{{ availableSlot }}</b>
+            </ion-label>
+            <ion-label *ngIf="availableSlot === 0">
+              Fully booked!
+            </ion-label>
+          </ion-row>
+        </span>
       </ion-datetime>
-
-      <div class="ion-margin-vertical">
-        <ion-label *ngIf="availableSlot && availableSlot !== 0">
-          <b>Available Slot: </b>20
-        </ion-label>
-        <ion-label *ngIf="availableSlot && availableSlot === 0">
-          Fully booked!
-        </ion-label>
-      </div>
     </ion-row>
-  </ion-grid>
+
 </ion-content>

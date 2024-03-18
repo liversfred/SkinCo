@@ -11,6 +11,7 @@ import { SelectDateComponent } from '../select-date/select-date.component';
 import { FormConstants } from 'src/app/constants/form.constants';
 import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
 import { Booking } from 'src/app/models/booking-details.model';
+import { UserData } from 'src/app/models/user-data.model';
 
 @Component({
   selector: 'app-booking',
@@ -20,6 +21,7 @@ import { Booking } from 'src/app/models/booking-details.model';
 export class BookingComponent implements OnInit {
   @Input() data: any;
   clinic: Clinic | undefined;
+  userData: UserData | undefined;
   booking: Booking | undefined;
   bookingForm: FormGroup | undefined;
   clinicSchedules: ClinicSchedule[] = [];
@@ -37,6 +39,7 @@ export class BookingComponent implements OnInit {
 
   async ngOnInit() {
     this.clinic = this.data.clinic;
+    this.userData = this.data.userData;
 
     this._globalService.showLoader('Preparing the form...');
 
@@ -82,6 +85,8 @@ export class BookingComponent implements OnInit {
         componentProps: {
           data: { 
             title: "Select Date",
+            userData: this.userData,
+            clinic: this.clinic,
             clinicSchedules: this.clinicSchedules,
             bookingDate: this.bookingForm?.value.bookingDate
           }
