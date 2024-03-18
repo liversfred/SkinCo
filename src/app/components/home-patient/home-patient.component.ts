@@ -17,6 +17,8 @@ import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
 import { RouteConstants } from 'src/app/constants/route.constants';
 import { Booking } from 'src/app/models/booking-details.model';
 import { BookingStatus } from 'src/app/constants/booking-status.enum';
+import { EmailService } from 'src/app/services/email.service';
+import { ClinicServiceData } from 'src/app/models/clinic-service-data.model';
 
 @Component({
   selector: 'app-home-patient',
@@ -42,6 +44,7 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
     private _globalService: GlobalService,
     private _trailService: TrailService,
     private _errorService: ErrorService,
+    private _emailService: EmailService,
     private _router: Router
     ) { }
 
@@ -92,17 +95,31 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
       this._globalService.hideLoader();
       return;
     }
-  
+
+    if(searchQuery === 'near me'){
+      const currentLocation = this.mapComponent?.currentLocation;
+      if(!currentLocation) return;
+
+      const currentCityProvince = this.getProvinceAndCity(currentLocation.address);
+      const currentCity = currentCityProvince.city;
+      const currentProvince = currentCityProvince.province;
+      
+      this.filteredClinics = this.clinics.filter(clinic => {
+        const {city, province} = this.getProvinceAndCity(clinic.location.address);
+        return currentCity === city && currentProvince === province;
+      });
+    }
+    else{
+      this.filteredClinics = this.clinics.filter(clinic => 
+            clinic.name?.toLowerCase().includes(searchQuery) || clinic.doctor?.person?.fullName?.toLowerCase().includes(searchQuery) ||
+            clinic.doctor?.specialization.name.toLowerCase().includes(searchQuery) ||
+            clinic.location.address.toLowerCase().includes(searchQuery) || clinic.location.landmark?.toLowerCase()?.includes(searchQuery));
+    }
+
     // Flag to show/hide the clinics
     this.loadClinics = true;
-  
-    this.filteredClinics = this.clinics.filter(clinic => 
-          clinic.name?.toLowerCase().includes(searchQuery) || clinic.doctor?.person?.fullName?.toLowerCase().includes(searchQuery) ||
-          clinic.doctor?.specialization.name.toLowerCase().includes(searchQuery) ||
-          clinic.location.address.toLowerCase().includes(searchQuery) || clinic.location.landmark?.toLowerCase()?.includes(searchQuery));
-      
+    
     await this.updateMarkers();
-
     this._globalService.hideLoader();
   }
 
@@ -150,15 +167,17 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
 
       const action = `${data.booking ? ModifierActions.UPDATED : ModifierActions.CREATED} Booking with Clinic ${data.clinic.name}`;
       const booking: Booking = {
-        ...bookingRes,
+        bookingNo: bookingRes.bookingNo,
+        bookingDate: new Date(bookingRes.bookingDate),
+        clinicId: bookingRes.clinicId,
+        remarks: bookingRes.remarks,
+        clinicServiceIds: bookingRes.clinicServiceIds,
         bookingStatus: BookingStatus.QUEUED,
-        userId: this.userData?.id,
+        userId: this.userData?.id!,
         ...(data.booking ? this._trailService.updateAudit(action) : this._trailService.createAudit(action))
       }
       
-      this.saveBooking(booking)
-      // TODO: DO THE UPDATE
-      // data.booking ? this.updateBookingDetails(this.clinicDoctor?.id!, clinicDoctor) : this.saveDoctor(clinicDoctor);
+      this.saveBooking(booking, bookingRes.clinicServices)
     } catch(e) {
       this._errorService.handleError(e);
     }
@@ -172,7 +191,7 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
     this.scrollToTop.emit();
   }
 
-  async saveBooking(booking: Booking){
+  async saveBooking(booking: Booking, clinicServices: ClinicServiceData[]){
     this._globalService.showLoader('Saving booking details...');
 
     await this._bookingService.saveBooking(booking)
@@ -191,6 +210,8 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
           ] 
         );
 
+        this.sendEmailConfirmation(booking, clinicServices);
+
         this.navigateToBookingHistory();
       })
       .catch(e => {
@@ -199,24 +220,28 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
       });
   }
 
+  sendEmailConfirmation(booking: Booking, clinicServices: ClinicServiceData[]){
+    booking.clinicServices = clinicServices;
+    booking.clinic = this.selectedClinic;
+
+    const mail = this._emailService.buildMail(
+      [this.userData?.person?.email!], 
+      this._emailService.buildBookingConfirmationEmailMessage(this.userData!, booking)
+    );
+    this._emailService.sendEmail(mail);
+  }
+
+  getProvinceAndCity(address: string){
+    const addressArray = address.split(', ');
+    const province = addressArray[addressArray?.length - 1];
+    const city = addressArray[addressArray?.length - 2];
+
+    return { city, province }
+  }
+
   navigateToBookingHistory(){
     this._router.navigateByUrl(RouteConstants.BOOKINGS, {replaceUrl: true});
   }
-  
-  // async updateBooking(id: string, bookingDetails: BookingDetails) {
-  //   this._globalService.showLoader('Updating booking details...');
-  //   bookingDetails = { id, ...bookingDetails };
-
-  //   await this._bookingService.updateBooking(bookingDetails)
-  //     .then(async () => {
-  //       this._globalService.hideLoader()
-  //       // TODO: NAVIGATE and show alert
-  //       // this._globalService.showToast(`Booking Saved!.`, 3000, ColorConstants.SUCCESS);
-  //     })
-  //     .catch((e) => {
-  //       this._errorService.handleError(e);
-  //     });
-  // }
 
   ngOnDestroy(): void {
     this.doctorsSubs?.unsubscribe();

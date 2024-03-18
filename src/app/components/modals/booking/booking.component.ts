@@ -147,10 +147,11 @@ export class BookingComponent implements OnInit {
           handler: () => {
             const booking: any = {
               bookingNo: this.generateRandomBookingNumber(),
-              bookingDate: this.bookingForm?.value.bookingDate,
+              bookingDate: new Date(this.bookingForm?.value.bookingDate),
               clinicId: this.clinic?.id!,
               clinicServiceIds: this.bookingForm?.value.clinicServiceIds,
-              remarks: this.bookingForm?.value.remarks
+              remarks: this.bookingForm?.value.remarks,
+              clinicServices: this.clinicServices.filter(x => this.bookingForm?.value.clinicServiceIds.includes(x.id))
             }
         
             this.dismiss(booking);

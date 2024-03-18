@@ -8,4 +8,5 @@ export class Collections {
   static readonly SPECIALIZATIONS = 'specializations'
   static readonly BANK_DETAILS = 'bank_details'
   static readonly BOOKINGS = 'bookings'
+  static readonly MAIL = 'mail';
 }

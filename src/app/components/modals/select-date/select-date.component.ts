@@ -131,7 +131,10 @@ export class SelectDateComponent  implements OnInit, OnDestroy {
       return;
     }
 
-    if(this.selectedDate?.toString() === this.currentDate.toISOString() && !this.isCurrentDateEnabled) return;
+    if(this.selectedDate?.toString() === this.currentDate.toISOString() && !this.isCurrentDateEnabled) {
+      this._globalService.showToast('This date is not available.');
+      return;
+    }
 
     this.dismiss(this.selectedDate);
   }

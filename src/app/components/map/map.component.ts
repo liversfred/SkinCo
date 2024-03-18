@@ -21,6 +21,7 @@ export class MapComponent  implements AfterViewInit, OnDestroy {
   mapListeners: any[] = [];
   markerUrl: string = 'assets/icons/location-pin.png';
   mapChange: Subscription | undefined;
+  currentLocation: LocationData | null | undefined;
 
   constructor(
     private _googleMapsService: GoogleMapsService,
@@ -51,8 +52,8 @@ export class MapComponent  implements AfterViewInit, OnDestroy {
     await this.initMap();
 
     // Get the current location
-    const currentLocationData = await this.getLocation(this.center.lat, this.center.lng);
-    if(currentLocationData) this.updateLocation(currentLocationData);
+    this.currentLocation = await this.getLocation(this.center.lat, this.center.lng);
+    if(this.currentLocation) this.updateLocation(this.currentLocation);
   }
 
   async initMap(){

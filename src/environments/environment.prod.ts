@@ -13,5 +13,7 @@ export const environment = {
   googleMapsApiKey: 'AIzaSyBNi-SOJUaN97At0NI5aYSujYwVpnQXrn4',
   defaultLat: 15.484958197991022,
   defaultLng: 120.97562615856529,
-  paginatedCount: 50
+  paginatedCount: 50,
+  emailSignatureName: 'Admin',
+  emailEnabled: true
 };

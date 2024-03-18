@@ -50,6 +50,7 @@ export class BookingService {
           return bookings.map((item) => {
             return { 
               ...item, 
+              bookingDate: item.bookingDate.toDate(),
               createdAt: item.createdAt.toDate(),
               updatedAt: item.updatedAt.toDate(),
             };
