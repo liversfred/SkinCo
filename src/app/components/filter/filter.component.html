@@ -1,0 +1,34 @@
+<div class="ion-padding">
+  <ion-fab slot="fixed" vertical="top" horizontal="start" class="ion-margin-start" *ngIf="!filterType">
+    <ion-fab-button size="small">
+      <ion-icon name="filter"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="bottom">
+      <ion-fab-button class="fab-item" color="secondary" (click)="onChangeFilterType(filterTypes.DATE)">
+        <ion-text>Date</ion-text>
+      </ion-fab-button>
+      <ion-fab-button class="fab-item" color="secondary" (click)="onChangeFilterType(filterTypes.CLINIC)">
+        <ion-text>Clinic</ion-text>
+      </ion-fab-button>
+      <ion-fab-button class="fab-item" color="secondary" (click)="onChangeFilterType()">
+        <ion-text>All</ion-text>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+  <ion-row *ngIf="filterType">
+    <ion-col size="12" size-md="6" push-md="4" *ngIf="filterType ===filterTypes.DATE">
+      <ion-text>Filter by Booking Date</ion-text>
+      <ion-datetime presentation="date" [value]="dateFilterValue" (ionChange)="onDateFilterChange($event)"></ion-datetime>
+    </ion-col>
+    <ion-col size="12" size-md="8" push-md="2" *ngIf="filterType ===filterTypes.CLINIC">
+      <ion-text>Filter by Clinic</ion-text>
+      <ion-item color="light" class="ion-margin-top">
+        <ion-icon name="business" slot="end"></ion-icon> 
+        <ion-select [value]="selectedClinicId" aria-label="clinic filter" interface="action-sheet" placeholder="Select a Clinic" (ionChange)="onClinicFilterChange($event)">
+          <ion-select-option *ngFor="let clinic of clinicOptions" [value]="clinic.id">{{ clinic.name }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+</div>

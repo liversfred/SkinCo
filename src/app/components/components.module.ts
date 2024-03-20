@@ -9,6 +9,7 @@ import { TruncateStringPipe } from '../pipes/truncate-string.pipe';
 import { ClinicCardComponent } from './cards/clinic-card/clinic-card.component';
 import { HomePatientComponent } from './home-patient/home-patient.component';
 import { BookingCardComponent } from './cards/booking-card/booking-card.component';
+import { FilterComponent } from './filter/filter.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { BookingCardComponent } from './cards/booking-card/booking-card.componen
     BookingCardComponent,
     TruncateStringPipe,
     ClinicCardComponent,
-    HomePatientComponent
+    HomePatientComponent,
+    FilterComponent
   ],
   imports: [
     SharedModule,
@@ -36,7 +38,8 @@ import { BookingCardComponent } from './cards/booking-card/booking-card.componen
     BookingCardComponent,
     TruncateStringPipe,
     ClinicCardComponent,
-    HomePatientComponent
+    HomePatientComponent,
+    FilterComponent
   ]
 })
 export class ComponentsModule { }

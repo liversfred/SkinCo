@@ -103,7 +103,7 @@ export class SelectDateComponent  implements OnInit, OnDestroy {
 
     const clinicBookings = this.clinicBookings.filter(x => 
       new Date(x.bookingDate).getDate() === new Date(this.selectedDate!).getDate() 
-      && x.bookingStatus !== BookingStatus.COMPLETED
+      && x.bookingStatus !== BookingStatus.COMPLETED && x.bookingStatus !== BookingStatus.CANCELLED
     );
 
     if(!clinicBookings) return;
@@ -124,7 +124,7 @@ export class SelectDateComponent  implements OnInit, OnDestroy {
       return;
     }
 
-    const existingBooking = this.bookingsOnSelectedDate.find(x => x.userId === this.userData?.id && x.bookingStatus !== BookingStatus.COMPLETED);
+    const existingBooking = this.bookingsOnSelectedDate.find(x => x.userId === this.userData?.id && x.bookingStatus !== BookingStatus.COMPLETED && x.bookingStatus !== BookingStatus.CANCELLED);
 
     if(existingBooking) {
       this._globalService.showToast('You already booked this data. Please choose a different date.');

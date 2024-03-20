@@ -12,6 +12,7 @@ export interface Booking extends Trail{
   remarks?: string;
   clinicServiceIds: string[];
   bookingStatus: BookingStatus;
+  cancellationReason?: string;
 
   clinicServices?: ClinicServiceData[];
   clinic?: Clinic;

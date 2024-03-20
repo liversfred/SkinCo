@@ -12,24 +12,51 @@
     </ion-card-title>
     <ion-card-subtitle>
       <ion-row class="ion-justify-content-between">
-        <ion-text [color]="statusColor" *ngIf="statusColor">
-          {{ booking?.bookingStatus }}
-        </ion-text>
-        <ion-text>
-          #{{ booking?.bookingNo }}
-        </ion-text>
+        <ion-col size="4">
+          <ion-text [color]="statusColor" *ngIf="statusColor">
+            {{ booking?.bookingStatus }}
+          </ion-text>
+        </ion-col>
+        <ion-col size="8" class="ion-text-end">
+          <ion-text class="ion-margin-end">
+            #{{ booking?.bookingNo }}
+          </ion-text>
+
+          <ion-icon class="menu-icon" 
+            color="primary" 
+            name="menu" 
+            (click)="presentPopover($event)"
+            *ngIf="booking?.bookingStatus !== bookingStatuses.COMPLETED && booking?.bookingStatus !== bookingStatuses.CANCELLED">
+          </ion-icon>
+        </ion-col>
       </ion-row>
     </ion-card-subtitle>
   </ion-card-header>
 
   <ion-card-content>
+    <ion-popover #popover [isOpen]="isPopoverOpen" (didDismiss)="isPopoverOpen = false"
+      *ngIf="booking?.bookingStatus !== bookingStatuses.COMPLETED && booking?.bookingStatus !== bookingStatuses.CANCELLED">
+      <ng-template>
+        <ion-list>
+          <ion-item class="link" *ngIf="userData?.role?.name === roles.PATIENT" (click)="onCancelBooking()">
+            <ion-icon slot="start" color="danger" name="close-circle"></ion-icon>
+            <ion-text>CANCEL</ion-text>
+          </ion-item>
+          <ion-item class="link" *ngIf="userData?.role?.name === roles.STAFF">
+            <ion-icon slot="start" color="secondary" name="play-skip-forward"></ion-icon>
+            <ion-text>SKIP</ion-text>
+          </ion-item>
+        </ion-list>
+      </ng-template>
+    </ion-popover>
+
     <ion-row>
       <ion-col size="12" size-md="6">
         <ion-text>
           <h2><b>Booking Date: </b> {{ booking?.bookingDate | date: 'longDate'}}</h2>
         </ion-text>
       </ion-col>
-      <ion-col size="12" size-md="6">
+      <ion-col size="12" size-md="6" class="ion-text-end">
         <ion-text>
           <h2><b>Date Created: </b> {{ booking?.createdAt | date: 'longDate'}}</h2>
         </ion-text>
