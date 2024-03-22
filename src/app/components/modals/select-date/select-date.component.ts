@@ -124,7 +124,7 @@ export class SelectDateComponent  implements OnInit, OnDestroy {
       return;
     }
 
-    const existingBooking = this.bookingsOnSelectedDate.find(x => x.userId === this.userData?.id && x.bookingStatus !== BookingStatus.COMPLETED && x.bookingStatus !== BookingStatus.CANCELLED);
+    const existingBooking = this.bookingsOnSelectedDate.find(x => x.patientId === this.userData?.id && x.bookingStatus !== BookingStatus.COMPLETED && x.bookingStatus !== BookingStatus.CANCELLED);
 
     if(existingBooking) {
       this._globalService.showToast('You already booked this data. Please choose a different date.');

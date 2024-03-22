@@ -38,8 +38,8 @@ export class BookingService {
     return this.fetchBookingsAsync(collectionRef);
   }
 
-  fetchBookingsByUserIdAsync(userId: string): Observable<Booking[]> {
-    const collectionRef = query(this.bookingsCollection, where('userId', '==', userId));
+  fetchBookingsByPatientIdAsync(userId: string): Observable<Booking[]> {
+    const collectionRef = query(this.bookingsCollection, where('patientId', '==', userId));
     return this.fetchBookingsAsync(collectionRef);
   }
 

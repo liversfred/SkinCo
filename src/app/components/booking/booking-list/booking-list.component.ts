@@ -3,6 +3,7 @@ import { Booking } from 'src/app/models/booking-details.model';
 import { Clinic } from 'src/app/models/clinic.model';
 import { UserData } from 'src/app/models/user-data.model';
 import { ClinicService } from 'src/app/services/clinic.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-booking-list',
@@ -12,16 +13,37 @@ import { ClinicService } from 'src/app/services/clinic.service';
 export class BookingListComponent {
   @Input() userData: UserData | undefined;
   @Input() bookings: Booking[] = [];
-  @Output() cancelBooking = new EventEmitter<Booking>
+  @Input() patientLevel: boolean = true;
+  @Output() cancelBooking = new EventEmitter<Booking>;
+  @Output() skipBooking = new EventEmitter<Booking>;
+  @Output() requeueBooking = new EventEmitter<Booking>;
+  @Output() completeBooking = new EventEmitter<Booking>
   
-  constructor(private _clinicService: ClinicService) { }
+  constructor(private _clinicService: ClinicService, private _userService: UserService) { }
 
   onViewClinic(clinic: Clinic){
     const data = { clinic }
     this._clinicService.openClinicDetailsModal(data);
   }
 
+  onViewPatient(patient: UserData){
+    const data = { userData: patient };
+    this._userService.openUserDetailsModal(data);
+  }
+
   onCancelBooking(booking: Booking){
     this.cancelBooking.emit(booking);
+  }
+
+  onSkipBooking(booking: Booking){
+    this.skipBooking.emit(booking);
+  }
+
+  onRequeueBooking(booking: Booking){
+    this.requeueBooking.emit(booking);
+  }
+
+  onCompleteBooking(booking: Booking){
+    this.completeBooking.emit(booking);
   }
 }

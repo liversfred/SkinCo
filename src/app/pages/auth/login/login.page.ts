@@ -24,7 +24,7 @@ export class LoginPage implements OnInit {
     // Redirect if user is logged in
     const isAuthenticated = await this._authService.checkUserAuth(); 
     if(isAuthenticated) {
-      this._authService.redirectIfLoggedIn();
+      this._authService.redirectByUserRole();
       return;
     }
   }
@@ -50,7 +50,7 @@ export class LoginPage implements OnInit {
 
     await this._authService.login(email, password).then(() => {
         this._globalService.hideLoader();
-        this._router.navigateByUrl(RouteConstants.HOME, { replaceUrl: true });
+        this._authService.redirectByUserRole();
         this.loginForm?.reset();
       })
       .catch(e => {

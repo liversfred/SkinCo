@@ -7,7 +7,6 @@ import { BankDetailsCardComponent } from './cards/bank-details-card/bank-details
 import { ClinicServiceCardComponent } from './cards/clinic-service-card/clinic-service-card.component';
 import { TruncateStringPipe } from '../pipes/truncate-string.pipe';
 import { ClinicCardComponent } from './cards/clinic-card/clinic-card.component';
-import { HomePatientComponent } from './home-patient/home-patient.component';
 import { BookingCardComponent } from './cards/booking-card/booking-card.component';
 import { FilterComponent } from './filter/filter.component';
 
@@ -20,9 +19,8 @@ import { FilterComponent } from './filter/filter.component';
     BankDetailsCardComponent,
     ClinicServiceCardComponent,
     BookingCardComponent,
-    TruncateStringPipe,
     ClinicCardComponent,
-    HomePatientComponent,
+    TruncateStringPipe,
     FilterComponent
   ],
   imports: [
@@ -36,9 +34,8 @@ import { FilterComponent } from './filter/filter.component';
     BankDetailsCardComponent,
     ClinicServiceCardComponent,
     BookingCardComponent,
-    TruncateStringPipe,
     ClinicCardComponent,
-    HomePatientComponent,
+    TruncateStringPipe,
     FilterComponent
   ]
 })

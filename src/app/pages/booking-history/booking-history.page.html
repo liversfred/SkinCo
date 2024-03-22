@@ -12,11 +12,11 @@
   
       <div [ngSwitch]="selectedSegment">
         <ion-list *ngSwitchCase="bookingSegments.ACTIVE_BOOKINGS">
-          <app-filter (filterByDate)="onFilterByDate($event)" (filterByClinic)="onFilterByClinic($event)" (clearFilters)="onClearFilters()" [clinicOptions]="clinicOptions"></app-filter>
+          <app-filter [filterOptions]="filterOptions" (filterByDate)="onFilterByDate($event)" (filterByClinic)="onFilterByClinic($event)" (clearFilters)="onClearFilters()" [clinicOptions]="clinicOptions"></app-filter>
           <app-booking-list [userData]="userData" [bookings]="filteredActiveBookings" (cancelBooking)="onCancelBooking($event)"></app-booking-list>
         </ion-list>
         <ion-list *ngSwitchCase="bookingSegments.BOOKING_HISTORY">
-          <app-filter (filterByDate)="onFilterByDate($event)" (filterByClinic)="onFilterByClinic($event)" (clearFilters)="onClearFilters()" [clinicOptions]="clinicOptions"></app-filter>
+          <app-filter [filterOptions]="filterOptions" (filterByDate)="onFilterByDate($event)" (filterByClinic)="onFilterByClinic($event)" (clearFilters)="onClearFilters()" [clinicOptions]="clinicOptions"></app-filter>
           <app-booking-list [userData]="userData" [bookings]="filteredPreviousBookings"></app-booking-list>
         </ion-list>
       </div>

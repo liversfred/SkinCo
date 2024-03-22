@@ -22,8 +22,13 @@ const routes: Routes = [
     loadChildren: () => import('./pages/auth/login/login.module').then( m => m.LoginPageModule)
   },
   {
-    path: RouteConstants.HOME,
-    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule),
+    path: RouteConstants.HOME_PATIENT,
+    loadChildren: () => import('./pages/home-patient/home-patient.module').then( m => m.HomePatientPageModule),
+    canMatch: [authGuard]
+  },
+  {
+    path: RouteConstants.HOME_STAFF,
+    loadChildren: () => import('./pages/home-staff/home-staff.module').then( m => m.HomeStaffPageModule),
     canMatch: [authGuard]
   },
   {
@@ -48,13 +53,15 @@ const routes: Routes = [
   },
   {
     path: RouteConstants.CLINIC_BANK_DETAILS,
-    loadChildren: () => import('./pages/clinic-bank-details/clinic-bank-details.module').then( m => m.ClinicBankDetailsPageModule)
+    loadChildren: () => import('./pages/clinic-bank-details/clinic-bank-details.module').then( m => m.ClinicBankDetailsPageModule),
+    canMatch: [authGuard]
   },
   {
     path: RouteConstants.BOOKINGS,
-    loadChildren: () => import('./pages/booking-history/booking-history.module').then( m => m.BookingHistoryPageModule)
+    loadChildren: () => import('./pages/booking-history/booking-history.module').then( m => m.BookingHistoryPageModule),
+    canMatch: [authGuard]
   },
-  { path: '**' , redirectTo: RouteConstants.LOGIN }, // To handle unknown url path
+  { path: '**' , redirectTo: RouteConstants.LOGIN },  // To handle unknown url path
 ];
 
 @NgModule({

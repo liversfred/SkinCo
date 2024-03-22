@@ -8,6 +8,7 @@ import { Clinic } from 'src/app/models/clinic.model';
   styleUrls: ['./filter.component.scss'],
 })
 export class FilterComponent {
+  @Input() filterOptions: string[] = [];
   @Input() clinicOptions: Clinic[] = [];
   filterTypes: any = FilterTypeEnum;
   filterType: FilterTypeEnum | null = null;

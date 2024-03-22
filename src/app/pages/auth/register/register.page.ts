@@ -52,7 +52,7 @@ export class RegisterPage implements OnInit {
     // Redirect if user is logged in
     const isAuthenticated = await this._authService.checkUserAuth(); 
     if(isAuthenticated) {
-      this._authService.redirectIfLoggedIn();
+      this._authService.redirectByUserRole();
       return;
     }
 

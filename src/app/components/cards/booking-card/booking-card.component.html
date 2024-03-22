@@ -3,10 +3,10 @@
     <ion-card-title>
       <ion-row class="ion-justify-content-between ion-align-items-center">
         <ion-col size="10" class="ion-text-start">
-          <h1>{{ booking?.clinic?.name}}</h1>
+          <h1>{{ patientLevel ? booking?.clinic?.name : booking?.patient?.person?.fullName }}</h1>
         </ion-col>
         <ion-col size="2" class="ion-text-end">
-          <ion-icon class="link" name="eye" (click)="onViewClinic()"></ion-icon>
+          <ion-icon class="link" name="eye" (click)="patientLevel ? onViewClinic() : onViewPatient()"></ion-icon>
         </ion-col>
       </ion-row>
     </ion-card-title>
@@ -26,7 +26,7 @@
             color="primary" 
             name="menu" 
             (click)="presentPopover($event)"
-            *ngIf="booking?.bookingStatus !== bookingStatuses.COMPLETED && booking?.bookingStatus !== bookingStatuses.CANCELLED">
+            *ngIf="booking?.bookingStatus === bookingStatuses.QUEUED || booking?.bookingStatus === bookingStatuses.SKIPPED">
           </ion-icon>
         </ion-col>
       </ion-row>
@@ -42,9 +42,17 @@
             <ion-icon slot="start" color="danger" name="close-circle"></ion-icon>
             <ion-text>CANCEL</ion-text>
           </ion-item>
-          <ion-item class="link" *ngIf="userData?.role?.name === roles.STAFF">
+          <ion-item class="link" *ngIf="userData?.role?.name === roles.STAFF && booking?.bookingStatus === bookingStatuses.QUEUED" (click)="onSkipBooking()">
             <ion-icon slot="start" color="secondary" name="play-skip-forward"></ion-icon>
             <ion-text>SKIP</ion-text>
+          </ion-item>
+          <ion-item class="link" *ngIf="userData?.role?.name === roles.STAFF && booking?.bookingStatus === bookingStatuses.SKIPPED" (click)="onRequeueBooking()">
+            <ion-icon slot="start" color="secondary" name="refresh"></ion-icon>
+            <ion-text>Requeue</ion-text>
+          </ion-item>
+          <ion-item class="link" *ngIf="userData?.role?.name === roles.STAFF && (booking?.bookingStatus === bookingStatuses.QUEUED || booking?.bookingStatus === bookingStatuses.SKIPPED)" (click)="onCompleteBooking()">
+            <ion-icon slot="start" color="success" name="thumbs-up"></ion-icon>
+            <ion-text>Complete</ion-text>
           </ion-item>
         </ion-list>
       </ng-template>
@@ -91,11 +99,17 @@
           </ion-accordion>
         </ion-accordion-group>
       </ion-col>
-      <ion-col size="12" size-md="6" *ngIf="booking?.remarks && booking?.remarks !== ''">
+      <ion-col size="12"*ngIf="booking?.remarks && booking?.remarks !== ''">
         <ion-text>
           <h2><b>Remarks:</b></h2>
         </ion-text>
         <ion-text> {{ booking?.remarks }}</ion-text>
+      </ion-col>
+      <ion-col size="12" *ngIf="booking?.bookingStatus === bookingStatuses.CANCELLED && booking?.cancellationReason && booking?.cancellationReason !== ''">
+        <ion-text color="danger">
+          <h2><b>Reson:</b></h2>
+        </ion-text>
+        <ion-text> {{ booking?.cancellationReason }}</ion-text>
       </ion-col>
     </ion-row>
   </ion-card-content>

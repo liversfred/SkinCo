@@ -4,6 +4,15 @@
       <h1>No Results found</h1>
     </ion-col>
     <ion-col size="12" size-md="8" *ngFor="let booking of bookings">
-      <app-booking-card [userData]="userData" [booking]="booking" (viewClinic)="onViewClinic($event)" (cancelBooking)="onCancelBooking($event)"></app-booking-card>
+      <app-booking-card [userData]="userData" 
+        [patientLevel]="patientLevel" 
+        [booking]="booking" 
+        (viewClinic)="onViewClinic($event)" 
+        (viewPatient)="onViewPatient($event)" 
+        (cancelBooking)="onCancelBooking($event)"
+        (skipBooking)="onSkipBooking($event)"
+        (requeueBooking)="onRequeueBooking($event)"
+        (completeBooking)="onCompleteBooking($event)">
+      </app-booking-card>
     </ion-col>
 </ion-row>

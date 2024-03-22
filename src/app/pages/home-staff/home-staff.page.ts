@@ -9,42 +9,42 @@ import { FilterTypeEnum } from 'src/app/constants/filter-type.enum';
 import { ModifierActions } from 'src/app/constants/modifiers-action.constants';
 import { Booking } from 'src/app/models/booking-details.model';
 import { ClinicServiceData } from 'src/app/models/clinic-service-data.model';
-import { Clinic } from 'src/app/models/clinic.model';
 import { UserData } from 'src/app/models/user-data.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { BookingService } from 'src/app/services/booking.service';
 import { ClinicServicesService } from 'src/app/services/clinic-services.service';
-import { ClinicService } from 'src/app/services/clinic.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { TrailService } from 'src/app/services/trail.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
-  selector: 'app-booking-history',
-  templateUrl: './booking-history.page.html',
-  styleUrls: ['./booking-history.page.scss'],
+  selector: 'app-home-staff',
+  templateUrl: './home-staff.page.html',
+  styleUrls: ['./home-staff.page.scss'],
 })
-export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
+export class HomeStaffPage implements ViewWillEnter, OnDestroy {
   userData: UserData | undefined;
   activeBookings: Booking[] = [];
   previousBookings: Booking[] = [];
+  skippedBookings: Booking[] = [];
   filteredActiveBookings: Booking[] = [];
   filteredPreviousBookings: Booking[] = [];
-  clinics: Clinic[] = [];
+  filteredSkippedBookings: Booking[] = [];
   clinicServices: ClinicServiceData[] = [];
-  filterOptions: string[] = [FilterTypeEnum.DATE, FilterTypeEnum.CLINIC];
+  filterOptions: string[] = [FilterTypeEnum.DATE];
+  users: UserData[] = [];
   bookingSegments: any = BookingSegments;
   selectedSegment: string = this.bookingSegments.ACTIVE_BOOKINGS;
-  clinicOptions: Clinic[] = [];
   userDataSubs: Subscription | undefined;
-  clinicSubs: Subscription | undefined;
+  usersSubs: Subscription | undefined;
   clinicServiceSubs: Subscription | undefined;
   bookingSubs: Subscription | undefined;
 
   constructor(
     private _authService: AuthService, 
+    private _userService: UserService,
     private _bookingService: BookingService,
-    private _clinicService: ClinicService,
     private _clinicServicesService: ClinicServicesService,
     private _trailService: TrailService,
     private _globalService: GlobalService,
@@ -52,22 +52,23 @@ export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
     ) { }
 
   async ionViewWillEnter() {
-    this.fetchClinics();
+    this.fetchUsers();
     this.fetchClinicServices();
 
     // Load user data
     this.userDataSubs = this._authService.userData.subscribe(async userData => {
       this.userData = userData ?? undefined;
+
       if(!this.userData) return;
 
       this.fetchBookings();
     });
   }
 
-  fetchClinics(){
-    this.clinicSubs = this._clinicService.fetchClinicsAsync().subscribe(clinics => {
-      this.clinics = clinics;
-    })
+  fetchUsers(){
+    this.usersSubs = this._userService.fetchUsersAsync().subscribe(users => {
+      this.users = users;
+    });
   }
 
   fetchClinicServices() {
@@ -77,34 +78,31 @@ export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
   }
 
   async fetchBookings(){
-    this.bookingSubs = this._bookingService.fetchBookingsByPatientIdAsync(this.userData?.id!)
+    this.bookingSubs = this._bookingService.fetchBookingsByClinicIdAsync(this.userData?.clinicId!)
       .subscribe({
         next: (bookings: Booking[]) => {
           this.activeBookings = [];
           this.previousBookings = [];
-          this.clinicOptions = []
+          this.skippedBookings = [];
       
           bookings.forEach(booking => {
-            booking.clinic = this.clinics.find(x => x.id === booking.clinicId),
-            booking.clinicServices = this.clinicServices.filter(x => booking.clinicServiceIds.includes(x.id!))
+            booking.patient = this.users.find(x => x.id === booking.patientId);
+            booking.clinicServices = this.clinicServices.filter(x => booking.clinicServiceIds.includes(x.id!));
       
-            if(booking.bookingStatus === BookingStatus.QUEUED || booking.bookingStatus === BookingStatus.SKIPPED){
+            if(booking.bookingStatus === BookingStatus.QUEUED){
               this.activeBookings.push(booking);
+            }
+            else if(booking.bookingStatus === BookingStatus.SKIPPED){
+              this.skippedBookings.push(booking);
             }
             else{              
               this.previousBookings.push(booking);
             }
-
-            // This will be used for filters
-            const isAlreadyAdded = this.clinicOptions.find(x => x.id === booking.clinicId);
-            if(!isAlreadyAdded){
-              const clinic = this.clinics.find(x => x.id === booking.clinicId);
-              if(clinic) this.clinicOptions.push(clinic);
-            }
           });
 
-          this.filteredActiveBookings = this.activeBookings;
+          this.onFilterByDate(new Date());  // Get active bookings and filter by current date
           this.filteredPreviousBookings = this.previousBookings;
+          this.filteredSkippedBookings = this.skippedBookings;
         },
         error: (err: any) => {
           this._errorService.handleError(err);
@@ -112,13 +110,22 @@ export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
       });
   }
 
+  onChangeSegment(event: any){
+    this.selectedSegment = event.target.value
+    this.onFilterByDate(new Date());
+  }
+
   getSourceArray(): Booking[]{
-    return this.selectedSegment === BookingSegments.ACTIVE_BOOKINGS ? this.activeBookings : this.previousBookings; 
+    return this.selectedSegment === BookingSegments.ACTIVE_BOOKINGS ? this.activeBookings : 
+            this.selectedSegment === BookingSegments.SKIPPED_BOOKINGS ? this.skippedBookings : this.previousBookings; 
   }
 
   setSourceArrayValue(bookings: Booking[]){
     if(this.selectedSegment === BookingSegments.ACTIVE_BOOKINGS){
       this.filteredActiveBookings = bookings;
+    }
+    else if(this.selectedSegment === BookingSegments.SKIPPED_BOOKINGS){
+      this.filteredSkippedBookings = bookings;
     }
     else{
       this.filteredPreviousBookings = bookings;
@@ -168,7 +175,7 @@ export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
             ...this._trailService.updateAudit(action)
             };
 
-            this.cancelBooking(updatedModel);
+            this.updateBooking(updatedModel);
           }
         }
       ],
@@ -183,17 +190,72 @@ export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
     )
   }
 
-  async cancelBooking(updatedModel: any){
+  async updateBooking(updatedModel: any){
     this._globalService.showLoader('Updating booking status...');
 
     this._bookingService.updateBooking(updatedModel)
       .then(async () => {
         this._globalService.hideLoader();
-        this._globalService.showToast(`Booking has been cancelled..`, 3000, ColorConstants.SUCCESS);
+        this._globalService.showToast(`Booking has been updated..`, 3000, ColorConstants.SUCCESS);
       })
       .catch((e) => {
         this._errorService.handleError(e);
       });
+  }
+
+  onSkipBooking(booking: Booking){
+    const action = `${ModifierActions.UPDATED} Booking ${booking.bookingNo}`;
+
+    const updatedModel = {
+      id: booking.id!,
+      bookingStatus: BookingStatus.SKIPPED,
+    ...this._trailService.updateAudit(action)
+    };
+    
+    this.showAlert('Are you sure you want to skip the booking?', updatedModel);
+  }
+
+  onRequeueBooking(booking: Booking){
+    const action = `${ModifierActions.UPDATED} Booking ${booking.bookingNo}`;
+
+    const updatedModel = {
+      id: booking.id!,
+      bookingStatus: BookingStatus.QUEUED,
+    ...this._trailService.updateAudit(action)
+    };
+
+    this.showAlert('Are you sure you want to re-queue the booking?', updatedModel);
+  }
+
+  onCompleteBooking(booking: Booking){
+    const action = `${ModifierActions.UPDATED} Booking ${booking.bookingNo}`;
+
+    const updatedModel = {
+      id: booking.id!,
+      bookingStatus: BookingStatus.COMPLETED,
+    ...this._trailService.updateAudit(action)
+    };
+
+    this.showAlert('Are you sure you want to complete the booking?', updatedModel);
+  }
+
+  showAlert(message: string, updatedModel: any){
+    this._globalService.showAlert(
+      AlertTypeEnum.CONFIRM, message,
+      [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary'
+        }, 
+        {
+          text: 'Yes',
+          handler: async () => {
+            this.updateBooking(updatedModel);
+          }
+        }
+      ]
+    );
   }
 
   onClearFilters(){
@@ -203,7 +265,7 @@ export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
   
   ngOnDestroy(): void {
     this.userDataSubs?.unsubscribe();
-    this.clinicSubs?.unsubscribe();
+    this.usersSubs?.unsubscribe();
     this.clinicServiceSubs?.unsubscribe();
     this.bookingSubs?.unsubscribe();
   }

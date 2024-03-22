@@ -9,7 +9,8 @@ import { Router } from '@angular/router';
 import { RouteConstants } from '../constants/route.constants';
 import { RoleService } from './role.service';
 import { StorageKeys } from '../constants/storage-key.constants';
-import { GlobalService } from './global.service';
+import { Roles } from '../constants/roles.constants';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,7 @@ export class AuthService {
     private _storageService: StorageService, 
     private _router: Router, 
     private _roleService: RoleService,
-    private _globalService: GlobalService
+    private _userService: UserService
     ) { 
     this.usersCollection = collection(this._fireStore, Collections.USERS);
   }
@@ -86,34 +87,11 @@ export class AuthService {
       // Get auth id from local storage
       const authId = await this.getAuthId();
       
-      const collectionRef = query(this.usersCollection, where('authId', '==', authId));
-      let userData = await new Promise<UserData>((resolve, reject) => {
-        collectionData(collectionRef, { idField: 'id'})
-          .pipe(
-            map((users: any) => {
-              const firstRes = users[0];
-              const userData: UserData = {
-                ...firstRes,
-                  createdAt: firstRes.createdAt.toDate(),
-                  updatedAt: firstRes.updatedAt.toDate(),
-                  person: {
-                    ...firstRes.person,
-                    fullName: this._globalService.formatFullName(firstRes.person.firstName, firstRes.person.middleName, firstRes.person.lastName)
-                  }
-              }
-              return userData;
-            }),
-          )
-          .subscribe({
-            next: (userData: UserData) => {
-              resolve(userData);
-            },
-            error: (err: any) => {
-              this.logout();  // Logout if no user record found in db
-              reject(err);
-            }
-          });
-      });
+      let userData = await this._userService.fetchUserData(authId);
+      if(!userData) {
+        this.logout();  // Logout if no user record found in db
+        return;
+      }
       
       // Fetch and assign role object
       const roles = await this._roleService.fetchRoles();
@@ -158,8 +136,18 @@ export class AuthService {
     }
   }
 
-  redirectIfLoggedIn() {
-    this._router.navigateByUrl(RouteConstants.HOME, { replaceUrl: true });
+  redirectByUserRole() {
+    const userDataSubs = this.userData.subscribe(userData => {
+      if(!userData) return;
+
+      let path = '';
+      if(userData?.role?.name === Roles.STAFF) path = RouteConstants.HOME_STAFF;
+      else if(userData?.role?.name === Roles.PATIENT) path = RouteConstants.HOME_PATIENT;
+      else if(userData?.role?.name === Roles.ADMIN) path = RouteConstants.HOME_ADMIN;
+
+      this._router.navigateByUrl(path, { replaceUrl: true })
+    });
+    userDataSubs.unsubscribe();
   }
 
   async getActiveUserByEmail(email: string): Promise<UserData>{

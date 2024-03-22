@@ -1,43 +1,47 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { Clinic } from 'src/app/models/clinic.model';
-import { Doctor } from 'src/app/models/doctor.model';
-import { MapComponent } from '../map/map.component';
-import { ClinicService } from 'src/app/services/clinic.service';
-import { DoctorService } from 'src/app/services/doctor.service';
-import { BookingService } from 'src/app/services/booking.service';
-import { GlobalService } from 'src/app/services/global.service';
-import { ErrorService } from 'src/app/services/error.service';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { TrailService } from 'src/app/services/trail.service';
-import { BookingComponent } from '../modals/booking/booking.component';
-import { ModifierActions } from 'src/app/constants/modifiers-action.constants';
-import { UserData } from 'src/app/models/user-data.model';
+import { IonContent, ViewWillEnter } from '@ionic/angular';
+import { Subscription } from 'rxjs';
+import { MapComponent } from 'src/app/components/map/map.component';
+import { BookingComponent } from 'src/app/components/modals/booking/booking.component';
 import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
+import { BookingStatus } from 'src/app/constants/booking-status.enum';
+import { ModifierActions } from 'src/app/constants/modifiers-action.constants';
 import { RouteConstants } from 'src/app/constants/route.constants';
 import { Booking } from 'src/app/models/booking-details.model';
-import { BookingStatus } from 'src/app/constants/booking-status.enum';
-import { EmailService } from 'src/app/services/email.service';
 import { ClinicServiceData } from 'src/app/models/clinic-service-data.model';
+import { Clinic } from 'src/app/models/clinic.model';
+import { Doctor } from 'src/app/models/doctor.model';
+import { UserData } from 'src/app/models/user-data.model';
+import { AuthService } from 'src/app/services/auth.service';
+import { BookingService } from 'src/app/services/booking.service';
+import { ClinicService } from 'src/app/services/clinic.service';
+import { DoctorService } from 'src/app/services/doctor.service';
+import { EmailService } from 'src/app/services/email.service';
+import { ErrorService } from 'src/app/services/error.service';
+import { GlobalService } from 'src/app/services/global.service';
+import { TrailService } from 'src/app/services/trail.service';
 
 @Component({
   selector: 'app-home-patient',
-  templateUrl: './home-patient.component.html',
-  styleUrls: ['./home-patient.component.scss'],
+  templateUrl: './home-patient.page.html',
+  styleUrls: ['./home-patient.page.scss'],
 })
-export class HomePatientComponent  implements OnInit, OnDestroy {
-  @Input() userData: UserData | undefined;
+export class HomePatientPage implements ViewWillEnter, OnDestroy {
+  userData: UserData | undefined;
   clinics: Clinic[] = [];
   doctors: Doctor[] = [];
   filteredClinics: Clinic[] = [];
   loadClinics: boolean = false;
   selectedClinic: Clinic | undefined;
-  doctorsSubs: Subscription | undefined;
+  userSubs: Subscription | undefined;
   clinicsSubs: Subscription | undefined;
-  @Output() scrollToTop = new EventEmitter<void>;
+  doctorsSubs: Subscription | undefined;
+  @ViewChild('content') content: IonContent | undefined;
   @ViewChild(MapComponent) mapComponent: MapComponent | undefined;
 
   constructor(
+    private _authService: AuthService,
     private _clinicService: ClinicService,
     private _doctorService: DoctorService,
     private _bookingService: BookingService,
@@ -48,14 +52,16 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
     private _router: Router
     ) { }
 
-  async ngOnInit() {
+  async ionViewWillEnter(): Promise<void> {
+    // Load user data
+    this.userSubs = this._authService.userData.subscribe(async userData => this.userData = userData ?? undefined );
+    
     this._globalService.showLoader('Loading page...');
     await this.fetchDoctors();
     await this.fetchClinics();
-
     this._globalService.hideLoader();
   }
-
+  
   async fetchDoctors(){
     this.doctorsSubs = this._doctorService.fetchDoctorsAsync()
       .subscribe({
@@ -173,7 +179,7 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
         remarks: bookingRes.remarks,
         clinicServiceIds: bookingRes.clinicServiceIds,
         bookingStatus: BookingStatus.QUEUED,
-        userId: this.userData?.id!,
+        patientId: this.userData?.id!,
         ...(data.booking ? this._trailService.updateAudit(action) : this._trailService.createAudit(action))
       }
       
@@ -188,7 +194,7 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
     const location = await this.mapComponent?.getLocationByLatLng(clinic.location.lat, clinic.location.lng);
     this.mapComponent?.setMapCenter(location);
     this.mapComponent?.setZoom(20);
-    this.scrollToTop.emit();
+    this.scrollToTop();
   }
 
   async saveBooking(booking: Booking, clinicServices: ClinicServiceData[]){
@@ -243,8 +249,11 @@ export class HomePatientComponent  implements OnInit, OnDestroy {
     this._router.navigateByUrl(RouteConstants.BOOKINGS, {replaceUrl: true});
   }
 
+  scrollToTop() {
+    this.content?.scrollToTop();
+  }
+
   ngOnDestroy(): void {
-    this.doctorsSubs?.unsubscribe();
-    this.clinicsSubs?.unsubscribe();
+    this.userSubs?.unsubscribe();
   }
 }

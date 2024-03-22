@@ -17,7 +17,6 @@ import { TrailService } from 'src/app/services/trail.service';
 })
 export class ProfilePage implements ViewWillEnter, ViewDidLeave {
   userData: UserData | undefined | null;
-  imagePath: string | undefined;
   userSubs: Subscription | undefined;
 
   constructor(
@@ -29,10 +28,7 @@ export class ProfilePage implements ViewWillEnter, ViewDidLeave {
   ionViewWillEnter(): void {
     this.userSubs = this._authService.userData.subscribe(userData => {
       if(!userData) return;
-      
       this.userData = userData;
-      this.imagePath = this.userData.person.gender
-      this.imagePath = `../../../assets/images/users/default_${this.userData?.person.gender.toLocaleLowerCase()}_user.png`;
     });
   }
 
@@ -42,7 +38,6 @@ export class ProfilePage implements ViewWillEnter, ViewDidLeave {
     this.openUpdateProfileModal(data);
   }
 
-  
   async openUpdateProfileModal(data?: any) {
     try {
       const options = {

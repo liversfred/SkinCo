@@ -15,6 +15,7 @@ import { UserData } from 'src/app/models/user-data.model';
 export class BookingCardComponent  implements OnInit {
   @Input() booking: Booking | undefined;
   @Input() userData: UserData | undefined;
+  @Input() patientLevel: boolean = true;
   roles: any = Roles;
   bookingStatuses: any = BookingStatus;
   totalServicesPrice: number = 0;
@@ -22,7 +23,11 @@ export class BookingCardComponent  implements OnInit {
   isPopoverOpen = false;
   @ViewChild('popover') popover: IonPopover | undefined;
   @Output() viewClinic = new EventEmitter<Clinic>;
+  @Output() viewPatient = new EventEmitter<UserData>;
   @Output() cancelBooking = new EventEmitter<Booking>;
+  @Output() skipBooking = new EventEmitter<Booking>;
+  @Output() requeueBooking = new EventEmitter<Booking>
+  @Output() completeBooking = new EventEmitter<Booking>
 
   constructor() { }
 
@@ -63,8 +68,27 @@ export class BookingCardComponent  implements OnInit {
     this.viewClinic.emit(this.booking?.clinic);
   }
 
+  onViewPatient(){
+    this.viewPatient.emit(this.booking?.patient);
+  }
+
   onCancelBooking(){
     this.isPopoverOpen = false;
     this.cancelBooking.emit(this.booking);
+  }
+
+  onSkipBooking(){
+    this.isPopoverOpen = false;
+    this.skipBooking.emit(this.booking);
+  }
+
+  onRequeueBooking(){
+    this.isPopoverOpen = false;
+    this.requeueBooking.emit(this.booking);
+  }
+
+  onCompleteBooking(){
+    this.isPopoverOpen = false;
+    this.completeBooking.emit(this.booking);
   }
 }
