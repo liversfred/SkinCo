@@ -15,7 +15,7 @@
     <div [ngSwitch]="selectedSegment">
       <ion-list *ngSwitchCase="bookingSegments.ACTIVE_BOOKINGS">
         <ion-row>
-          <ion-col size="12" size-md="6" offset-md="1" class="ion-margin-top">
+          <ion-col size="12" offset="3" size-md="6" offset-md="1" class="ion-margin-top">
             <ion-text>Filter: {{ this.filterMessage  }}</ion-text>
           </ion-col>
         </ion-row>
@@ -24,7 +24,7 @@
       </ion-list>
       <ion-list *ngSwitchCase="bookingSegments.SKIPPED_BOOKINGS">
         <ion-row>
-          <ion-col size="12" size-md="6" offset-md="1" class="ion-margin-top">
+          <ion-col size="12" offset="3" size-md="6" offset-md="1" class="ion-margin-top">
             <ion-text>Filter: {{ this.filterMessage  }}</ion-text>
           </ion-col>
         </ion-row>
@@ -33,7 +33,7 @@
       </ion-list>
       <ion-list *ngSwitchCase="bookingSegments.BOOKING_HISTORY">
         <ion-row>
-          <ion-col size="12" size-md="6" offset-md="1" class="ion-margin-top">
+          <ion-col size="12" offset="3" size-md="6" offset-md="1" class="ion-margin-top">
             <ion-text>Filter: {{ this.filterMessage  }}</ion-text>
           </ion-col>
         </ion-row>

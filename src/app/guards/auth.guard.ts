@@ -8,6 +8,6 @@ export const authGuard: CanMatchFn = async (route, segments) => {
   const _authService = inject(AuthService);
   const isAuthenticated = await _authService.checkUserAuth();
 
-  if(!isAuthenticated) _router.navigate([RouteConstants.LOGIN]);
+  if(!isAuthenticated) _router.navigateByUrl(RouteConstants.LOGIN);
   return true;
 };

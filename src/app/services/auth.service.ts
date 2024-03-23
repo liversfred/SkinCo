@@ -109,7 +109,7 @@ export class AuthService {
   }
 
   async logout(){
-    signOut(this._auth);
+    await signOut(this._auth);
     // Set userdata to null
     this._userData.next(null);
     // Clear local storage
@@ -137,7 +137,7 @@ export class AuthService {
   }
 
   redirectByUserRole() {
-    const userDataSubs = this.userData.subscribe(userData => {
+    this.userData.subscribe(userData => {
       if(!userData) return;
 
       let path = '';
@@ -147,7 +147,6 @@ export class AuthService {
 
       this._router.navigateByUrl(path, { replaceUrl: true })
     });
-    userDataSubs.unsubscribe();
   }
 
   async getActiveUserByEmail(email: string): Promise<UserData>{

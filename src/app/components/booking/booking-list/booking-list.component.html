@@ -1,7 +1,7 @@
 
 <ion-row class="wrapper ion-justify-content-center">
     <ion-col size="12" class="ion-text-center" *ngIf="bookings.length === 0">
-      <h1>No Results found</h1>
+      <h3>No bookings found</h3>
     </ion-col>
     <ion-col size="12" size-md="8" *ngFor="let booking of bookings">
       <app-booking-card [userData]="userData" 
