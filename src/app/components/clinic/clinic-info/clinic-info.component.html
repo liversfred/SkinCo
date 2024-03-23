@@ -1,4 +1,4 @@
-<div class="ion-padding-horizontal" *ngIf="clinic">  
+<div class="wrapper ion-padding-horizontal" *ngIf="clinic">  
   <app-refresher [showRefresher]="true" (refresh)="onRefresh($event)"></app-refresher>
 
   <fieldset *ngIf="!clinic.isApproved" class="ion-text-center">

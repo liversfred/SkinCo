@@ -1,5 +1,5 @@
 export enum BookingSegments {
-  ACTIVE_BOOKINGS = 'Active Bookings',
-  BOOKING_HISTORY = 'Booking History',
-  SKIPPED_BOOKINGS = 'Skipped Bookings'
+  ACTIVE_BOOKINGS = 'Active',
+  BOOKING_HISTORY = 'History',
+  SKIPPED_BOOKINGS = 'Skipped'
 }

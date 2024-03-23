@@ -1,6 +1,10 @@
 <ion-tabs *ngIf="_platformService.isAndroid()">
   <ion-tab-bar slot="bottom">
-    <ion-tab-button [tab]="routes.HOME">
+    <ion-tab-button [tab]="routes.HOME_STAFF" *ngIf="userData && userData.role?.name === roles.STAFF">
+      <ion-icon name="home-outline"></ion-icon>
+      <ion-label>HOME</ion-label>
+    </ion-tab-button>
+    <ion-tab-button [tab]="routes.HOME_PATIENT" *ngIf="userData && userData.role?.name === roles.PATIENT">
       <ion-icon name="home-outline"></ion-icon>
       <ion-label>HOME</ion-label>
     </ion-tab-button>

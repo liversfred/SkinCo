@@ -1,5 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
-import { ViewWillEnter } from '@ionic/angular';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
 import { BookingSegments } from 'src/app/constants/booking-segments.enum';
@@ -23,7 +22,7 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './home-staff.page.html',
   styleUrls: ['./home-staff.page.scss'],
 })
-export class HomeStaffPage implements ViewWillEnter, OnDestroy {
+export class HomeStaffPage implements OnInit, OnDestroy {
   userData: UserData | undefined;
   activeBookings: Booking[] = [];
   previousBookings: Booking[] = [];
@@ -32,7 +31,7 @@ export class HomeStaffPage implements ViewWillEnter, OnDestroy {
   filteredPreviousBookings: Booking[] = [];
   filteredSkippedBookings: Booking[] = [];
   clinicServices: ClinicServiceData[] = [];
-  filterOptions: string[] = [FilterTypeEnum.DATE];
+  filterOptions: string[] = [FilterTypeEnum.DATE, FilterTypeEnum.TODAY];
   users: UserData[] = [];
   bookingSegments: any = BookingSegments;
   selectedSegment: string = this.bookingSegments.ACTIVE_BOOKINGS;
@@ -51,7 +50,7 @@ export class HomeStaffPage implements ViewWillEnter, OnDestroy {
     private _errorService: ErrorService
     ) { }
 
-  async ionViewWillEnter() {
+  ngOnInit(): void {
     this.fetchUsers();
     this.fetchClinicServices();
 
@@ -110,9 +109,10 @@ export class HomeStaffPage implements ViewWillEnter, OnDestroy {
       });
   }
 
-  onChangeSegment(event: any){
-    this.selectedSegment = event.target.value
-    this.onFilterByDate(new Date());
+  onChangeSegment(segment: any){
+    this.selectedSegment = segment;
+    
+    if(!this.showAll()) this.onFilterByDate(new Date());
   }
 
   getSourceArray(): Booking[]{
@@ -130,6 +130,10 @@ export class HomeStaffPage implements ViewWillEnter, OnDestroy {
     else{
       this.filteredPreviousBookings = bookings;
     }
+  }
+
+  showAll(){
+    return this.selectedSegment === BookingSegments.BOOKING_HISTORY;
   }
 
   onFilterByDate(dateSelected: Date){

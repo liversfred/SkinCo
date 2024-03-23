@@ -1,7 +1,7 @@
 <ion-content *ngIf="userData">
   <ion-row>
     <ion-col s ize="12" size-md="10" offset-md="1">
-      <ion-segment [value]="selectedSegment" (ionChange)="onChangeSegment($event)" mode="ios">
+      <ion-segment [value]="selectedSegment" (ionChange)="onChangeSegment($event.target.value)" mode="ios">
         <ion-segment-button [value]="bookingSegments.ACTIVE_BOOKINGS">
           <ion-label>{{ bookingSegments.ACTIVE_BOOKINGS }}</ion-label>
         </ion-segment-button>

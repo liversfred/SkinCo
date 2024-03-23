@@ -1,0 +1,12 @@
+<ion-row class="wrapper ion-padding">
+  <ion-col size="12" size-md="8" offset-md="2">
+    <ion-text id="page-header-italic" *ngIf="bankDetailsList.length === 0">No Bank Details</ion-text>
+    <ion-text id="page-header" *ngIf="bankDetailsList.length > 0">Bank Details</ion-text>
+    
+    <ion-row>
+      <ion-col size="12" size-md="4" *ngFor="let bankDetails of bankDetailsList">
+        <app-bank-details-card [bankDetails]="bankDetails" [enableUpdate]="enableUpdate" (updateBankDetails)="onUpdateBankDetails($event)" (deleteBankDetails)="onDeleteBankDetails($event)"></app-bank-details-card>
+      </ion-col>
+    </ion-row>
+  </ion-col>
+</ion-row>

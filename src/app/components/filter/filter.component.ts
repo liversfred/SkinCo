@@ -26,7 +26,15 @@ export class FilterComponent {
     if(!this.filterType) {
       this.clearFilters.emit();
       return;
-    };
+    }
+    else if(this.filterType === FilterTypeEnum.TODAY){
+      this.onTodayFilter();
+    }
+  }
+
+  onTodayFilter(){
+    this.filterByDate.emit(new Date());
+    this.filterType = null;
   }
 
   onDateFilterChange(event: any){

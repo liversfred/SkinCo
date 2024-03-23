@@ -4,11 +4,14 @@
       <ion-icon name="filter"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="bottom">
+      <ion-fab-button class="fab-item" color="secondary" (click)="onChangeFilterType(filterTypes.CLINIC)" *ngIf="filterOptions.includes(filterTypes.CLINIC)">
+        <ion-text>Clinic</ion-text>
+      </ion-fab-button>
       <ion-fab-button class="fab-item" color="secondary" (click)="onChangeFilterType(filterTypes.DATE)" *ngIf="filterOptions.includes(filterTypes.DATE)">
         <ion-text>Date</ion-text>
       </ion-fab-button>
-      <ion-fab-button class="fab-item" color="secondary" (click)="onChangeFilterType(filterTypes.CLINIC)" *ngIf="filterOptions.includes(filterTypes.CLINIC)">
-        <ion-text>Clinic</ion-text>
+      <ion-fab-button class="fab-item" color="secondary" (click)="onChangeFilterType(filterTypes.TODAY)" *ngIf="filterOptions.includes(filterTypes.TODAY)">
+        <ion-text>Today</ion-text>
       </ion-fab-button>
       <ion-fab-button class="fab-item" color="secondary" (click)="onChangeFilterType()">
         <ion-text>All</ion-text>

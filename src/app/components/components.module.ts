@@ -9,6 +9,7 @@ import { TruncateStringPipe } from '../pipes/truncate-string.pipe';
 import { ClinicCardComponent } from './cards/clinic-card/clinic-card.component';
 import { BookingCardComponent } from './cards/booking-card/booking-card.component';
 import { FilterComponent } from './filter/filter.component';
+import { BankDetailsComponent } from './clinic/bank-details/bank-details.component';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { FilterComponent } from './filter/filter.component';
     ClinicServiceCardComponent,
     BookingCardComponent,
     ClinicCardComponent,
+    BankDetailsComponent,
     TruncateStringPipe,
     FilterComponent
   ],
@@ -35,6 +37,7 @@ import { FilterComponent } from './filter/filter.component';
     ClinicServiceCardComponent,
     BookingCardComponent,
     ClinicCardComponent,
+    BankDetailsComponent,
     TruncateStringPipe,
     FilterComponent
   ]

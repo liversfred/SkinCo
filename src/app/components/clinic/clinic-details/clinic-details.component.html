@@ -18,6 +18,9 @@
       <ion-segment-button [value]="clinicSegments.DOCTOR" [disabled]="!clinic.isApproved">
         <ion-label>{{ clinicSegments.DOCTOR }}</ion-label>
       </ion-segment-button>
+      <ion-segment-button [value]="clinicSegments.BANK_DETAILS">
+        <ion-label>{{ clinicSegments.BANK_DETAILS }}</ion-label>
+      </ion-segment-button>
     </ion-segment>
   
     <div [ngSwitch]="selectedSegment">
@@ -29,6 +32,9 @@
       </ion-list>
       <ion-list *ngSwitchCase="clinicSegments.DOCTOR">
         <app-clinic-doctors [clinic]="clinic" [viewOnly]="true"></app-clinic-doctors>
+      </ion-list>
+      <ion-list *ngSwitchCase="clinicSegments.BANK_DETAILS">
+        <app-bank-details [bankDetailsList]="bankDetailsList" [enableUpdate]="false"></app-bank-details>
       </ion-list>
     </div>
   </div>
