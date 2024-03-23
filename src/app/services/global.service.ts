@@ -218,14 +218,36 @@ export class GlobalService {
   }
 
   checkIfDatesAreEqual(date1: Date, date2: Date): boolean{
-    const year1 = date1.getFullYear();
-    const month1 = date1.getMonth();
-    const day1 = date1.getDate();
+    const yearMonthDay1 = this.getYearMonthDay(date1);
+    const yearMonthDay2 = this.getYearMonthDay(date2);
+    return yearMonthDay1.year === yearMonthDay2.year && yearMonthDay1.month === yearMonthDay2.month && yearMonthDay1.day === yearMonthDay2.day;
+  }
 
-    const year2 = date2.getFullYear();
-    const month2 = date2.getMonth();
-    const day2 = date2.getDate();
+  checkIfBookingDateIsExpired(bookingDate: Date): boolean{
+    const currentDate = new Date();
+    const bookingDateYearMonthDay = this.getYearMonthDay(bookingDate);
+    const currentDateYearMonthDay = this.getYearMonthDay(currentDate);
+    
+    if (bookingDateYearMonthDay.year < currentDateYearMonthDay.year) {
+      return true;
+    } else if (bookingDateYearMonthDay.year === currentDateYearMonthDay.year) {
+      if (bookingDateYearMonthDay.month < currentDateYearMonthDay.month) {
+        return true;
+      } else if (bookingDateYearMonthDay.month === currentDateYearMonthDay.month) {
+        if (bookingDateYearMonthDay.day < currentDateYearMonthDay.day) {
+          return true;
+        }
+      }
+    }
 
-    return year1 === year2 && month1 === month2 && day1 === day2;
+    return false;
+  }
+
+  private getYearMonthDay(date: Date){
+    return {
+      year: date.getFullYear(),
+      month: date.getMonth(),
+      day: date.getDate(),
+    }
   }
 }

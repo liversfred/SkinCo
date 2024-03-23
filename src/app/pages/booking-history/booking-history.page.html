@@ -1,25 +1,10 @@
-<ion-content *ngIf="userData">
-  <ion-row>
-    <ion-col size="12" size-md="10" offset-md="1">
-      <ion-segment [(ngModel)]="selectedSegment" mode="ios">
-        <ion-segment-button [value]="bookingSegments.ACTIVE_BOOKINGS">
-          <ion-label>{{ bookingSegments.ACTIVE_BOOKINGS }}</ion-label>
-        </ion-segment-button>
-        <ion-segment-button [value]="bookingSegments.BOOKING_HISTORY">
-          <ion-label>{{ bookingSegments.BOOKING_HISTORY }}</ion-label>
-        </ion-segment-button>
-      </ion-segment>
-  
-      <div [ngSwitch]="selectedSegment">
-        <ion-list *ngSwitchCase="bookingSegments.ACTIVE_BOOKINGS">
-          <app-filter [filterOptions]="filterOptions" (filterByDate)="onFilterByDate($event)" (filterByClinic)="onFilterByClinic($event)" (clearFilters)="onClearFilters()" [clinicOptions]="clinicOptions"></app-filter>
-          <app-booking-list [userData]="userData" [bookings]="filteredActiveBookings" (cancelBooking)="onCancelBooking($event)"></app-booking-list>
-        </ion-list>
-        <ion-list *ngSwitchCase="bookingSegments.BOOKING_HISTORY">
-          <app-filter [filterOptions]="filterOptions" (filterByDate)="onFilterByDate($event)" (filterByClinic)="onFilterByClinic($event)" (clearFilters)="onClearFilters()" [clinicOptions]="clinicOptions"></app-filter>
-          <app-booking-list [userData]="userData" [bookings]="filteredPreviousBookings"></app-booking-list>
-        </ion-list>
-      </div>
-    </ion-col>
-  </ion-row>
+<ion-content>
+  <app-booking-history-segments *ngIf="userData" 
+    [userData]="userData"
+    [patientLevel]="true"
+    [clinicOptions]="clinicOptions"
+    [bookingSegmentOptions]="bookingSegmentOptions" 
+    [filterOptions]="filterOptions"
+    (cancelBooking)="onCancelBooking($event)">
+  </app-booking-history-segments>
 </ion-content>

@@ -1,32 +1,11 @@
-<ion-content *ngIf="userData">
-  <ion-row>
-    <ion-col s ize="12" size-md="10" offset-md="1">
-      <ion-segment [value]="selectedSegment" (ionChange)="onChangeSegment($event.target.value)" mode="ios">
-        <ion-segment-button [value]="bookingSegments.ACTIVE_BOOKINGS">
-          <ion-label>{{ bookingSegments.ACTIVE_BOOKINGS }}</ion-label>
-        </ion-segment-button>
-        <ion-segment-button [value]="bookingSegments.SKIPPED_BOOKINGS">
-          <ion-label>{{ bookingSegments.SKIPPED_BOOKINGS }}</ion-label>
-        </ion-segment-button>
-        <ion-segment-button [value]="bookingSegments.BOOKING_HISTORY">
-          <ion-label>{{ bookingSegments.BOOKING_HISTORY }}</ion-label>
-        </ion-segment-button>
-      </ion-segment>
-  
-      <div [ngSwitch]="selectedSegment">
-        <ion-list *ngSwitchCase="bookingSegments.ACTIVE_BOOKINGS">
-          <app-filter [filterOptions]="filterOptions" (filterByDate)="onFilterByDate($event)" (clearFilters)="onClearFilters()"></app-filter>
-          <app-booking-list [userData]="userData" [patientLevel]="false" [bookings]="filteredActiveBookings" (skipBooking)="onSkipBooking($event)" (completeBooking)="onCompleteBooking($event)"></app-booking-list>
-        </ion-list>
-        <ion-list *ngSwitchCase="bookingSegments.SKIPPED_BOOKINGS">
-          <app-filter [filterOptions]="filterOptions" (filterByDate)="onFilterByDate($event)" (clearFilters)="onClearFilters()"></app-filter>
-          <app-booking-list [userData]="userData" [patientLevel]="false" [bookings]="filteredSkippedBookings" (requeueBooking)="onRequeueBooking($event)" (completeBooking)="onCompleteBooking($event)"></app-booking-list>
-        </ion-list>
-        <ion-list *ngSwitchCase="bookingSegments.BOOKING_HISTORY">
-          <app-filter [filterOptions]="filterOptions" (filterByDate)="onFilterByDate($event)" (clearFilters)="onClearFilters()"></app-filter>
-          <app-booking-list [userData]="userData" [patientLevel]="false" [bookings]="filteredPreviousBookings"></app-booking-list>
-        </ion-list>
-      </div>
-    </ion-col>
-  </ion-row>
+<ion-content>
+  <app-booking-history-segments *ngIf="userData" 
+    [userData]="userData"
+    [patientLevel]="false"
+    [bookingSegmentOptions]="bookingSegmentOptions" 
+    [filterOptions]="filterOptions"
+    (skipBooking)="onSkipBooking($event)"
+    (requeueBooking)="onRequeueBooking($event)"
+    (completeBooking)="onCompleteBooking($event)">
+  </app-booking-history-segments>
 </ion-content>

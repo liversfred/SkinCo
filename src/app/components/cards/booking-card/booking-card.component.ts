@@ -46,6 +46,7 @@ export class BookingCardComponent  implements OnInit {
       case BookingStatus.SKIPPED:
         return ColorConstants.DANGER;
       case BookingStatus.CANCELLED:
+      case BookingStatus.EXPIRED:
         return ColorConstants.DANGER;
       default:
         return null;

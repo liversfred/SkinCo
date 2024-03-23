@@ -2,5 +2,6 @@ export enum BookingStatus {
   QUEUED = 'Queued',
   SKIPPED = 'Skipped',
   COMPLETED = 'Completed',
-  CANCELLED = 'Cancelled'
+  CANCELLED = 'Cancelled',
+  EXPIRED = 'Expired'
 }

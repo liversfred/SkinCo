@@ -1,6 +1,7 @@
-import { Component, OnDestroy } from '@angular/core';
-import { ViewWillEnter } from '@ionic/angular';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { ViewDidLeave } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { BookingHistorySegmentsComponent } from 'src/app/components/booking/booking-history-segments/booking-history-segments.component';
 import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
 import { BookingSegments } from 'src/app/constants/booking-segments.enum';
 import { BookingStatus } from 'src/app/constants/booking-status.enum';
@@ -24,22 +25,18 @@ import { TrailService } from 'src/app/services/trail.service';
   templateUrl: './booking-history.page.html',
   styleUrls: ['./booking-history.page.scss'],
 })
-export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
+export class BookingHistoryPage implements ViewDidLeave, OnDestroy {
   userData: UserData | undefined;
-  activeBookings: Booking[] = [];
-  previousBookings: Booking[] = [];
-  filteredActiveBookings: Booking[] = [];
-  filteredPreviousBookings: Booking[] = [];
   clinics: Clinic[] = [];
   clinicServices: ClinicServiceData[] = [];
-  filterOptions: string[] = [FilterTypeEnum.DATE, FilterTypeEnum.CLINIC];
-  bookingSegments: any = BookingSegments;
-  selectedSegment: string = this.bookingSegments.ACTIVE_BOOKINGS;
   clinicOptions: Clinic[] = [];
   userDataSubs: Subscription | undefined;
   clinicSubs: Subscription | undefined;
   clinicServiceSubs: Subscription | undefined;
   bookingSubs: Subscription | undefined;
+  filterOptions: string[] = [FilterTypeEnum.DATE, FilterTypeEnum.TODAY, FilterTypeEnum.CLINIC, FilterTypeEnum.STATUS];
+  bookingSegmentOptions: string[] = [BookingSegments.ACTIVE_BOOKINGS, BookingSegments.BOOKING_HISTORY];
+  @ViewChild(BookingHistorySegmentsComponent) bookingHistorySegmentsComponent : BookingHistorySegmentsComponent | undefined;
 
   constructor(
     private _authService: AuthService, 
@@ -51,7 +48,7 @@ export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
     private _errorService: ErrorService
     ) { }
 
-  async ionViewWillEnter() {
+  async ionViewDidEnter() {
     this.fetchClinics();
     this.fetchClinicServices();
 
@@ -80,21 +77,10 @@ export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
     this.bookingSubs = this._bookingService.fetchBookingsByPatientIdAsync(this.userData?.id!)
       .subscribe({
         next: (bookings: Booking[]) => {
-          this.activeBookings = [];
-          this.previousBookings = [];
-          this.clinicOptions = []
-      
           bookings.forEach(booking => {
-            booking.clinic = this.clinics.find(x => x.id === booking.clinicId),
-            booking.clinicServices = this.clinicServices.filter(x => booking.clinicServiceIds.includes(x.id!))
-      
-            if(booking.bookingStatus === BookingStatus.QUEUED || booking.bookingStatus === BookingStatus.SKIPPED){
-              this.activeBookings.push(booking);
-            }
-            else{              
-              this.previousBookings.push(booking);
-            }
-
+            booking.clinic = this.clinics.find(x => x.id === booking.clinicId);
+            booking.clinicServices = this.clinicServices.filter(x => booking.clinicServiceIds.includes(x.id!));
+            
             // This will be used for filters
             const isAlreadyAdded = this.clinicOptions.find(x => x.id === booking.clinicId);
             if(!isAlreadyAdded){
@@ -103,46 +89,12 @@ export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
             }
           });
 
-          this.filteredActiveBookings = this.activeBookings;
-          this.filteredPreviousBookings = this.previousBookings;
+          this.bookingHistorySegmentsComponent?.loadBookings(bookings);
         },
         error: (err: any) => {
           this._errorService.handleError(err);
         }
       });
-  }
-
-  getSourceArray(): Booking[]{
-    return this.selectedSegment === BookingSegments.ACTIVE_BOOKINGS ? this.activeBookings : this.previousBookings; 
-  }
-
-  setSourceArrayValue(bookings: Booking[]){
-    if(this.selectedSegment === BookingSegments.ACTIVE_BOOKINGS){
-      this.filteredActiveBookings = bookings;
-    }
-    else{
-      this.filteredPreviousBookings = bookings;
-    }
-  }
-
-  onFilterByDate(dateSelected: Date){
-    const sourceArray = this.getSourceArray();
-
-    const filteredArray = sourceArray.filter(x => {
-      return this._globalService.checkIfDatesAreEqual(x.bookingDate, dateSelected);
-    })
-
-    this.setSourceArrayValue(filteredArray);
-  }
-
-  onFilterByClinic(clinicId: string){
-    const sourceArray = this.getSourceArray();
-
-    const filteredArray = sourceArray.filter(x => {
-      return x.clinicId === clinicId;
-    })
-
-    this.setSourceArrayValue(filteredArray);
   }
 
   onCancelBooking(booking: Booking){
@@ -168,7 +120,7 @@ export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
             ...this._trailService.updateAudit(action)
             };
 
-            this.cancelBooking(updatedModel);
+            this.updateBooking(updatedModel);
           }
         }
       ],
@@ -183,22 +135,23 @@ export class BookingHistoryPage implements ViewWillEnter, OnDestroy {
     )
   }
 
-  async cancelBooking(updatedModel: any){
+  async updateBooking(updatedModel: any){
     this._globalService.showLoader('Updating booking status...');
 
     this._bookingService.updateBooking(updatedModel)
       .then(async () => {
         this._globalService.hideLoader();
-        this._globalService.showToast(`Booking has been cancelled..`, 3000, ColorConstants.SUCCESS);
+        this._globalService.showToast(`Booking has been updated..`, 3000, ColorConstants.SUCCESS);
       })
       .catch((e) => {
         this._errorService.handleError(e);
       });
   }
 
-  onClearFilters(){
-    const sourceArray = this.getSourceArray();
-    this.setSourceArrayValue(sourceArray);
+  ionViewDidLeave(): void {
+    if(!this.bookingHistorySegmentsComponent) return;
+
+    this.bookingHistorySegmentsComponent.selectedSegment = BookingSegments.ACTIVE_BOOKINGS
   }
   
   ngOnDestroy(): void {
