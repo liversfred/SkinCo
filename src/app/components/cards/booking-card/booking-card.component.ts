@@ -28,6 +28,7 @@ export class BookingCardComponent  implements OnInit {
   @Output() skipBooking = new EventEmitter<Booking>;
   @Output() requeueBooking = new EventEmitter<Booking>
   @Output() completeBooking = new EventEmitter<Booking>
+  @Output() rescheduleBooking = new EventEmitter<Booking>
 
   constructor() { }
 
@@ -91,5 +92,10 @@ export class BookingCardComponent  implements OnInit {
   onCompleteBooking(){
     this.isPopoverOpen = false;
     this.completeBooking.emit(this.booking);
+  }
+
+  onRescheduleBooking(){
+    this.isPopoverOpen = false;
+    this.rescheduleBooking.emit(this.booking);
   }
 }

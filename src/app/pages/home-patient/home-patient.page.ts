@@ -156,7 +156,7 @@ export class HomePatientPage implements ViewWillEnter, OnDestroy {
     this._clinicService.openClinicDetailsModal(data);
   }
 
-  async openBookingModal(data?: any) {
+  async openBookingModal(data: any) {
     try {
       const options = {
         component: BookingComponent,
@@ -171,7 +171,7 @@ export class HomePatientPage implements ViewWillEnter, OnDestroy {
 
       if(!bookingRes) return;
 
-      const action = `${data.booking ? ModifierActions.UPDATED : ModifierActions.CREATED} Booking with Clinic ${data.clinic.name}`;
+      const action = `${ModifierActions.CREATED} Booking with Clinic ${data.clinic.name}`;
       const booking: Booking = {
         bookingNo: bookingRes.bookingNo,
         bookingDate: new Date(bookingRes.bookingDate),
@@ -180,10 +180,10 @@ export class HomePatientPage implements ViewWillEnter, OnDestroy {
         clinicServiceIds: bookingRes.clinicServiceIds,
         bookingStatus: BookingStatus.QUEUED,
         patientId: this.userData?.id!,
-        ...(data.booking ? this._trailService.updateAudit(action) : this._trailService.createAudit(action))
-      }
+        ...this._trailService.createAudit(action)
+      };
       
-      this.saveBooking(booking, bookingRes.clinicServices)
+      this.saveBooking(booking, bookingRes.clinicServices);
     } catch(e) {
       this._errorService.handleError(e);
     }

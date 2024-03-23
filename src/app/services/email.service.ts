@@ -34,14 +34,47 @@ export class EmailService {
     const subject = `BOOKING CONFIRMATION`;
     const recipient = `Hi ${userData?.person?.firstName || 'Patient'},` ;
 
-    const mainMessage = this.composeReturnRecieptMessage(booking);
+    const mainMessage = this.composeBookingConfirmationMessage(booking);
 
     return { subject, html: this.buildBodyFromTemplate(recipient, mainMessage) };
   }
 
-  composeReturnRecieptMessage(booking: Booking): string{
+  buildReschedulingConfirmationEmailMessage(userData: UserData, booking: Booking): Message{
+    const subject = `BOOKING RESCHEDULE CONFIRMATION`;
+    const recipient = `Hi ${userData?.person?.firstName || 'Patient'},` ;
+
+    const mainMessage = this.composeRescheduleConfirmationMessage(booking);
+
+    return { subject, html: this.buildBodyFromTemplate(recipient, mainMessage) };
+  }
+
+  composeBookingConfirmationMessage(booking: Booking): string{
    return `
     This is to confirm your booking with clinic ${booking.clinic?.name}:
+    <br>
+    <br>
+    <h3>Booking Details:</h3>
+    <ul>
+      <li>Booking No.: ${booking.bookingNo}</li>
+      <li>Booking Date: ${booking.bookingDate.toDateString()}</li>
+      <li>Booking Status: ${booking.bookingStatus}</li>
+      <li>Remarks: ${booking.remarks}</li>
+    </ul>
+    <br>
+    Services:
+    ${this.composeClinicServices(booking.clinicServices!)} 
+    <br>
+    <br>
+    Thank you for booking with us. If you need anything else related to your booking, feel free to ask our team.
+    <br>
+    <br>
+    Keep enjoying our services!
+   `;
+  }
+
+  composeRescheduleConfirmationMessage(booking: Booking): string{
+   return `
+    This is to inform you about the new booking schedule with clinic ${booking.clinic?.name}:
     <br>
     <br>
     <h3>Booking Details:</h3>

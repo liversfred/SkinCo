@@ -222,25 +222,15 @@ export class GlobalService {
     const yearMonthDay2 = this.getYearMonthDay(date2);
     return yearMonthDay1.year === yearMonthDay2.year && yearMonthDay1.month === yearMonthDay2.month && yearMonthDay1.day === yearMonthDay2.day;
   }
+  
+  getDatesDifference(date1: Date, date2: Date): number{
+    // Calculate the difference in milliseconds
+    const differenceMs = date1.getTime() - date2.getTime();
 
-  checkIfBookingDateIsExpired(bookingDate: Date): boolean{
-    const currentDate = new Date();
-    const bookingDateYearMonthDay = this.getYearMonthDay(bookingDate);
-    const currentDateYearMonthDay = this.getYearMonthDay(currentDate);
-    
-    if (bookingDateYearMonthDay.year < currentDateYearMonthDay.year) {
-      return true;
-    } else if (bookingDateYearMonthDay.year === currentDateYearMonthDay.year) {
-      if (bookingDateYearMonthDay.month < currentDateYearMonthDay.month) {
-        return true;
-      } else if (bookingDateYearMonthDay.month === currentDateYearMonthDay.month) {
-        if (bookingDateYearMonthDay.day < currentDateYearMonthDay.day) {
-          return true;
-        }
-      }
-    }
+    // Convert milliseconds to days
+    const differenceDays = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
 
-    return false;
+    return differenceDays;
   }
 
   private getYearMonthDay(date: Date){

@@ -20,7 +20,7 @@
           </ion-col>
         </ion-row>
         <app-filter [filterOptions]="filterOptions" (filterByDate)="onFilterByDate($event)" (filterByClinic)="onFilterByClinic($event)" (filterByStatus)="onFilterByStatus($event)" (clearFilters)="onClearFilters()" [clinicOptions]="clinicOptions"></app-filter>
-        <app-booking-list [userData]="userData" [patientLevel]="patientLevel" [bookings]="filteredActiveBookings" (cancelBooking)="onCancelBooking($event)" (skipBooking)="onSkipBooking($event)" (completeBooking)="onCompleteBooking($event)"></app-booking-list>
+        <app-booking-list [userData]="userData" [patientLevel]="patientLevel" [bookings]="filteredActiveBookings" (cancelBooking)="onCancelBooking($event)" (skipBooking)="onSkipBooking($event)" (completeBooking)="onCompleteBooking($event)" (rescheduleBooking)="onRescheduleBooking($event)"></app-booking-list>
       </ion-list>
       <ion-list *ngSwitchCase="bookingSegments.SKIPPED_BOOKINGS">
         <ion-row>

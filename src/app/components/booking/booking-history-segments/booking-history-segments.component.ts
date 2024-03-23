@@ -36,6 +36,7 @@ export class BookingHistorySegmentsComponent {
   @Output() skipBooking = new EventEmitter<Booking>;
   @Output() requeueBooking = new EventEmitter<Booking>;
   @Output() completeBooking = new EventEmitter<Booking>;
+  @Output() rescheduleBooking = new EventEmitter<Booking>;
 
   constructor(
     private _globalService: GlobalService,
@@ -49,7 +50,8 @@ export class BookingHistorySegmentsComponent {
     let forStatusUpdate: Booking[] = [];
 
     bookings.forEach(booking => {
-      if(this._globalService.checkIfBookingDateIsExpired(booking.bookingDate) && booking.bookingStatus !== BookingStatus.EXPIRED){
+      const daysDifference = this._globalService.getDatesDifference(booking.bookingDate, new Date());
+      if(daysDifference < 0 && booking.bookingStatus !== BookingStatus.EXPIRED){
         forStatusUpdate.push(booking);
       }
 
@@ -190,5 +192,9 @@ export class BookingHistorySegmentsComponent {
 
   onCompleteBooking(booking: Booking){
     this.completeBooking.emit(booking);
+  }
+
+  onRescheduleBooking(booking: Booking){
+    this.rescheduleBooking.emit(booking);
   }
 }

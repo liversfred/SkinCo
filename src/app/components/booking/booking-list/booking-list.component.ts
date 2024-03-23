@@ -18,6 +18,7 @@ export class BookingListComponent {
   @Output() skipBooking = new EventEmitter<Booking>;
   @Output() requeueBooking = new EventEmitter<Booking>;
   @Output() completeBooking = new EventEmitter<Booking>
+  @Output() rescheduleBooking = new EventEmitter<Booking>
   
   constructor(private _clinicService: ClinicService, private _userService: UserService) { }
 
@@ -45,5 +46,9 @@ export class BookingListComponent {
 
   onCompleteBooking(booking: Booking){
     this.completeBooking.emit(booking);
+  }
+
+  onRescheduleBooking(booking: Booking){
+    this.rescheduleBooking.emit(booking);
   }
 }

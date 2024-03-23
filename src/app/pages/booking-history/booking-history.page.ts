@@ -2,6 +2,7 @@ import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ViewDidLeave } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { BookingHistorySegmentsComponent } from 'src/app/components/booking/booking-history-segments/booking-history-segments.component';
+import { BookingComponent } from 'src/app/components/modals/booking/booking.component';
 import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
 import { BookingSegments } from 'src/app/constants/booking-segments.enum';
 import { BookingStatus } from 'src/app/constants/booking-status.enum';
@@ -16,6 +17,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { BookingService } from 'src/app/services/booking.service';
 import { ClinicServicesService } from 'src/app/services/clinic-services.service';
 import { ClinicService } from 'src/app/services/clinic.service';
+import { EmailService } from 'src/app/services/email.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { TrailService } from 'src/app/services/trail.service';
@@ -45,7 +47,8 @@ export class BookingHistoryPage implements ViewDidLeave, OnDestroy {
     private _clinicServicesService: ClinicServicesService,
     private _trailService: TrailService,
     private _globalService: GlobalService,
-    private _errorService: ErrorService
+    private _errorService: ErrorService,
+    private _emailService: EmailService
     ) { }
 
   async ionViewDidEnter() {
@@ -96,6 +99,86 @@ export class BookingHistoryPage implements ViewDidLeave, OnDestroy {
         }
       });
   }
+
+  onRescheduleBooking(booking: Booking){
+    const dateDifference = this._globalService.getDatesDifference(booking.bookingDate, new Date());
+    if(dateDifference <= 1) {
+      this._globalService.showCloseAlert("You can only reschedule bookings two or more days prior to the booking date.");
+      return;
+    }
+
+    const data = { 
+      clinic: booking.clinic,
+      userData: this.userData,
+      booking: booking
+    }
+    this.openBookingModal(data);
+  }
+
+  async openBookingModal(data: any) {
+    try {
+      const options = {
+        component: BookingComponent,
+        swipeToClose: false,
+        canDismiss: true,
+        backdropDismiss: false,
+        cssClass: 'full-screen-modal',
+        componentProps: { data },
+      };
+      
+      const bookingRes = await this._globalService.createModal(options);
+
+      if(!bookingRes) return;
+
+      const action = `${ModifierActions.UPDATED} Booking with Clinic ${data.clinic.name}`;
+      const updatedModel: any = {
+        id: data.booking.id,
+        bookingDate: new Date(bookingRes.bookingDate),
+        ...this._trailService.updateAudit(action)
+      };
+      
+      this.rescheduleBooking(updatedModel, data.booking);
+    } catch(e) {
+      this._errorService.handleError(e);
+    }
+  }
+
+  async rescheduleBooking(updatedModel: any, booking: Booking){
+    this._globalService.showLoader('Processing rescheduling...');
+
+    await this._bookingService.updateBooking(updatedModel)
+      .then(async () => {
+        this._globalService.hideLoader();
+        
+        this._globalService.showAlert(
+          AlertTypeEnum.SUCCESS, 
+          `Your have successfulyl rescheduled your booking with clinic <b>${booking.clinic?.name}</b>`, 
+          [
+            {
+              text: 'Okay',
+              role: 'cancel',
+              cssClass: 'success',
+            }
+          ] 
+        );
+
+        booking.bookingDate = updatedModel.bookingDate;
+
+        this.sendEmailConfirmation(booking);
+      })
+      .catch(e => {
+        console.log(e);
+        this._globalService.showCloseAlert('Failed to reschedule the booking. Try again later.')
+      });
+  }
+  
+  sendEmailConfirmation(booking: Booking){
+    const mail = this._emailService.buildMail(
+      [this.userData?.person?.email!], 
+      this._emailService.buildReschedulingConfirmationEmailMessage(this.userData!, booking)
+    );
+    this._emailService.sendEmail(mail);
+  };
 
   onCancelBooking(booking: Booking){
     this._globalService.showAlert(

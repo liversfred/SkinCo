@@ -42,6 +42,10 @@
             <ion-icon slot="start" color="danger" name="close-circle"></ion-icon>
             <ion-text>CANCEL</ion-text>
           </ion-item>
+          <ion-item class="link" *ngIf="userData?.role?.name === roles.PATIENT" (click)="onRescheduleBooking()">
+            <ion-icon slot="start" color="secondary" name="calendar"></ion-icon>
+            <ion-text>RESCHEDULE</ion-text>
+          </ion-item>
           <ion-item class="link" *ngIf="userData?.role?.name === roles.STAFF && booking?.bookingStatus === bookingStatuses.QUEUED" (click)="onSkipBooking()">
             <ion-icon slot="start" color="secondary" name="play-skip-forward"></ion-icon>
             <ion-text>SKIP</ion-text>

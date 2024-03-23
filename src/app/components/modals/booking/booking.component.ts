@@ -71,6 +71,11 @@ export class BookingComponent implements OnInit {
       this.bookingForm?.get('bookingDate')?.setValue(this.booking?.bookingDate);
       this.bookingForm?.get('clinicServiceIds')?.setValue(this.booking?.clinicServiceIds);
       this.bookingForm?.get('remarks')?.setValue(this.booking?.remarks);
+      this.selectedClinicServices = this.booking?.clinicServices ?? [];
+
+      // Enable only booking date field
+      this.bookingForm.get('clinicServiceIds')?.disable();
+      this.bookingForm.get('remarks')?.disable();
     }
   }
   
@@ -145,19 +150,29 @@ export class BookingComponent implements OnInit {
         {
           text: 'Submit',
           handler: () => {
-            const booking: any = {
-              bookingNo: this.generateRandomBookingNumber(),
-              bookingDate: new Date(this.bookingForm?.value.bookingDate),
-              clinicId: this.clinic?.id!,
-              clinicServiceIds: this.bookingForm?.value.clinicServiceIds,
-              remarks: this.bookingForm?.value.remarks,
-              clinicServices: this.clinicServices.filter(x => this.bookingForm?.value.clinicServiceIds.includes(x.id))
-            }
+            const booking = this.data.booking ? this.getRescheduleModel() : this.getNewBookingModel();
         
             this.dismiss(booking);
           }
         }
       ]
     )
+  }
+  
+  getNewBookingModel(){
+    return {
+      bookingNo: this.generateRandomBookingNumber(),
+      bookingDate: new Date(this.bookingForm?.value.bookingDate),
+      clinicId: this.clinic?.id!,
+      clinicServiceIds: this.bookingForm?.value.clinicServiceIds,
+      remarks: this.bookingForm?.value.remarks,
+      clinicServices: this.clinicServices.filter(x => this.bookingForm?.value.clinicServiceIds.includes(x.id))
+    };
+  }
+
+  getRescheduleModel(){
+    return {
+      bookingDate: new Date(this.bookingForm?.value.bookingDate)
+    };
   }
 }
