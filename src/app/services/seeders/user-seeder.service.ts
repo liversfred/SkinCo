@@ -65,6 +65,20 @@ export class UserSeederService {
       { 
         authId: null,
         person: {
+          email: 'staff2@gmail.com',
+          firstName: 'Staff2',
+          middleName: 'Middle2',
+          lastName: 'Last2',
+          mobileNumber: '09593983452',
+          gender: GenderConstants.MALE,
+          age: 40
+        },
+        roleId: staffRoleId!,
+        ...this._trailService.createAudit(`${ModifierActions.CREATED} User Staff2 M. Last2`), 
+      },
+      { 
+        authId: null,
+        person: {
           email: 'patient1@gmail.com',
           firstName: 'Patient1',
           middleName: 'Middle1',
@@ -75,6 +89,20 @@ export class UserSeederService {
         },
         roleId: patientRoleId!,
         ...this._trailService.createAudit(`${ModifierActions.CREATED} User Patient1 M. Last1`), 
+      },
+      { 
+        authId: null,
+        person: {
+          email: 'patient2@gmail.com',
+          firstName: 'Patient2',
+          middleName: 'Middle2',
+          lastName: 'Last2',
+          mobileNumber: '09593983453',
+          gender: GenderConstants.MALE,
+          age: 18
+        },
+        roleId: patientRoleId!,
+        ...this._trailService.createAudit(`${ModifierActions.CREATED} User Patient2 M. Last2`), 
       },
     ];
 

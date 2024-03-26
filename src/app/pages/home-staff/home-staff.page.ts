@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BookingHistorySegmentsComponent } from 'src/app/components/booking/booking-history-segments/booking-history-segments.component';
 import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
@@ -7,6 +8,8 @@ import { BookingStatus } from 'src/app/constants/booking-status.enum';
 import { ColorConstants } from 'src/app/constants/color.constants';
 import { FilterTypeEnum } from 'src/app/constants/filter-type.enum';
 import { ModifierActions } from 'src/app/constants/modifiers-action.constants';
+import { Roles } from 'src/app/constants/roles.constants';
+import { RouteConstants } from 'src/app/constants/route.constants';
 import { Booking } from 'src/app/models/booking-details.model';
 import { ClinicServiceData } from 'src/app/models/clinic-service-data.model';
 import { UserData } from 'src/app/models/user-data.model';
@@ -42,17 +45,22 @@ export class HomeStaffPage implements OnInit, OnDestroy {
     private _clinicServicesService: ClinicServicesService,
     private _trailService: TrailService,
     private _globalService: GlobalService,
+    private _router: Router,
     private _errorService: ErrorService
     ) { }
 
   ngOnInit(): void {
+    this._globalService.showLoader('Page loading...');
     this.fetchUsers();
     this.fetchClinicServices();
 
     // Load user data
-    this.userDataSubs = this._authService.userData.subscribe(async userData => {
-      this.userData = userData ?? undefined;
-      if(!this.userData) return;
+    this.userDataSubs = this._authService.userData.subscribe(userData => {
+      if(!userData) return;
+      if(userData.role?.name !== Roles.STAFF) this._router.navigateByUrl(RouteConstants.UNAUTHORIZED);
+
+      this.userData = userData;
+      this._globalService.hideLoader();
 
       this.fetchBookings();
     });

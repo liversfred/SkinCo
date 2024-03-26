@@ -3,6 +3,11 @@
     <ion-row>
       <ion-col size="12" size-md="8" offset-md="2">
         <ion-text id="page-header">Profile</ion-text>
+        <div class="ion-text-center ion-margin-top" *ngIf="!userData">
+          <ion-text color="medium">
+            <h2>Failed to fetch profile record.</h2>
+          </ion-text>
+        </div>
         <app-profile-card *ngIf="userData" [userData]="userData" (updateProfile)="onUpdateProfile()"></app-profile-card>
       </ion-col>
     </ion-row>

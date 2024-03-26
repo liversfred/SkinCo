@@ -20,5 +20,4 @@ export class SidebarComponent {
   onLogout() {
     this.logout.emit();
   }
-
 }

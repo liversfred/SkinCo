@@ -17,7 +17,7 @@ import { TrailService } from 'src/app/services/trail.service';
 })
 export class ProfilePage implements ViewWillEnter, ViewDidLeave {
   userData: UserData | undefined | null;
-  userSubs: Subscription | undefined;
+  userDataSubs: Subscription | undefined;
 
   constructor(
     private _authService: AuthService, 
@@ -26,9 +26,14 @@ export class ProfilePage implements ViewWillEnter, ViewDidLeave {
     private _errorService: ErrorService) { }
 
   ionViewWillEnter(): void {
-    this.userSubs = this._authService.userData.subscribe(userData => {
+    this._globalService.showLoader('Page loading...');
+
+    // Load user data
+    this.userDataSubs = this._authService.userData.subscribe(userData => {
       if(!userData) return;
+
       this.userData = userData;
+      this._globalService.hideLoader();
     });
   }
 
@@ -82,6 +87,6 @@ export class ProfilePage implements ViewWillEnter, ViewDidLeave {
   }
 
   ionViewDidLeave(): void {
-    this.userSubs?.unsubscribe();
+    this.userDataSubs?.unsubscribe();
   }
 }

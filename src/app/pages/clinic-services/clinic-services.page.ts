@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RefresherCustomEvent, ViewDidLeave, ViewWillEnter } from '@ionic/angular';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { RefresherCustomEvent, ViewWillEnter } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AddClinicServiceComponent } from 'src/app/components/modals/add-clinic-service/add-clinic-service.component';
 import { GenericComponent } from 'src/app/components/modals/generic/generic.component';
@@ -7,7 +8,9 @@ import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
 import { ColorConstants } from 'src/app/constants/color.constants';
 import { DefaultFileNames } from 'src/app/constants/default-file-names.constants';
 import { ModifierActions } from 'src/app/constants/modifiers-action.constants';
+import { Roles } from 'src/app/constants/roles.constants';
 import { RootDirectory } from 'src/app/constants/root-directories.constants';
+import { RouteConstants } from 'src/app/constants/route.constants';
 import { ClinicServiceData } from 'src/app/models/clinic-service-data.model';
 import { Clinic } from 'src/app/models/clinic.model';
 import { GenericData } from 'src/app/models/generic-data.model';
@@ -25,7 +28,7 @@ import { TrailService } from 'src/app/services/trail.service';
   templateUrl: './clinic-services.page.html',
   styleUrls: ['./clinic-services.page.scss'],
 })
-export class ClinicServicesPage implements ViewWillEnter, ViewDidLeave {
+export class ClinicServicesPage implements OnInit, ViewWillEnter, OnDestroy {
   clinic: Clinic | undefined;
   userData: UserData | undefined;
   clinicServices: ClinicServiceData[] = [];
@@ -39,21 +42,36 @@ export class ClinicServicesPage implements ViewWillEnter, ViewDidLeave {
     private _fileService: FileService,
     private _globalService: GlobalService,
     private _trailService: TrailService,
+    private _router: Router,
     private _errorService: ErrorService
   ) { }
 
-  async ionViewWillEnter(): Promise<void> {
+  ngOnInit(): void {
+    this._globalService.showLoader('Page loading...');
+
+    // Load user data
     this.userDataSubs = this._authService.userData.subscribe(async userData => {
-      this.userData = userData ?? undefined;
+      if(!userData) return;
+      if(userData.role?.name !== Roles.STAFF) this._router.navigateByUrl(RouteConstants.UNAUTHORIZED);
 
-      if(!this.userData) return;
+      this.userData = userData;
+      this._globalService.hideLoader();
       
-      await this.fetchClinic();
-
-      if(!this.clinic) return;
-
-      this.fetchClinicServices();
+      await this.reloadData();
     });
+  }
+
+  async ionViewWillEnter(): Promise<void> {
+    if(!this.userData) return;
+
+    await this.reloadData();
+  }
+
+  async reloadData(){
+    await this.fetchClinic();
+
+    if(!this.clinic) return;
+    this.fetchClinicServices();
   }
 
   async fetchClinic(){
@@ -264,7 +282,7 @@ export class ClinicServicesPage implements ViewWillEnter, ViewDidLeave {
     }
   }
 
-  ionViewDidLeave(): void {
+  ngOnDestroy(): void {
     this.userDataSubs?.unsubscribe();
   }
 }

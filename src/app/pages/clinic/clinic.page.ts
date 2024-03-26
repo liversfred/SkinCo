@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ViewDidLeave, ViewWillEnter } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { ClinicSegments } from 'src/app/constants/clinic-segmets.constants';
+import { Roles } from 'src/app/constants/roles.constants';
+import { RouteConstants } from 'src/app/constants/route.constants';
 import { Clinic } from 'src/app/models/clinic.model';
 import { UserData } from 'src/app/models/user-data.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -13,7 +16,7 @@ import { GlobalService } from 'src/app/services/global.service';
   templateUrl: './clinic.page.html',
   styleUrls: ['./clinic.page.scss'],
 })
-export class ClinicPage implements ViewDidLeave, ViewWillEnter {
+export class ClinicPage implements OnInit, ViewWillEnter, ViewDidLeave, OnDestroy {
   clinic: Clinic | undefined;
   userData: UserData | undefined;
   showClinicSetupForm: boolean | undefined;
@@ -25,18 +28,28 @@ export class ClinicPage implements ViewDidLeave, ViewWillEnter {
   constructor(
     private _authService: AuthService,
     private _clinicService: ClinicService,
-    private _globalService: GlobalService
+    private _globalService: GlobalService,
+    private _router: Router
     ) { }
 
-  async ionViewWillEnter() {
+  ngOnInit(): void {
+    this._globalService.showLoader('Page loading...');
+
     // Load user data
     this.userDataSubs = this._authService.userData.subscribe(async userData => {
-      this.userData = userData ?? undefined;
+      if(!userData) return;
+      if(userData.role?.name !== Roles.STAFF) this._router.navigateByUrl(RouteConstants.UNAUTHORIZED);
 
-      if(!this.userData) return;
-      
+      this.userData = userData;
+      this._globalService.hideLoader();
+
       await this.fetchClinic();
     });
+  }
+
+  async ionViewWillEnter() {
+    if(!this.userData) return;
+    await this.fetchClinic();
   }
 
   async onRefresh(){
@@ -75,7 +88,10 @@ export class ClinicPage implements ViewDidLeave, ViewWillEnter {
   ionViewDidLeave(): void {
     this.showClinicSetupForm = undefined;
     this.selectedSegment = ClinicSegments.INFO;
-    this.userDataSubs?.unsubscribe();
     this.isFormUpdate = false;
+  }
+  
+  ngOnDestroy(): void {
+    this.userDataSubs?.unsubscribe();
   }
 }

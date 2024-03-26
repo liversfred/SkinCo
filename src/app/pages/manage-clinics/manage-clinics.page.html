@@ -10,6 +10,11 @@
           </ion-card-title>
         </ion-card-header>
         <ion-card-content>
+          <div class="ion-text-center" *ngIf="clinics.length === 0">
+            <ion-text color="medium">
+              <h1>No registered clinics found</h1>
+            </ion-text>
+          </div>
           <ion-accordion-group [multiple]="true" *ngFor="let clinic of clinics;" >
             <app-clinic-accordion *ngIf="clinic.isActive" [clinic]="clinic" (approveClinic)="onApproveClinic($event)"></app-clinic-accordion>
           </ion-accordion-group>

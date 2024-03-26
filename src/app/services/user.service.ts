@@ -38,14 +38,16 @@ export class UserService {
       );
   }
 
-  async fetchUserData(authId: string | null) {
+  async fetchUserData(authId: string | null): Promise<UserData> {
     try {
       const collectionRef = query(this.usersCollection, where('authId', '==', authId));
       let userData = await new Promise<UserData>((resolve, reject) => {
         collectionData(collectionRef, { idField: 'id'})
           .pipe(
             map((users: any) => {
+              if(!users) reject(null);
               const firstRes = users[0];
+              
               const userData: UserData = {
                 ...firstRes,
                   createdAt: firstRes.createdAt.toDate(),

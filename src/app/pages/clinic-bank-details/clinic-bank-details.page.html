@@ -1,4 +1,4 @@
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" *ngIf="userData">
   <app-refresher (refresh)="onRefresh($event)"></app-refresher>
 
   <app-bank-details [bankDetailsList]="bankDetailsList" (updateBankDetails)="onUpdateBankDetails($event)" (deleteBankDetails)="onDeleteBankDetails($event)"></app-bank-details>

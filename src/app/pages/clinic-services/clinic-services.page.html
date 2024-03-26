@@ -1,4 +1,4 @@
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" *ngIf="userData">
   <app-refresher (refresh)="onRefresh($event)"></app-refresher>
 
   <ion-row>

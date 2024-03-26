@@ -1,6 +1,6 @@
-<ion-content #content class="ion-padding">
+<ion-content #content class="ion-padding" *ngIf="userData">
   <ion-row>
-    <ion-col size="12" size-md="10" offset-md="1" *ngIf="clinics.length !== 0">
+    <ion-col size="12" size-md="10" offset-md="1">
       <div class="ion-text-center ion-padding-bottom">
         <ion-text id="page-header">Looking for a clinic?</ion-text>
       </div>

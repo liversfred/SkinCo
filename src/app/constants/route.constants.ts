@@ -11,4 +11,5 @@ export class RouteConstants {
   static readonly CLINIC_SERVICES = 'clinic_services';
   static readonly CLINIC_BANK_DETAILS = 'clinic_bank_details';
   static readonly BOOKINGS = 'bookings';
+  static readonly UNAUTHORIZED = 'unauthorized';
 }

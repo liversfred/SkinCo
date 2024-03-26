@@ -1,12 +1,16 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start" class="ion-margin-start">
+    <ion-buttons slot="start" class="ion-margin-start link" (click)="onLogoClicked()">
       <ion-avatar>
         <ion-img src="../../../assets/logos/company-logo.png"  alt="company icon"></ion-img>
       </ion-avatar>
       <ion-text size="ion-text-large" color="primary">SkinCo</ion-text>
     </ion-buttons>
     <ion-buttons class="toolbar-nav" slot="end" *ngIf="_platformService.isDesktop()">
+      <ion-button tab="home" [routerLink]="routes.HOME_ADMIN" *ngIf="userData && userData.role?.name === roles.ADMIN">
+        <ion-icon name="home-outline"></ion-icon>
+        <ion-label *ngIf="!_platformService.screenXS()">HOME</ion-label>
+      </ion-button>
       <ion-button tab="home" [routerLink]="routes.HOME_STAFF" *ngIf="userData && userData.role?.name === roles.STAFF">
         <ion-icon name="home-outline"></ion-icon>
         <ion-label *ngIf="!_platformService.screenXS()">HOME</ion-label>

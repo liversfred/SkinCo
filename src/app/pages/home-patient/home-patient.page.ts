@@ -1,12 +1,13 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonContent, ViewWillEnter } from '@ionic/angular';
+import { IonContent } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { MapComponent } from 'src/app/components/map/map.component';
 import { BookingComponent } from 'src/app/components/modals/booking/booking.component';
 import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
 import { BookingStatus } from 'src/app/constants/booking-status.enum';
 import { ModifierActions } from 'src/app/constants/modifiers-action.constants';
+import { Roles } from 'src/app/constants/roles.constants';
 import { RouteConstants } from 'src/app/constants/route.constants';
 import { Booking } from 'src/app/models/booking-details.model';
 import { ClinicServiceData } from 'src/app/models/clinic-service-data.model';
@@ -27,14 +28,14 @@ import { TrailService } from 'src/app/services/trail.service';
   templateUrl: './home-patient.page.html',
   styleUrls: ['./home-patient.page.scss'],
 })
-export class HomePatientPage implements ViewWillEnter, OnDestroy {
+export class HomePatientPage implements OnInit, OnDestroy {
   userData: UserData | undefined;
   clinics: Clinic[] = [];
   doctors: Doctor[] = [];
   filteredClinics: Clinic[] = [];
   loadClinics: boolean = false;
   selectedClinic: Clinic | undefined;
-  userSubs: Subscription | undefined;
+  userDataSubs: Subscription | undefined;
   clinicsSubs: Subscription | undefined;
   doctorsSubs: Subscription | undefined;
   @ViewChild('content') content: IonContent | undefined;
@@ -52,14 +53,19 @@ export class HomePatientPage implements ViewWillEnter, OnDestroy {
     private _router: Router
     ) { }
 
-  async ionViewWillEnter(): Promise<void> {
-    // Load user data
-    this.userSubs = this._authService.userData.subscribe(async userData => this.userData = userData ?? undefined );
-    
-    this._globalService.showLoader('Loading page...');
+  async ngOnInit() {
+    this._globalService.showLoader('Page loading...');
     await this.fetchDoctors();
     await this.fetchClinics();
-    this._globalService.hideLoader();
+
+    // Load user data
+    this.userDataSubs = this._authService.userData.subscribe(userData => {
+      if(!userData) return;
+      if(userData.role?.name !== Roles.PATIENT) this._router.navigateByUrl(RouteConstants.UNAUTHORIZED);
+
+      this.userData = userData;
+      this._globalService.hideLoader();
+    });
   }
   
   async fetchDoctors(){
@@ -254,6 +260,8 @@ export class HomePatientPage implements ViewWillEnter, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.userSubs?.unsubscribe();
+    this.userDataSubs?.unsubscribe();
+    this.doctorsSubs?.unsubscribe();
+    this.clinicsSubs?.unsubscribe();
   }
 }

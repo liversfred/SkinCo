@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BankDetails } from 'src/app/models/bank-details.model';
 import { Clinic } from 'src/app/models/clinic.model';
 import { GlobalService } from 'src/app/services/global.service';
@@ -7,20 +7,23 @@ import { ModifierActions } from 'src/app/constants/modifiers-action.constants';
 import { TrailService } from 'src/app/services/trail.service';
 import { ClinicBankDetailsService } from 'src/app/services/clinic-bank-details.service';
 import { ColorConstants } from 'src/app/constants/color.constants';
-import { RefresherCustomEvent, ViewDidLeave, ViewWillEnter } from '@ionic/angular';
+import { RefresherCustomEvent, ViewWillEnter } from '@ionic/angular';
 import { AddBankDetailsComponent } from 'src/app/components/modals/add-bank-details/add-bank-details.component';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserData } from 'src/app/models/user-data.model';
 import { ClinicService } from 'src/app/services/clinic.service';
 import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
+import { Roles } from 'src/app/constants/roles.constants';
+import { Router } from '@angular/router';
+import { RouteConstants } from 'src/app/constants/route.constants';
 
 @Component({
   selector: 'app-clinic-bank-details',
   templateUrl: './clinic-bank-details.page.html',
   styleUrls: ['./clinic-bank-details.page.scss'],
 })
-export class ClinicBankDetailsPage implements ViewWillEnter, ViewDidLeave {
+export class ClinicBankDetailsPage implements OnInit, ViewWillEnter, OnDestroy {
   @Input() clinic: Clinic | undefined;
   userData: UserData | undefined;
   bankDetailsList: BankDetails[] = [];
@@ -33,20 +36,35 @@ export class ClinicBankDetailsPage implements ViewWillEnter, ViewDidLeave {
     private _globalService: GlobalService,
     private _errorService: ErrorService,
     private _trailService: TrailService,
+    private _router: Router,
     private _clinicBankDetailsService: ClinicBankDetailsService) { }
+    
+  ngOnInit(): void {
+    this._globalService.showLoader('Page loading...');
 
-  ionViewWillEnter(): void {
+    // Load user data
     this.userDataSubs = this._authService.userData.subscribe(async userData => {
-      this.userData = userData ?? undefined;
+      if(!userData) return;
+      if(userData.role?.name !== Roles.STAFF) this._router.navigateByUrl(RouteConstants.UNAUTHORIZED);
 
-      if(!this.userData) return;
+      this.userData = userData;
+      this._globalService.hideLoader();
       
-      await this.fetchClinic();
-
-      if(!this.clinic) return;
-
-      this.fetchBankDetails();
+      await this.reloadData();
     });
+  }
+
+  async ionViewWillEnter() {
+    if(!this.userData) return;
+
+    await this.reloadData();
+  }
+
+  async reloadData(){
+    await this.fetchClinic();
+
+    if(!this.clinic) return;
+    this.fetchBankDetails();
   }
 
   async fetchClinic(){
@@ -179,8 +197,8 @@ export class ClinicBankDetailsPage implements ViewWillEnter, ViewDidLeave {
         this._errorService.handleError(e);
       });
   }
-  
-  ionViewDidLeave(): void {
+
+  ngOnDestroy(): void {
     this.userDataSubs?.unsubscribe();
   }
 }
