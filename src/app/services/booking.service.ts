@@ -4,6 +4,10 @@ import { Collections } from '../constants/collections.constants';
 import { GlobalService } from './global.service';
 import { Observable, map } from 'rxjs';
 import { Booking } from '../models/booking-details.model';
+import { ScheduleOptions } from '@capacitor/local-notifications';
+import { NotificationConstants } from '../constants/notification.constants';
+import { BookingStatus } from '../constants/booking-status.enum';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +47,11 @@ export class BookingService {
     return this.fetchBookingsAsync(collectionRef);
   }
 
+  fetchAllActiveBookingsAsync(): Observable<Booking[]> {
+    const collectionRef = query(this.bookingsCollection, where('bookingStatus', 'in', [BookingStatus.QUEUED]));
+    return this.fetchBookingsAsync(collectionRef);
+  }
+
   fetchBookingsAsync(query: Query): Observable<Booking[]> {
     return collectionData(query, { idField: 'id'})
       .pipe(
@@ -56,7 +65,23 @@ export class BookingService {
             };
           });
         }),
-        map((bookings: Booking[]) => this._globalService.sortData({active: 'bookingDate', direction: 'asc'}, bookings))
+        map((bookings: Booking[]) => this._globalService.sortData({active: 'bookingDate', direction: 'asc'}, bookings)),
       )
+  }
+  
+  createBookingNotification(id: number, title: string, message: string): ScheduleOptions{
+    let options: ScheduleOptions = {
+      notifications: [
+        {
+          id,
+          title,
+          body: message,
+          largeIcon: NotificationConstants.LARGE_ICON_PATH,
+          smallIcon: NotificationConstants.SMALL_ICON_PATH,
+        }
+      ]
+    };
+
+    return options;
   }
 }

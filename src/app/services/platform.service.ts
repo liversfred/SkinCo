@@ -10,6 +10,10 @@ export class PlatformService {
 
   constructor(private _platform: Platform) { }
 
+  isReady(){
+    return this._platform.ready();
+  }
+
   isAndroid(){
     return this._platform.platforms()[0] == PlatformConstants.ANDROID
           || this._platform.platforms()[0] == PlatformConstants.TABLET

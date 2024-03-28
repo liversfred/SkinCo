@@ -7,8 +7,20 @@
   </ion-header>
   <ion-content class="ion-padding">
     <ion-list>
-      <ion-menu-toggle auto-hide="false">
-        <ion-item [routerLink]="routes.HOME">
+      <ion-menu-toggle auto-hide="false" *ngIf="userData && userData.role?.name === roles.ADMIN">
+        <ion-item [routerLink]="routes.HOME_ADMIN">
+          <ion-icon slot="start" name="home"></ion-icon>
+          <ion-label>Home</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle auto-hide="false" *ngIf="userData && userData.role?.name === roles.STAFF">
+        <ion-item [routerLink]="routes.HOME_STAFF">
+          <ion-icon slot="start" name="home"></ion-icon>
+          <ion-label>Home</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle auto-hide="false" *ngIf="userData && userData.role?.name === roles.PATIENT">
+        <ion-item [routerLink]="routes.HOME_PATIENT">
           <ion-icon slot="start" name="home"></ion-icon>
           <ion-label>Home</ion-label>
         </ion-item>

@@ -224,6 +224,8 @@ export class GlobalService {
   }
   
   getDatesDifference(date1: Date, date2: Date): number{
+    date1.setHours(0, 0, 0, 0);
+    date2.setHours(0, 0, 0, 0);
     // Calculate the difference in milliseconds
     const differenceMs = date1.getTime() - date2.getTime();
 
@@ -239,5 +241,17 @@ export class GlobalService {
       month: date.getMonth(),
       day: date.getDate(),
     }
+  }
+
+  isPositionForSending(position: number){
+    return [10, 5, 4, 3, 2].includes(position);
+  }
+
+  getPositionInWord(position: number){
+    return position === 1 ? '1st' :
+          position === 2 ? '2nd' :
+          position === 3 ? '3rd' :
+          position >= 4 && position <= 20 ? `${position}th` :
+          -1;
   }
 }

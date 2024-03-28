@@ -104,6 +104,62 @@ export class UserSeederService {
         roleId: patientRoleId!,
         ...this._trailService.createAudit(`${ModifierActions.CREATED} User Patient2 M. Last2`), 
       },
+      { 
+        authId: null,
+        person: {
+          email: 'patient3@gmail.com',
+          firstName: 'Patient3',
+          middleName: 'Middle3',
+          lastName: 'Last3',
+          mobileNumber: '09593983454',
+          gender: GenderConstants.MALE,
+          age: 30
+        },
+        roleId: patientRoleId!,
+        ...this._trailService.createAudit(`${ModifierActions.CREATED} User Patient3 M. Last3`), 
+      },
+      { 
+        authId: null,
+        person: {
+          email: 'patient4@gmail.com',
+          firstName: 'Patient4',
+          middleName: 'Middle4',
+          lastName: 'Last4',
+          mobileNumber: '09593983455',
+          gender: GenderConstants.MALE,
+          age: 35
+        },
+        roleId: patientRoleId!,
+        ...this._trailService.createAudit(`${ModifierActions.CREATED} User Patient4 M. Last4`), 
+      },
+      { 
+        authId: null,
+        person: {
+          email: 'patient5@gmail.com',
+          firstName: 'Patient5',
+          middleName: 'Middle5',
+          lastName: 'Last5',
+          mobileNumber: '09593983457',
+          gender: GenderConstants.MALE,
+          age: 32
+        },
+        roleId: patientRoleId!,
+        ...this._trailService.createAudit(`${ModifierActions.CREATED} User Patient5 M. Last5`), 
+      },
+      { 
+        authId: null,
+        person: {
+          email: 'patient6@gmail.com',
+          firstName: 'Patient6',
+          middleName: 'Middle6',
+          lastName: 'Last6',
+          mobileNumber: '09593983456',
+          gender: GenderConstants.MALE,
+          age: 23
+        },
+        roleId: patientRoleId!,
+        ...this._trailService.createAudit(`${ModifierActions.CREATED} User Patient6 M. Last6`), 
+      },
     ];
 
     console.log("SEEDING USER DATA");
