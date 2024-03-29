@@ -6,6 +6,8 @@ import { UserData } from '../models/user-data.model';
 import { Booking } from '../models/booking-details.model';
 import { ClinicServiceData } from '../models/clinic-service-data.model';
 import { environment } from 'src/environments/environment';
+import { Template } from '../models/template.model';
+import { TemplateDefault } from '../constants/template-dafault.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -30,11 +32,11 @@ export class EmailService {
     };
   }
 
-  buildBookingConfirmationEmailMessage(userData: UserData, booking: Booking): Message{
+  buildBookingConfirmationEmailMessage(userData: UserData, booking: Booking, template: Template): Message{
     const subject = `BOOKING CONFIRMATION`;
     const recipient = `Hi ${userData?.person?.firstName || 'Patient'},` ;
 
-    const mainMessage = this.composeBookingConfirmationMessage(booking);
+    const mainMessage = this.composeBookingConfirmationMessage(template, booking);
 
     return { subject, html: this.buildBodyFromTemplate(recipient, mainMessage) };
   }
@@ -48,28 +50,25 @@ export class EmailService {
     return { subject, html: this.buildBodyFromTemplate(recipient, mainMessage) };
   }
 
-  composeBookingConfirmationMessage(booking: Booking): string{
-   return `
-    This is to confirm your booking with clinic ${booking.clinic?.name}:
-    <br>
-    <br>
-    <h3>Booking Details:</h3>
-    <ul>
-      <li>Booking No.: ${booking.bookingNo}</li>
-      <li>Booking Date: ${booking.bookingDate.toDateString()}</li>
-      <li>Booking Status: ${booking.bookingStatus}</li>
-      <li>Remarks: ${booking.remarks}</li>
-    </ul>
-    <br>
-    Services:
-    ${this.composeClinicServices(booking.clinicServices!)} 
-    <br>
-    <br>
-    Thank you for booking with us. If you need anything else related to your booking, feel free to ask our team.
-    <br>
-    <br>
-    Keep enjoying our services!
-   `;
+  composeBookingConfirmationMessage(template: Template, booking: Booking): string{
+    const bookingDetails = `
+      <h3>Booking Details:</h3>
+      <ul>
+        <li>Booking No.: ${booking.bookingNo}</li>
+        <li>Booking Date: ${booking.bookingDate.toDateString()}</li>
+        <li>Booking Status: ${booking.bookingStatus}</li>
+        <li>Remarks: ${booking.remarks}</li>
+      </ul>
+    `;
+    const services = `
+      Services:
+      ${this.composeClinicServices(booking.clinicServices!)} 
+    `;
+
+    let content = template.content.replace(TemplateDefault.CLINIC_NAME_VAR, booking.clinic?.name!);
+    content = content.replace(TemplateDefault.BOOKING_DETAILS_VAR, bookingDetails);
+    content = content.replace(TemplateDefault.SERVICES_VAR, services);
+    return content;
   }
 
   composeRescheduleConfirmationMessage(booking: Booking): string{

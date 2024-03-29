@@ -67,6 +67,11 @@ const routes: Routes = [
     canMatch: [authGuard]
   },
   {
+    path: RouteConstants.TEMPLATES,
+    loadChildren: () => import('./pages/template/template.module').then( m => m.TemplatePageModule),
+    canMatch: [authGuard]
+  },
+  {
     path: RouteConstants.UNAUTHORIZED,
     loadChildren: () => import('./pages/unauthorized/unauthorized.module').then( m => m.UnauthorizedPageModule),
     canMatch: [authGuard]

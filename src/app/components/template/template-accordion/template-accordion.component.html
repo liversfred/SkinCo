@@ -1,0 +1,34 @@
+<ion-accordion [value]="template?.templateType">
+  <ion-item slot="header" color="light">
+    <ion-label>{{ template?.templateType }}</ion-label>
+  </ion-item>
+  <div class="ion-padding" slot="content" class="accordion-content">
+    <form [formGroup]="templateForm!" (ngSubmit)="onUpdateTemplate()">
+      <ion-row>
+        <ion-col size="12">
+          <ion-text class="ion-text-start ion-margin-bottom">
+            <ion-textarea  
+              color="light"
+              label="Description"
+              labelPlacement="floating"
+              [autoGrow]="true"
+              [counter]="true"
+              (ionInput)="validateEmailContent($event.target.value)"
+              formControlName="content"></ion-textarea>
+          </ion-text>
+        </ion-col>
+        <ion-text class="error-message" color="danger" *ngIf="templateForm?.hasError('invalidContent', 'content') && templateForm?.get('content')?.touched">
+          <div>* Content is invalid.</div>
+        </ion-text>
+        <ion-col size="12">
+          <ion-text color="danger" class="hint">{{ errorMessage }}</ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12" class="ion-text-end">
+          <ion-button type="submit" color="secondary" size="medium" [disabled]="errorMessage !== ''">Update</ion-button>
+        </ion-col>
+      </ion-row>
+    </form>
+  </div>
+</ion-accordion>

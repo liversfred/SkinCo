@@ -78,10 +78,8 @@ export class ClinicServicesPage implements OnInit, ViewWillEnter, OnDestroy {
     const clinicId = this.userData?.clinicId;
     if(!clinicId) { return; };
     
-    this._globalService.showLoader('Fetching clinic info...');
     this.clinic = await this._clinicService.fetchClinicById(clinicId) ?? undefined;
     this.selectedClinicService = undefined;
-    this._globalService.hideLoader();
   }
   
   async onRefresh(event: RefresherCustomEvent){

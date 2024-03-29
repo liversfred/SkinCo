@@ -36,12 +36,6 @@ export class ClinicServicesService {
   async fetchClinicServices(clinicId?: string): Promise<ClinicServiceData[]> {
     try{
       let clinicServices = await new Promise<ClinicServiceData[]>((resolve, reject) => {
-        let collectionRef = query(this.clinicServicessCollection, where('isActive', '==', true));
-        
-        if(clinicId){
-          collectionRef = query(collectionRef, where('clinicId', '==', clinicId));
-        }
-        
         this.fetchClinicServicesAsync(clinicId)
           .subscribe({
             next: (clinicServices: ClinicServiceData[]) => {

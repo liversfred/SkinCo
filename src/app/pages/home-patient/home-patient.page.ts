@@ -9,6 +9,7 @@ import { BookingStatus } from 'src/app/constants/booking-status.enum';
 import { ModifierActions } from 'src/app/constants/modifiers-action.constants';
 import { Roles } from 'src/app/constants/roles.constants';
 import { RouteConstants } from 'src/app/constants/route.constants';
+import { TemplateType } from 'src/app/constants/template-types.constants';
 import { Booking } from 'src/app/models/booking-details.model';
 import { ClinicServiceData } from 'src/app/models/clinic-service-data.model';
 import { Clinic } from 'src/app/models/clinic.model';
@@ -21,6 +22,7 @@ import { DoctorService } from 'src/app/services/doctor.service';
 import { EmailService } from 'src/app/services/email.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { GlobalService } from 'src/app/services/global.service';
+import { TemplateService } from 'src/app/services/template.service';
 import { TrailService } from 'src/app/services/trail.service';
 
 @Component({
@@ -50,6 +52,7 @@ export class HomePatientPage implements OnInit, OnDestroy {
     private _trailService: TrailService,
     private _errorService: ErrorService,
     private _emailService: EmailService,
+    private _templateService: TemplateService,
     private _router: Router
     ) { }
 
@@ -232,13 +235,17 @@ export class HomePatientPage implements OnInit, OnDestroy {
       });
   }
 
-  sendEmailConfirmation(booking: Booking, clinicServices: ClinicServiceData[]){
+  async sendEmailConfirmation(booking: Booking, clinicServices: ClinicServiceData[]){
+    const templates = await this._templateService.fetchTemplates(this.userData!, booking.clinicId);
+    const emailTemplate = this._templateService.getTemplateByType(templates, TemplateType.EMAIL);
+    if(!emailTemplate) return;
+    
     booking.clinicServices = clinicServices;
     booking.clinic = this.selectedClinic;
 
     const mail = this._emailService.buildMail(
       [this.userData?.person?.email!], 
-      this._emailService.buildBookingConfirmationEmailMessage(this.userData!, booking)
+      this._emailService.buildBookingConfirmationEmailMessage(this.userData!, booking, emailTemplate)
     );
     this._emailService.sendEmail(mail);
   }

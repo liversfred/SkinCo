@@ -55,6 +55,12 @@
           <ion-label>Bank Details</ion-label>
         </ion-item>
       </ion-menu-toggle>
+      <ion-menu-toggle auto-hide="false" *ngIf="userData && userData.clinicId && userData.role?.name === roles.STAFF">
+        <ion-item [routerLink]="routes.TEMPLATES">
+          <ion-icon slot="start" name="document-text"></ion-icon>
+          <ion-label>Templates</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
       <ion-menu-toggle auto-hide="false" *ngIf="userData">
         <ion-item [routerLink]="routes.PROFILE">
           <ion-icon slot="start" name="person"></ion-icon>
