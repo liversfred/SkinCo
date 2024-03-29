@@ -38,7 +38,7 @@
           </ion-col>
         </ion-row>
         <app-filter [filterOptions]="filterOptions" (filterByDate)="onFilterByDate($event)" (filterByClinic)="onFilterByClinic($event)" (filterByStatus)="onFilterByStatus($event)" (clearFilters)="onClearFilters()" [clinicOptions]="clinicOptions"></app-filter>
-        <app-booking-list [userData]="userData" [patientLevel]="patientLevel" [bookings]="filteredPreviousBookings"></app-booking-list>
+        <app-booking-list [userData]="userData" [patientLevel]="patientLevel" [bookings]="filteredPreviousBookings" (writeReview)="onWriteReview($event)"></app-booking-list>
       </ion-list>
     </div>
   </ion-col>

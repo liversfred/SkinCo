@@ -10,6 +10,7 @@ import { ClinicCardComponent } from './cards/clinic-card/clinic-card.component';
 import { BookingCardComponent } from './cards/booking-card/booking-card.component';
 import { FilterComponent } from './filter/filter.component';
 import { BankDetailsComponent } from './clinic/bank-details/bank-details.component';
+import { ReviewCardComponent } from './cards/review-card/review-card.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { BankDetailsComponent } from './clinic/bank-details/bank-details.compone
     ClinicCardComponent,
     BankDetailsComponent,
     TruncateStringPipe,
-    FilterComponent
+    FilterComponent,
+    ReviewCardComponent
   ],
   imports: [
     SharedModule,
@@ -39,7 +41,8 @@ import { BankDetailsComponent } from './clinic/bank-details/bank-details.compone
     ClinicCardComponent,
     BankDetailsComponent,
     TruncateStringPipe,
-    FilterComponent
+    FilterComponent,
+    ReviewCardComponent
   ]
 })
 export class ComponentsModule { }

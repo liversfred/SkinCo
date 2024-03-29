@@ -29,6 +29,7 @@ export class BookingCardComponent  implements OnInit {
   @Output() requeueBooking = new EventEmitter<Booking>
   @Output() completeBooking = new EventEmitter<Booking>
   @Output() rescheduleBooking = new EventEmitter<Booking>
+  @Output() writeReview = new EventEmitter<Booking>
 
   constructor() { }
 
@@ -97,5 +98,10 @@ export class BookingCardComponent  implements OnInit {
   onRescheduleBooking(){
     this.isPopoverOpen = false;
     this.rescheduleBooking.emit(this.booking);
+  }
+
+  onWriteReview(){
+    this.isPopoverOpen = false;
+    this.writeReview.emit(this.booking);
   }
 }

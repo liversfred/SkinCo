@@ -8,6 +8,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ClinicScheduleListComponent } from './clinic-schedule-list/clinic-schedule-list.component';
 import { ClinicDoctorsComponent } from './clinic-doctors/clinic-doctors.component';
 import { ClinicDetailsComponent } from './clinic-details/clinic-details.component';
+import { ClinicReviewsComponent } from './clinic-reviews/clinic-reviews.component';
 
 
 
@@ -20,6 +21,7 @@ import { ClinicDetailsComponent } from './clinic-details/clinic-details.componen
     ClinicScheduleComponent,
     ClinicScheduleListComponent,
     ClinicDoctorsComponent,
+    ClinicReviewsComponent
   ],
   imports: [
     SharedModule,
@@ -33,6 +35,7 @@ import { ClinicDetailsComponent } from './clinic-details/clinic-details.componen
     ClinicScheduleComponent,
     ClinicScheduleListComponent,
     ClinicDoctorsComponent,
+    ClinicReviewsComponent
   ]
 })
 export class ClinicModule { }

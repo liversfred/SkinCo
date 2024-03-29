@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ViewDidLeave } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { BookingHistorySegmentsComponent } from 'src/app/components/booking/booking-history-segments/booking-history-segments.component';
+import { AddReviewComponent } from 'src/app/components/modals/add-review/add-review.component';
 import { BookingComponent } from 'src/app/components/modals/booking/booking.component';
 import { AlertTypeEnum } from 'src/app/constants/alert-logo.enum';
 import { BookingSegments } from 'src/app/constants/booking-segments.enum';
@@ -15,6 +16,7 @@ import { RouteConstants } from 'src/app/constants/route.constants';
 import { Booking } from 'src/app/models/booking-details.model';
 import { ClinicServiceData } from 'src/app/models/clinic-service-data.model';
 import { Clinic } from 'src/app/models/clinic.model';
+import { Review } from 'src/app/models/review.model';
 import { UserData } from 'src/app/models/user-data.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { BookingService } from 'src/app/services/booking.service';
@@ -237,6 +239,42 @@ export class BookingHistoryPage implements OnInit, ViewDidLeave, OnDestroy {
       .catch((e) => {
         this._errorService.handleError(e);
       });
+  }
+
+  onWriteReview(booking: Booking){
+    const data = { booking };
+    this.openReviewModal(data);
+  }
+
+  async openReviewModal(data: any) {
+    try {
+      const options = {
+        component: AddReviewComponent,
+        swipeToClose: false,
+        canDismiss: true,
+        backdropDismiss: true,
+        componentProps: { data },
+      };
+      
+      const reviewRes = await this._globalService.createModal(options);
+
+      if(!reviewRes) return;
+
+      const action = `${data.review ? ModifierActions.UPDATED : ModifierActions.CREATED} Review to Clinic ${data.booking.clinic.name}`;
+      const review: Review = {
+        ...reviewRes,
+        userId: this.userData?.id,
+        ...(data.review ? this._trailService.updateAudit(action) : this._trailService.createAudit(action))
+      };
+      const booking = {
+        id: data.booking.id,
+        review
+      };
+
+      this.updateBooking(booking);
+    } catch(e) {
+      this._errorService.handleError(e);
+    }
   }
 
   ionViewDidLeave(): void {

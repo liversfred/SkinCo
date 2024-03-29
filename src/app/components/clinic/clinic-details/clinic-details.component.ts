@@ -4,6 +4,7 @@ import { BankDetails } from 'src/app/models/bank-details.model';
 import { Clinic } from 'src/app/models/clinic.model';
 import { ClinicBankDetailsService } from 'src/app/services/clinic-bank-details.service';
 import { GlobalService } from 'src/app/services/global.service';
+import { PlatformService } from 'src/app/services/platform.service';
 
 @Component({
   selector: 'app-clinic-details',
@@ -16,10 +17,17 @@ export class ClinicDetailsComponent  implements OnInit {
   clinicSegments: any = ClinicSegments;
   bankDetailsList: BankDetails[] = [];
   selectedSegment: string = this.clinicSegments.INFO;
+  isDesktop: boolean = false;
 
-  constructor(private _globalService: GlobalService, private _clinicBankDetailsService: ClinicBankDetailsService) { }
+  constructor(
+    private _globalService: GlobalService, 
+    private _clinicBankDetailsService: ClinicBankDetailsService,
+    private _platformService: PlatformService
+    ) { }
 
   ngOnInit() {
+    this.isDesktop = this._platformService.isDesktop();
+
     this.clinic = this.data.clinic;
     this.fetchBankDetails();
   }

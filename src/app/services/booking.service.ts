@@ -62,6 +62,11 @@ export class BookingService {
               bookingDate: item.bookingDate.toDate(),
               createdAt: item.createdAt.toDate(),
               updatedAt: item.updatedAt.toDate(),
+              review: item.review ? {
+                ...item.review,
+                updatedAt: item.review.updatedAt?.toDate(),
+                createdAt: item.review.createdAt?.toDate(),
+              } : undefined
             };
           });
         }),

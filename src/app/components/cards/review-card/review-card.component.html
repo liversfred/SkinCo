@@ -1,0 +1,49 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>
+      <ion-row>
+        <ion-col size="12" size-md="1" class="ion-no-padding ion-no-margin">
+          <ion-avatar>
+            <img alt="userData image" [src]="imagePath" />
+          </ion-avatar>
+        </ion-col>
+        <ion-col size="12" size-md="10" class="ion-no-padding ion-no-margin">
+          {{ fullname ?? 'Anonymous' }}
+        </ion-col>
+      </ion-row>
+    </ion-card-title>
+    <ion-card-subtitle>
+      <ion-row>
+        <ion-col size="6" push-md="1">
+          <ion-icon *ngFor="let i of getStarsArray(bookingWithReview?.review?.rating);" name="star-half-outline"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    <ion-row>
+      <ion-col size="12" size-md="6">
+        <ion-text>Booking Date: {{ bookingWithReview?.createdAt | date: 'longDate'  }}</ion-text>
+      </ion-col>
+      <ion-col size="12" size-md="6">
+        <ion-text>Review Date: {{ bookingWithReview?.review?.updatedAt | date: 'longDate'  }}</ion-text>
+      </ion-col>
+    </ion-row>
+    <div class="ion-padding">
+      <ion-text>SERVICES:</ion-text>
+      <ion-row *ngFor="let service of bookingWithReview?.clinicServices">
+        <ion-col size="6">
+          <ion-text>{{ service.name }}</ion-text>
+        </ion-col>
+        <ion-col size="6">
+          <ion-text>{{ service.price | currency: 'PHP' }}</ion-text>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <ion-text>
+      {{ bookingWithReview?.review?.remarks }}
+    </ion-text>
+  </ion-card-content>
+</ion-card>

@@ -10,6 +10,7 @@ import { AddClinicServiceComponent } from './add-clinic-service/add-clinic-servi
 import { GenericComponent } from './generic/generic.component';
 import { BookingComponent } from './booking/booking.component';
 import { SelectDateComponent } from './select-date/select-date.component';
+import { AddReviewComponent } from './add-review/add-review.component';
 
 
 
@@ -24,7 +25,8 @@ import { SelectDateComponent } from './select-date/select-date.component';
     UpdateProfileComponent,
     AddClinicServiceComponent,
     GenericComponent,
-    BookingComponent
+    BookingComponent,
+    AddReviewComponent
   ],
   imports: [
     SharedModule
@@ -39,7 +41,8 @@ import { SelectDateComponent } from './select-date/select-date.component';
     UpdateProfileComponent,
     AddClinicServiceComponent,
     GenericComponent,
-    BookingComponent
+    BookingComponent,
+    AddReviewComponent
   ]
 })
 export class ModalsModule { }

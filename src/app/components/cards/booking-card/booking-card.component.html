@@ -26,7 +26,7 @@
             color="primary" 
             name="menu" 
             (click)="presentPopover($event)"
-            *ngIf="booking?.bookingStatus === bookingStatuses.QUEUED || booking?.bookingStatus === bookingStatuses.SKIPPED">
+            *ngIf="booking?.bookingStatus !== bookingStatuses.CANCELLED && !booking?.review">
           </ion-icon>
         </ion-col>
       </ion-row>
@@ -35,14 +35,14 @@
 
   <ion-card-content>
     <ion-popover #popover [isOpen]="isPopoverOpen" (didDismiss)="isPopoverOpen = false"
-      *ngIf="booking?.bookingStatus !== bookingStatuses.COMPLETED && booking?.bookingStatus !== bookingStatuses.CANCELLED">
+      *ngIf="booking?.bookingStatus !== bookingStatuses.CANCELLED && !booking?.review">
       <ng-template>
         <ion-list>
-          <ion-item class="link" *ngIf="userData?.role?.name === roles.PATIENT" (click)="onCancelBooking()">
+          <ion-item class="link" *ngIf="userData?.role?.name === roles.PATIENT && booking?.bookingStatus === bookingStatuses.QUEUED  && booking?.bookingStatus === bookingStatuses.SKIPPED" (click)="onCancelBooking()">
             <ion-icon slot="start" color="danger" name="close-circle"></ion-icon>
             <ion-text>CANCEL</ion-text>
           </ion-item>
-          <ion-item class="link" *ngIf="userData?.role?.name === roles.PATIENT" (click)="onRescheduleBooking()">
+          <ion-item class="link" *ngIf="userData?.role?.name === roles.PATIENT && booking?.bookingStatus === bookingStatuses.QUEUED  && booking?.bookingStatus === bookingStatuses.SKIPPED" (click)="onRescheduleBooking()">
             <ion-icon slot="start" color="secondary" name="calendar"></ion-icon>
             <ion-text>RESCHEDULE</ion-text>
           </ion-item>
@@ -57,6 +57,10 @@
           <ion-item class="link" *ngIf="userData?.role?.name === roles.STAFF && (booking?.bookingStatus === bookingStatuses.QUEUED || booking?.bookingStatus === bookingStatuses.SKIPPED)" (click)="onCompleteBooking()">
             <ion-icon slot="start" color="success" name="thumbs-up"></ion-icon>
             <ion-text>Complete</ion-text>
+          </ion-item>
+          <ion-item class="link" *ngIf="userData?.role?.name === roles.PATIENT && booking?.bookingStatus === bookingStatuses.COMPLETED" (click)="onWriteReview()">
+            <ion-icon slot="start" color="success" name="pencil"></ion-icon>
+            <ion-text>Write Review</ion-text>
           </ion-item>
         </ion-list>
       </ng-template>
@@ -97,6 +101,26 @@
                 </ion-col>
                 <ion-col size="6">
                   <ion-text>{{ totalServicesPrice | currency: 'PHP' }}</ion-text>
+                </ion-col>
+              </ion-row>
+            </div>
+          </ion-accordion>
+          <ion-accordion mode="ios" class="ion-margin-top" *ngIf="booking?.review">
+            <ion-item slot="header" color="medium">
+              <ion-label>Review</ion-label>
+            </ion-item>
+            <div slot="content" class="ion-padding">
+              <ion-row>
+                <ion-col size="6">
+                  <ion-text>Rating: {{ booking?.review?.rating }}</ion-text>
+                </ion-col>
+                <ion-col size="6">
+                  <ion-text>Date: {{ booking?.review?.updatedAt | date: 'longDate'  }}</ion-text>
+                </ion-col>
+                <ion-col size="12">
+                  <ion-text>Remarks:</ion-text>
+                  <br>
+                  <ion-text color="medium">{{ booking?.review?.remarks }}</ion-text>
                 </ion-col>
               </ion-row>
             </div>

@@ -132,6 +132,9 @@ export class ClinicService {
         backdropDismiss: true,
         cssClass: 'view-clinic',
         componentProps: { data },
+        breakpoints: [0, 0.5, 1],
+        initialBreakpoint: 1,
+        handleBehavior: "cycle",
       };
       
       await this._globalService.createModal(options);

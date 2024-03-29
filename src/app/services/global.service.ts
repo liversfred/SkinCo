@@ -57,7 +57,7 @@ export class GlobalService {
   showAlert(header: AlertTypeEnum, message: string, buttons?: AlertButton[], inputs?: AlertInput[]) {
     const formattedMessage = `<div class="alert-modal">
                                 <div class="ion-text-center ion-padding">
-                                  <ion-img class="alert-logo" src="../../assets/logos/${header.toLowerCase()}.png"></ion-img>
+                                  <ion-img class="alert-logo" src="../../assets/images/${header.toLowerCase()}.png"></ion-img>
                                 </div>
                                 <div class="ion-text-center ion-margin-top">
                                   <ion-label>

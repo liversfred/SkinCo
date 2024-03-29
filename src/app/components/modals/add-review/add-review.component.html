@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">{{ data?.review ? 'Update' : 'Write' }} Review</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="done()">Done</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <form [formGroup]="reviewForm!">
+    <ion-row class="ion-margin-vertical ion-justify-content-end">
+      <ion-toggle [enableOnOffLabels]="true" formControlName="isAnonymous">Make it Anonymous</ion-toggle>
+    </ion-row>
+
+    <ion-list color="light">
+      <ion-radio-group formControlName="rating">
+        <ion-row class="ion-justify-content-center">
+          <ion-col>
+            <ion-radio class="ion-text-center" alignment="center" labelPlacement="stacked" value="1">Very Bad</ion-radio>
+          </ion-col>
+          <ion-col>
+            <ion-radio class="ion-text-center"alignment="center" labelPlacement="stacked" value="2">Bad</ion-radio>
+          </ion-col>
+          <ion-col>
+            <ion-radio class="ion-text-center"alignment="center" labelPlacement="stacked" value="3">Satisfied</ion-radio>
+          </ion-col>
+          <ion-col>
+            <ion-radio class="ion-text-center"alignment="center" labelPlacement="stacked" value="4">Good</ion-radio>
+          </ion-col>
+          <ion-col>
+            <ion-radio class="ion-text-center"alignment="center" labelPlacement="stacked" value="5">Very Good</ion-radio>
+          </ion-col>
+        </ion-row>
+      </ion-radio-group>
+
+      <ion-item color="light" class="ion-margin-top">
+        <ion-textarea  
+        formControlName="remarks" 
+        label="Remarks"
+        labelPlacement="floating"
+        [autoGrow]="true"
+        [counter]="true" 
+        [maxlength]="commentMaxLengh"></ion-textarea>
+      </ion-item>
+      <ion-text class="error-message" color="danger" *ngIf="reviewForm?.value.description?.length > commentMaxLengh && reviewForm?.get('remarks')?.touched">
+        <div>* Maximum is {{ commentMaxLengh }} characters.</div>
+      </ion-text>
+
+    </ion-list>
+  </form>
+</ion-content>

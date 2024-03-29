@@ -1,0 +1,20 @@
+<ion-row class="wrapper ion-padding">
+  <ion-col size="12" size-md="8" offset-md="2">
+    <ion-text id="page-header-italic" *ngIf="bookingsWithReviews.length === 0">No Reviews</ion-text>
+    <ion-text id="page-header" *ngIf="bookingsWithReviews.length > 0">Reviews</ion-text>
+    <div class="ion-margin-top">
+      <ion-text>
+        <h4>Clinic Rating:
+          <ion-icon name="star-half-outline"></ion-icon>
+          {{ clinicReviewRate + '/5   ' + ' (' + bookingsWithReviews.length + ' Review' + (bookingsWithReviews.length > 1 ? 's' : '') + ')' }}
+        </h4>
+      </ion-text>
+    </div>
+
+    <ion-row>
+      <ion-col size="12" *ngFor="let bookingsWithReview of bookingsWithReviews">
+        <app-review-card [bookingWithReview]="bookingsWithReview"></app-review-card>
+      </ion-col>
+    </ion-row>
+  </ion-col>
+</ion-row>
