@@ -30,7 +30,7 @@ export class AddReviewComponent  implements OnInit {
     if(this.data?.review) {
       const review: Review = this.data.review;
       this.reviewForm?.get('isAnonymous')?.setValue(review.isAnonymous);
-      this.reviewForm?.get('rating')?.setValue(review.rating);
+      this.reviewForm?.get('rating')?.setValue(review.rating.toString());
       this.reviewForm?.get('remarks')?.setValue(review.remarks);
     }
   }

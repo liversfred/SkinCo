@@ -20,6 +20,8 @@ export class BookingListComponent {
   @Output() completeBooking = new EventEmitter<Booking>
   @Output() rescheduleBooking = new EventEmitter<Booking>
   @Output() writeReview = new EventEmitter<Booking>
+  @Output() updateReview = new EventEmitter<Booking>
+  @Output() deleteReview = new EventEmitter<Booking>
   
   constructor(private _clinicService: ClinicService, private _userService: UserService) { }
 
@@ -55,5 +57,13 @@ export class BookingListComponent {
 
   onWriteReview(booking: Booking){
     this.writeReview.emit(booking);
+  }
+
+  onUpdateReview(booking: Booking){
+    this.updateReview.emit(booking);
+  }
+
+  onDeleteReview(booking: Booking){
+    this.deleteReview.emit(booking);
   }
 }

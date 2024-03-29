@@ -10,6 +10,7 @@ import { UserData } from 'src/app/models/user-data.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ClinicService } from 'src/app/services/clinic.service';
 import { GlobalService } from 'src/app/services/global.service';
+import { PlatformService } from 'src/app/services/platform.service';
 
 @Component({
   selector: 'app-clinic',
@@ -23,16 +24,20 @@ export class ClinicPage implements OnInit, ViewWillEnter, ViewDidLeave, OnDestro
   clinicSegments: any = ClinicSegments;
   selectedSegment: string = this.clinicSegments.INFO;
   isFormUpdate: boolean = false;
+  isDesktop: boolean = false;
   userDataSubs: Subscription | undefined;
 
   constructor(
     private _authService: AuthService,
     private _clinicService: ClinicService,
     private _globalService: GlobalService,
-    private _router: Router
+    private _router: Router,
+    private _platformService: PlatformService
     ) { }
 
   ngOnInit(): void {
+    this.isDesktop = this._platformService.isDesktop();
+
     this._globalService.showLoader('Page loading...');
 
     // Load user data

@@ -38,6 +38,8 @@ export class BookingHistorySegmentsComponent {
   @Output() completeBooking = new EventEmitter<Booking>;
   @Output() rescheduleBooking = new EventEmitter<Booking>;
   @Output() writeReview = new EventEmitter<Booking>;
+  @Output() updateReview = new EventEmitter<Booking>;
+  @Output() deleteReview = new EventEmitter<Booking>;
 
   constructor(
     private _globalService: GlobalService,
@@ -201,5 +203,13 @@ export class BookingHistorySegmentsComponent {
 
   onWriteReview(booking: Booking){
     this.writeReview.emit(booking);
+  }
+
+  onUpdateReview(booking: Booking){
+    this.updateReview.emit(booking);
+  }
+
+  onDeleteReview(booking: Booking){
+    this.deleteReview.emit(booking);
   }
 }

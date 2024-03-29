@@ -30,6 +30,8 @@ export class BookingCardComponent  implements OnInit {
   @Output() completeBooking = new EventEmitter<Booking>
   @Output() rescheduleBooking = new EventEmitter<Booking>
   @Output() writeReview = new EventEmitter<Booking>
+  @Output() updateReview = new EventEmitter<Booking>
+  @Output() deleteReview = new EventEmitter<Booking>
 
   constructor() { }
 
@@ -103,5 +105,13 @@ export class BookingCardComponent  implements OnInit {
   onWriteReview(){
     this.isPopoverOpen = false;
     this.writeReview.emit(this.booking);
+  }
+
+  onUpdateReview(){
+    this.updateReview.emit(this.booking);
+  }
+
+  onDeleteReview(){
+    this.deleteReview.emit(this.booking);
   }
 }

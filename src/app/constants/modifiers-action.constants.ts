@@ -3,4 +3,5 @@ export class ModifierActions {
   static readonly UPDATED = 'Updated';
   static readonly ARCHIVED = 'Archived';
   static readonly ADDED = 'Added';
+  static readonly DELETED = 'Deleted';
 }

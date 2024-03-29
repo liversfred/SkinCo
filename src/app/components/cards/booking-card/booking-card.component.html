@@ -105,7 +105,7 @@
               </ion-row>
             </div>
           </ion-accordion>
-          <ion-accordion mode="ios" class="ion-margin-top" *ngIf="booking?.review">
+          <ion-accordion mode="ios" class="ion-margin-top" *ngIf="booking?.review && userData?.role?.name === roles.PATIENT">
             <ion-item slot="header" color="medium">
               <ion-label>Review</ion-label>
             </ion-item>
@@ -121,6 +121,12 @@
                   <ion-text>Remarks:</ion-text>
                   <br>
                   <ion-text color="medium">{{ booking?.review?.remarks }}</ion-text>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="12" class="ion-text-end">
+                  <ion-button class="ion-margin-end" color="secondary" size="small" (click)="onUpdateReview()">Update</ion-button>
+                  <ion-button color="danger" size="small" (click)="onDeleteReview()">Delete</ion-button>
                 </ion-col>
               </ion-row>
             </div>

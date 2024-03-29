@@ -9,15 +9,22 @@
   </app-clinic-registration-form>
   
   <div *ngIf="showClinicSetupForm === false && clinic">
-    <ion-segment [(ngModel)]="selectedSegment">
+    <ion-segment [(ngModel)]="selectedSegment" [scrollable]="true">
       <ion-segment-button [value]="clinicSegments.INFO">
-        <ion-label>{{ clinicSegments.INFO }}</ion-label>
+        <ion-icon name="information-circle" *ngIf="!isDesktop"></ion-icon>
+        <ion-label *ngIf="isDesktop">{{ clinicSegments.INFO }}</ion-label>
       </ion-segment-button>
       <ion-segment-button [value]="clinicSegments.SCHEDULE" [disabled]="!clinic.isApproved">
-        <ion-label>{{ clinicSegments.SCHEDULE }}</ion-label>
+        <ion-icon name="calendar" *ngIf="!isDesktop"></ion-icon>
+        <ion-label *ngIf="isDesktop">{{ clinicSegments.SCHEDULE }}</ion-label>
       </ion-segment-button>
       <ion-segment-button [value]="clinicSegments.DOCTOR" [disabled]="!clinic.isApproved">
-        <ion-label>{{ clinicSegments.DOCTOR }}</ion-label>
+        <ion-icon name="person" *ngIf="!isDesktop"></ion-icon>
+        <ion-label *ngIf="isDesktop">{{ clinicSegments.DOCTOR }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button [value]="clinicSegments.REVIEWS">
+        <ion-icon name="people" *ngIf="!isDesktop"></ion-icon>
+        <ion-label *ngIf="isDesktop">{{ clinicSegments.REVIEWS }}</ion-label>
       </ion-segment-button>
     </ion-segment>
 
@@ -30,6 +37,9 @@
       </ion-list>
       <ion-list *ngSwitchCase="clinicSegments.DOCTOR">
         <app-clinic-doctors [clinic]="clinic"></app-clinic-doctors>
+      </ion-list>
+      <ion-list *ngSwitchCase="clinicSegments.REVIEWS">
+        <app-clinic-reviews [clinic]="clinic"></app-clinic-reviews>
       </ion-list>
     </div>
   </div>

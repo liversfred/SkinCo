@@ -246,6 +246,39 @@ export class BookingHistoryPage implements OnInit, ViewDidLeave, OnDestroy {
     this.openReviewModal(data);
   }
 
+  onUpdateReview(booking: Booking){
+    const data = { booking, review: booking.review };
+    this.openReviewModal(data);
+  }
+
+  onDeleteReview(booking: Booking){
+    this._globalService.showAlert(
+      AlertTypeEnum.CONFIRM, 
+      'Are you sure you want to delete your review?',
+      [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary'
+        }, 
+        {
+          text: 'Okay',
+          handler: async () => {
+            const action = `${ModifierActions.DELETED} Review from booking ${booking.bookingNo}`;
+
+            const updatedModel = {
+              id: booking.id!,
+              review: null,
+            ...this._trailService.updateAudit(action)
+            };
+
+            this.updateBooking(updatedModel);
+          }
+        }
+      ]
+    )
+  }
+
   async openReviewModal(data: any) {
     try {
       const options = {
