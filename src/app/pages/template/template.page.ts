@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { RefresherCustomEvent } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { ColorConstants } from 'src/app/constants/color.constants';
 import { Roles } from 'src/app/constants/roles.constants';
@@ -41,20 +42,27 @@ export class TemplatePage implements OnInit, OnDestroy {
       this.userData = userData;
       this._globalService.hideLoader();
 
-      this.fetchClinicTemplates();
+      this.reloadData();
     });
   }
 
-  fetchClinicTemplates(){
-    this.templateSubs = this._templateService.fetchTemplatesAsync(this.userData?.clinicId!)
-      .subscribe({
-        next: (templates: Template[]) => {
-          this.templates = templates;
-        },
-        error: (err: any) => {
-          this._errorService.handleError(err);
-        }
-      });
+  async ionViewWillEnter(): Promise<void> {
+    if(!this.userData) return;
+
+    await this.reloadData();
+  }
+
+  async reloadData(){
+    this.fetchClinicTemplates();
+  }
+  
+  async onRefresh(event: RefresherCustomEvent){
+    await this.reloadData();
+    event.target.complete();
+  }
+
+  async fetchClinicTemplates(){
+    this.templates = await this._templateService.fetchTemplates(this.userData!, this.userData?.clinicId!);
   }
 
   onUpdateTemplate(template: Template){
@@ -68,6 +76,8 @@ export class TemplatePage implements OnInit, OnDestroy {
       .then(async (res) => {
         this._globalService.hideLoader();
         if(!res) return;
+
+        await this.reloadData();
         this._globalService.showToast("Template has been saved.", 3000, ColorConstants.SUCCESS)
       })
       .catch(e => {
@@ -79,6 +89,8 @@ export class TemplatePage implements OnInit, OnDestroy {
     await this._templateService.updateTemplate(template)
     .then(async () => {
       this._globalService.hideLoader()
+    
+      await this.reloadData();
       this._globalService.showToast("Template has been updated.", 3000, ColorConstants.SUCCESS);
     })
     .catch((e) => {

@@ -56,14 +56,14 @@ export class TemplateService {
           });
       });
 
-      const emailTemplate = templates.find(x => x.templateType === TemplateType.EMAIL);
+      const emailTemplate = templates.find(x => x.templateType === TemplateType.CONFIRMATION_EMAIL);
 
       if(!emailTemplate) {
         const fullName = this._globalService.formatFullName(userData.person?.firstName!, userData?.person?.middleName!, userData?.person?.lastName!);
         const defaultTemplate: any = {
           clinicId: clinicId,
-          templateType: TemplateType.EMAIL,
-          content: TemplateDefault.EMAIL,
+          templateType: TemplateType.CONFIRMATION_EMAIL,
+          content: TemplateDefault.CONFIRMATION_EMAIL,
           ...this._trailService.createAudit(`${ModifierActions.UPDATED} Template ${fullName}`, true)
         }
         templates.push(defaultTemplate);

@@ -237,7 +237,7 @@ export class HomePatientPage implements OnInit, OnDestroy {
 
   async sendEmailConfirmation(booking: Booking, clinicServices: ClinicServiceData[]){
     const templates = await this._templateService.fetchTemplates(this.userData!, booking.clinicId);
-    const emailTemplate = this._templateService.getTemplateByType(templates, TemplateType.EMAIL);
+    const emailTemplate = this._templateService.getTemplateByType(templates, TemplateType.CONFIRMATION_EMAIL);
     if(!emailTemplate) return;
     
     booking.clinicServices = clinicServices;

@@ -1,3 +1,3 @@
 export enum TemplateType {
-  EMAIL = 'Email'
+  CONFIRMATION_EMAIL = 'Booking Confirmation Email'
 }
