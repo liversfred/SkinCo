@@ -103,7 +103,7 @@ export class SelectDateComponent  implements OnInit, OnDestroy {
 
     const clinicBookings = this.clinicBookings.filter(x => 
       new Date(x.bookingDate).getDate() === new Date(this.selectedDate!).getDate() 
-      && x.bookingStatus !== BookingStatus.COMPLETED && x.bookingStatus !== BookingStatus.CANCELLED
+      && (x.bookingStatus === BookingStatus.QUEUED || x.bookingStatus === BookingStatus.SKIPPED)
     );
 
     if(!clinicBookings) return;

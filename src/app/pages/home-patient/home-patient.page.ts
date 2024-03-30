@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonContent } from '@ionic/angular';
+import { IonContent, RefresherCustomEvent } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { MapComponent } from 'src/app/components/map/map.component';
 import { BookingComponent } from 'src/app/components/modals/booking/booking.component';
@@ -72,6 +72,15 @@ export class HomePatientPage implements OnInit, OnDestroy {
 
       this.getFavoriteClinics();
     });
+  }
+  async onRefresh(event: RefresherCustomEvent){
+    this.reloadData();
+    event.target.complete();
+  }
+
+  reloadData(){
+    this.loadClinics = false
+    this.getFavoriteClinics();
   }
   
   async fetchDoctors(){
