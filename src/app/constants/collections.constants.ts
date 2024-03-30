@@ -10,4 +10,5 @@ export class Collections {
   static readonly BOOKINGS = 'bookings'
   static readonly MAIL = 'mail';
   static readonly TEMPLATES = 'templates'
+  static readonly COMMENTS = 'comments'
 }

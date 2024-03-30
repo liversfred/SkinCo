@@ -9,15 +9,15 @@ import { ClinicServiceData } from '../models/clinic-service-data.model';
   providedIn: 'root'
 })
 export class ClinicServicesService {
-  private clinicServicessCollection: CollectionReference<DocumentData>;
+  private clinicServicesCollection: CollectionReference<DocumentData>;
 
   constructor(private _fireStore: Firestore, private _globalService: GlobalService) {
-    this.clinicServicessCollection = collection(this._fireStore, Collections.CLINIC_SERVICES);
+    this.clinicServicesCollection = collection(this._fireStore, Collections.CLINIC_SERVICES);
   }
 
   async saveClinicService(clinicService: ClinicServiceData): Promise<string>{
     try{
-      const res = await addDoc(this.clinicServicessCollection, clinicService);
+      const res = await addDoc(this.clinicServicesCollection, clinicService);
       return res.id;
     }catch(e) {
       throw(e);
@@ -55,7 +55,7 @@ export class ClinicServicesService {
   }
 
   fetchClinicServicesAsync(clinicId?: string): Observable<ClinicServiceData[]> {
-    let collectionRef = query(this.clinicServicessCollection, where('isActive', '==', true));
+    let collectionRef = query(this.clinicServicesCollection, where('isActive', '==', true));
     
     if(clinicId){
       collectionRef = query(collectionRef, where('clinicId', '==', clinicId));

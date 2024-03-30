@@ -26,7 +26,7 @@ export class BookingListComponent {
   constructor(private _clinicService: ClinicService, private _userService: UserService) { }
 
   onViewClinic(clinic: Clinic){
-    const data = { clinic }
+    const data = { clinic, userData: this.userData }
     this._clinicService.openClinicDetailsModal(data);
   }
 

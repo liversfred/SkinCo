@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">{{ data?.review ? 'Update' : 'Add' }} Comment</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="done()">Done</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <form [formGroup]="commentForm!">
+    <ion-row class="ion-margin-vertical ion-justify-content-end">
+      <ion-toggle [enableOnOffLabels]="true" formControlName="isAnonymous">Make it Anonymous</ion-toggle>
+    </ion-row>
+
+    <ion-list color="light">
+      <ion-item color="light" class="ion-margin-top">
+        <ion-textarea  
+        formControlName="comment" 
+        label="Comment"
+        labelPlacement="floating"
+        [autoGrow]="true"
+        [counter]="true" 
+        [maxlength]="commentMaxLengh"></ion-textarea>
+      </ion-item>
+      <ion-text class="error-message" color="danger" *ngIf="commentForm?.value.comment?.length > commentMaxLengh && commentForm?.get('comment')?.touched">
+        <div>* Maximum is {{ commentMaxLengh }} characters.</div>
+      </ion-text>
+
+    </ion-list>
+  </form>
+</ion-content>

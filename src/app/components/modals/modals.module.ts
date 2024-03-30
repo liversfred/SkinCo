@@ -11,6 +11,7 @@ import { GenericComponent } from './generic/generic.component';
 import { BookingComponent } from './booking/booking.component';
 import { SelectDateComponent } from './select-date/select-date.component';
 import { AddReviewComponent } from './add-review/add-review.component';
+import { AddCommentComponent } from './add-comment/add-comment.component';
 
 
 
@@ -26,7 +27,8 @@ import { AddReviewComponent } from './add-review/add-review.component';
     AddClinicServiceComponent,
     GenericComponent,
     BookingComponent,
-    AddReviewComponent
+    AddReviewComponent,
+    AddCommentComponent
   ],
   imports: [
     SharedModule
@@ -42,7 +44,8 @@ import { AddReviewComponent } from './add-review/add-review.component';
     AddClinicServiceComponent,
     GenericComponent,
     BookingComponent,
-    AddReviewComponent
+    AddReviewComponent,
+    AddCommentComponent
   ]
 })
 export class ModalsModule { }

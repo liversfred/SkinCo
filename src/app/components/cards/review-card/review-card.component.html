@@ -45,5 +45,39 @@
     <ion-text>
       {{ bookingWithReview?.review?.remarks }}
     </ion-text>
+
+    <ion-row class="ion-justify-content-end">
+      <ion-text *ngIf="!showComments" (click)="toggleComments()">See Comments</ion-text>
+      <ion-text *ngIf="showComments" (click)="toggleComments()">Hide Comments</ion-text>
+    </ion-row>
+
+    <div class="ion-padding" *ngIf="showComments">
+      <ion-text *ngIf="comments.length === 0">
+        <i>No Comments found.</i>
+      </ion-text>
+
+      <fieldset class="ion-margin-top" *ngFor="let commentData of comments">
+        <ion-row class="ion-justify-content-end" *ngIf="commentData.userId === userData?.id">
+          <ion-icon class="ion-margin-end" name="pencil-outline" (click)="onUpdateComment(commentData)"></ion-icon>
+          <ion-icon name="trash-outline"(click)="onDeleteComment(commentData)"></ion-icon>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12" size-md="8">
+            {{ commentData.isAnonymous ? 'Anonymous' : commentData.user?.person?.fullName }}
+          </ion-col>
+          <ion-col size="12" size-md="4">
+            {{ commentData.createdAt | date: 'shortDate' }}
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-margin-top">
+          <ion-text>
+            {{ commentData.comment }}
+          </ion-text>
+        </ion-row>
+      </fieldset>
+      <ion-row class="ion-justify-content-end ion-margin-top" *ngIf="userData?.role?.name === roles.PATIENT">
+        <ion-text *ngIf="showComments" (click)="onAddComment()">Add Comment</ion-text>
+      </ion-row>
+    </div>
   </ion-card-content>
 </ion-card>

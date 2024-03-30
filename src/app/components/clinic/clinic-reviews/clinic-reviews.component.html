@@ -13,7 +13,7 @@
 
     <ion-row>
       <ion-col size="12" *ngFor="let bookingsWithReview of bookingsWithReviews">
-        <app-review-card [bookingWithReview]="bookingsWithReview"></app-review-card>
+        <app-review-card [userData]="userData" [users]="users" [bookingWithReview]="bookingsWithReview"></app-review-card>
       </ion-col>
     </ion-row>
   </ion-col>

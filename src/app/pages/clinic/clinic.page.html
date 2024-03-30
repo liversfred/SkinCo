@@ -39,7 +39,7 @@
         <app-clinic-doctors [clinic]="clinic"></app-clinic-doctors>
       </ion-list>
       <ion-list *ngSwitchCase="clinicSegments.REVIEWS">
-        <app-clinic-reviews [clinic]="clinic"></app-clinic-reviews>
+        <app-clinic-reviews [clinic]="clinic" [userData]="userData"></app-clinic-reviews>
       </ion-list>
     </div>
   </div>

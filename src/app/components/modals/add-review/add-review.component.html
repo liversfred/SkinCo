@@ -45,7 +45,7 @@
         [counter]="true" 
         [maxlength]="commentMaxLengh"></ion-textarea>
       </ion-item>
-      <ion-text class="error-message" color="danger" *ngIf="reviewForm?.value.description?.length > commentMaxLengh && reviewForm?.get('remarks')?.touched">
+      <ion-text class="error-message" color="danger" *ngIf="reviewForm?.value.remarks?.length > commentMaxLengh && reviewForm?.get('remarks')?.touched">
         <div>* Maximum is {{ commentMaxLengh }} characters.</div>
       </ion-text>
 

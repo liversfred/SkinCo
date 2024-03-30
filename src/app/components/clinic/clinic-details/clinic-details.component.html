@@ -45,7 +45,7 @@
         <app-bank-details [bankDetailsList]="bankDetailsList" [enableUpdate]="false"></app-bank-details>
       </ion-list>
       <ion-list *ngSwitchCase="clinicSegments.REVIEWS">
-        <app-clinic-reviews [clinic]="clinic"></app-clinic-reviews>
+        <app-clinic-reviews [clinic]="clinic" [userData]="userData"></app-clinic-reviews>
       </ion-list>
     </div>
   </div>

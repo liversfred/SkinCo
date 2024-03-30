@@ -276,7 +276,7 @@ export class BookingHistoryPage implements OnInit, ViewDidLeave, OnDestroy {
           }
         }
       ]
-    )
+    );
   }
 
   async openReviewModal(data: any) {

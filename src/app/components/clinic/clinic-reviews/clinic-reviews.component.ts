@@ -14,6 +14,7 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./clinic-reviews.component.scss'],
 })
 export class ClinicReviewsComponent  implements OnInit, OnDestroy {
+  @Input() userData: UserData | undefined;
   @Input() clinic: Clinic | undefined;
   users: UserData[] = [];
   bookingsWithReviews: Booking[] = [];
