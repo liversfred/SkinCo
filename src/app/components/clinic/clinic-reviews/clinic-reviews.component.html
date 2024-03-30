@@ -2,7 +2,7 @@
   <ion-col size="12" size-md="8" offset-md="2">
     <ion-text id="page-header-italic" *ngIf="bookingsWithReviews.length === 0">No Reviews</ion-text>
     <ion-text id="page-header" *ngIf="bookingsWithReviews.length > 0">Reviews</ion-text>
-    <div class="ion-margin-top">
+    <div class="ion-margin-top" *ngIf="bookingsWithReviews.length > 0">
       <ion-text>
         <h4>Clinic Rating:
           <ion-icon name="star-half-outline"></ion-icon>

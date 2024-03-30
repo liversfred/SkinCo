@@ -52,6 +52,10 @@ export class BookingService {
     return this.fetchBookingsAsync(collectionRef);
   }
 
+  fetchAllBookings(): Observable<Booking[]> {
+    return this.fetchBookingsAsync(this.bookingsCollection);
+  }
+
   fetchBookingsAsync(query: Query): Observable<Booking[]> {
     return collectionData(query, { idField: 'id'})
       .pipe(

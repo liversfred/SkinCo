@@ -102,12 +102,17 @@ export class ClinicService {
     }
   }
 
-  fetchClinicsAsync(): Observable<Clinic[]> {
-    const collectionRef = query(
-      this.clinicsCollection, 
-      where('isActive', '==', true), 
-      where('isApproved', '==', true)
-    );
+  fetchClinicsAsync(isAll: boolean = false): Observable<Clinic[]> {
+    let collectionRef = query(this.clinicsCollection);
+
+    if(!isAll){
+      collectionRef = query(
+        collectionRef, 
+        where('isActive', '==', true), 
+        where('isApproved', '==', true)
+      );
+    }
+
     return collectionData(collectionRef, { idField: 'id'})
     .pipe(
       map((clinics: any[]) => {

@@ -160,7 +160,7 @@ export class HomePatientPage implements OnInit, OnDestroy {
 
   onViewClinic(clinic: Clinic){
     this.selectedClinic = clinic;
-    const data = { clinic };
+    const data = { clinic, userData: this.userData };
 
     this._clinicService.openClinicDetailsModal(data);
   }
