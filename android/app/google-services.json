@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "18510123362",
+    "project_id": "skinco-62ad8",
+    "storage_bucket": "skinco-62ad8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:18510123362:android:26311951dd710871021c3b",
+        "android_client_info": {
+          "package_name": "com.capstone.skinco"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqXeA6zUe8IuVgvJ34r0i3gmNeXsBak8Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

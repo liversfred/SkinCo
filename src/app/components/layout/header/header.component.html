@@ -31,6 +31,10 @@
         <ion-icon name="book-outline"></ion-icon>
         <ion-label *ngIf="!_platformService.screenXS()">BOOKINGS</ion-label>
       </ion-button>
+      <ion-button [routerLink]="routes.MANAGE_CLINICS" *ngIf="userData && userData.role?.name === roles.ADMIN">
+        <ion-icon name="business-outline"></ion-icon>
+        <ion-label *ngIf="!_platformService.screenXS()">CLINICS</ion-label>
+      </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
       <ion-menu-button></ion-menu-button>

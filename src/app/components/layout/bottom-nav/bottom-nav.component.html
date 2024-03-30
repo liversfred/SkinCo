@@ -24,5 +24,9 @@
       <ion-icon name="book-outline"></ion-icon>
       <ion-label>BOOKINGS</ion-label>
     </ion-tab-button>
+    <ion-tab-button [tab]="routes.MANAGE_CLINICS" *ngIf="userData && userData.role?.name === roles.ADMIN">
+      <ion-icon name="business-outline"></ion-icon>
+      <ion-label>Clinics</ion-label>
+    </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>
