@@ -35,6 +35,7 @@ export class HomePatientPage implements OnInit, OnDestroy {
   clinics: Clinic[] = [];
   doctors: Doctor[] = [];
   filteredClinics: Clinic[] = [];
+  favoriteClinics: Clinic[] = [];
   loadClinics: boolean = false;
   selectedClinic: Clinic | undefined;
   userDataSubs: Subscription | undefined;
@@ -68,6 +69,8 @@ export class HomePatientPage implements OnInit, OnDestroy {
 
       this.userData = userData;
       this._globalService.hideLoader();
+
+      this.getFavoriteClinics();
     });
   }
   
@@ -99,10 +102,14 @@ export class HomePatientPage implements OnInit, OnDestroy {
         },
       });
   }
+
+  getFavoriteClinics(){
+    this.favoriteClinics = this.clinics.filter(clinic => clinic.doctorId === this.userData?.favoriteDoctorId);
+  }
   
   async onSearch(event: any){
     this._globalService.showLoader('Fetching clinics...');
-    const searchQuery = event.detail.value.toLowerCase();
+    const searchQuery = event.toLowerCase();
     this.mapComponent?.setZoom(15);
     
     if(searchQuery === '' && this.loadClinics) {

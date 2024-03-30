@@ -39,7 +39,7 @@
         <app-clinic-schedule [clinic]="clinic" [viewOnly]="true"></app-clinic-schedule>
       </ion-list>
       <ion-list *ngSwitchCase="clinicSegments.DOCTOR">
-        <app-clinic-doctors [clinic]="clinic" [viewOnly]="true"></app-clinic-doctors>
+        <app-clinic-doctors [clinic]="clinic" [patient]="userData" [viewOnly]="true"></app-clinic-doctors>
       </ion-list>
       <ion-list *ngSwitchCase="clinicSegments.BANK_DETAILS">
         <app-bank-details [bankDetailsList]="bankDetailsList" [enableUpdate]="false"></app-bank-details>

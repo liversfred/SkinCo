@@ -10,6 +10,7 @@ import { TrailService } from 'src/app/services/trail.service';
 import { ColorConstants } from 'src/app/constants/color.constants';
 import { DoctorService } from 'src/app/services/doctor.service';
 import { ClinicService } from 'src/app/services/clinic.service';
+import { UserData } from 'src/app/models/user-data.model';
 
 @Component({
   selector: 'app-clinic-doctors',
@@ -18,6 +19,7 @@ import { ClinicService } from 'src/app/services/clinic.service';
 })
 export class ClinicDoctorsComponent  implements OnInit {
   @Input() clinic: Clinic | undefined;
+  @Input() patient: UserData | undefined;
   @Input() viewOnly: boolean = false;
   clinicDoctor: Doctor | undefined | null;
 

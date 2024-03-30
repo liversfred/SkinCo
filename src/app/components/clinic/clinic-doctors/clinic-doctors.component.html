@@ -13,7 +13,7 @@
         
         <ion-row>
           <ion-col size="12" size-md="8" offset-md="2">
-            <app-doctor-card *ngIf="clinicDoctor" [doctor]="clinicDoctor" (updateDoctor)="onUpdateDoctor()" [viewOnly]="viewOnly"></app-doctor-card>
+            <app-doctor-card *ngIf="clinicDoctor" [patient]="patient" [doctor]="clinicDoctor" (updateDoctor)="onUpdateDoctor()" [viewOnly]="viewOnly"></app-doctor-card>
           </ion-col>
         </ion-row>
       </ion-col>

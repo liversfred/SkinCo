@@ -76,8 +76,11 @@ export class HomeAdminPage implements OnInit, AfterViewInit, OnDestroy {
       this.bookingsByClinicChart = undefined;
 
       let dataPoints: any = [];
+      let noData: boolean = true;
       this.clinics.forEach(clinic => {
         const bookingsByClinic = bookings.filter(x => x.clinicId === clinic.id);
+
+        if(bookingsByClinic.length !== 0) noData = false;
 
         const dataPoint = {
           name: clinic.name,
@@ -85,8 +88,8 @@ export class HomeAdminPage implements OnInit, AfterViewInit, OnDestroy {
         };
         dataPoints.push(dataPoint);
       })
-      
-      this.setupBookingsByClinicChart(dataPoints);
+
+      this.setupBookingsByClinicChart(dataPoints, noData);
     });
   }
 
@@ -110,12 +113,12 @@ export class HomeAdminPage implements OnInit, AfterViewInit, OnDestroy {
     }, 10);
   }
 
-  setupBookingsByClinicChart(dataPoints: any){
+  setupBookingsByClinicChart(dataPoints: any, noData: boolean){
     setTimeout(() => {
       this.bookingsByClinicChart = {
         animationEnabled: true,
         title:{
-          text: "Bookings By Clinic"
+          text: noData ? 'No Data' : "Bookings By Clinic"
         },
         data: [{
           type: "doughnut",
@@ -124,7 +127,7 @@ export class HomeAdminPage implements OnInit, AfterViewInit, OnDestroy {
           dataPoints: dataPoints
         }]
       };
-    }, 10);
+    }, 50);
   }
 
   ngOnDestroy(): void {

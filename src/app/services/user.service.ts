@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, DocumentData, Firestore, collection, collectionData, query, where } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, collection, collectionData, doc, query, updateDoc, where } from '@angular/fire/firestore';
 import { Collections } from '../constants/collections.constants';
 import { Observable, map } from 'rxjs';
 import { UserData } from '../models/user-data.model';
@@ -91,6 +91,15 @@ export class UserService {
       await this._globalService.createModal(options);
     } catch(e) {
       this._errorService.handleError(e);
+    }
+  }
+
+  async updateUserData(updatedModel: any): Promise<void> {
+    try{
+      const docInstance = doc(this._fireStore, Collections.USERS, updatedModel.id);
+      await updateDoc(docInstance, updatedModel)
+    }catch(e) {
+      throw(e);
     }
   }
 }

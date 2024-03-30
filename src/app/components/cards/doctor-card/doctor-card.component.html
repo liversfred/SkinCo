@@ -8,6 +8,10 @@
     <ion-card-title>
       <ion-row class="ion-justify-content-between">
         {{ doctor?.person?.fullName }}
+        <div class="link" *ngIf="patient">
+          <ion-icon color="primary" size="large" name="heart" *ngIf="patient.favoriteDoctorId === doctor?.id" (click)="onToggleFavorite(false)"></ion-icon>
+          <ion-icon size="large" name="heart-outline" *ngIf="patient.favoriteDoctorId !== doctor?.id" (click)="onToggleFavorite(true)"></ion-icon>
+        </div>
       </ion-row>
     </ion-card-title>
     <ion-card-subtitle>{{ doctor?.specialization?.name }}</ion-card-subtitle>

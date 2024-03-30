@@ -21,7 +21,7 @@
           debounce="500" 
           #searchInput 
           placeholder="Search for clinic, doctor, specialization, location..."
-          (ionChange)="onSearch($event)">
+          (ionChange)="onSearch($event.detail.value)">
         </ion-searchbar>
         <ion-text class="ion-margin-start" size="small" *ngIf="loadClinics">
           Found {{ filteredClinics.length }} clinic{{ filteredClinics.length > 1 ? 's' : '' }}.
@@ -31,14 +31,35 @@
       <ion-row class="ion-margin-vertical" *ngIf="loadClinics">
         <ion-col size="12" size-md="4" *ngFor="let clinic of filteredClinics">
           <app-clinic-card class="link"
-          [highlighted]="clinic === selectedClinic"
-          [clinic]="clinic" 
-          (viewInMap)="onViewInMap($event)"
-          (viewClinic)="onViewClinic($event)"
-          (bookClinic)="onBookClinic($event)">
-        </app-clinic-card>
+            [highlighted]="clinic === selectedClinic"
+            [clinic]="clinic" 
+            (viewInMap)="onViewInMap($event)"
+            (viewClinic)="onViewClinic($event)"
+            (bookClinic)="onBookClinic($event)">
+          </app-clinic-card>
         </ion-col>
       </ion-row>
+      
+      <div *ngIf="!loadClinics">
+        <div class="horizontal-line"></div>
+        <ion-text>
+          <h3>
+            Favorites
+            <ion-icon color="primary" size="medium" name="heart"></ion-icon>
+          </h3>
+        </ion-text>
+        <ion-row class="ion-margin-vertical">
+          <ion-col size="12" size-md="4" *ngFor="let clinic of favoriteClinics">
+            <app-clinic-card class="link"
+              [highlighted]="clinic === selectedClinic"
+              [clinic]="clinic" 
+              (viewInMap)="onViewInMap($event)"
+              (viewClinic)="onViewClinic($event)"
+              (bookClinic)="onBookClinic($event)">
+            </app-clinic-card>
+          </ion-col>
+        </ion-row>
+      </div>
     </ion-col>
   </ion-row>
 </ion-content>
