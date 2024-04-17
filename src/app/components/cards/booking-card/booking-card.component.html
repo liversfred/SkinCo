@@ -26,7 +26,7 @@
             color="primary" 
             name="menu" 
             (click)="presentPopover($event)"
-            *ngIf="booking?.bookingStatus !== bookingStatuses.CANCELLED && (userData?.role?.name === roles.PATIENT && !booking?.review)">
+            *ngIf="booking?.bookingStatus !== bookingStatuses.CANCELLED || (userData?.role?.name === roles.PATIENT && !booking?.review)">
           </ion-icon>
         </ion-col>
       </ion-row>
