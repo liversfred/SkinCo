@@ -34,7 +34,8 @@ export class RegisterPage implements OnInit {
   mobileNumberMaxLength: number = FormConstants.mobileNumberMaxLength;
   emailMaxLength: number = FormConstants.emailMaxLength;
   userType: string = Roles.PATIENT;
-  rolesOptions: string[] = [Roles.PATIENT, Roles.STAFF];
+  optionTwoLabel: string = "Doctor";
+  rolesOptions: string[] = [Roles.PATIENT, this.optionTwoLabel];
   roles: Role[] = [];
 
   constructor(
@@ -91,7 +92,9 @@ export class RegisterPage implements OnInit {
       const fullName = this._globalService.formatFullName(firstName, middleName, lastName);
       const action = `${ModifierActions.CREATED} User ${fullName}`;
       const password = this.registerForm?.value.password.trim();
-      const role = this.roles.find(x => x.name == this.userType);
+      
+      let userType = this.userType === this.optionTwoLabel ? Roles.STAFF : this.userType;
+      const role = this.roles.find(x => x.name == userType);
 
       if(!role) {
         this._globalService.showToast("Role cannot be found.");
