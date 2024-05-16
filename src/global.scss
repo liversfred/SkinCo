@@ -77,3 +77,11 @@
 .wrapper{
   min-height: 60vh;
 }
+
+.patient-header {
+  background: linear-gradient(to right, var(--ion-color-light), var(--ion-color-header-patient));
+}
+
+.staff-header {
+  background: linear-gradient(to right, var(--ion-color-light), var(--ion-color-header-staff));
+}

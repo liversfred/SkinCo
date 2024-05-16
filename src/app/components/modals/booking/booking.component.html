@@ -12,6 +12,9 @@
 <ion-content class="ion-padding">
   <ion-grid>
     <ion-row class="ion-justify-content-center">
+      <ion-text>{{ clinic?.name }}</ion-text>
+    </ion-row>
+    <ion-row class="ion-justify-content-center">
       <ion-col size="12" size-md="8">
         <form [formGroup]="bookingForm!" class="ion-margin-top">
           <ion-list color="light">
@@ -63,6 +66,11 @@
                 </ion-col>
                 <ion-col size="6">
                   <ion-text>{{ totalServicesPrice | currency: 'PHP' }}</ion-text>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="6">
+                  <ion-text color="danger"><i>Medicinal fee is not part of the total bill.</i></ion-text>
                 </ion-col>
               </ion-row>
             </div>

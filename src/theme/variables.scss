@@ -77,6 +77,8 @@
 
   /** Custom **/
   --ion-color-highlight: #f5f6f9;
+  --ion-color-header-patient: #E0D0C1;
+  --ion-color-header-staff: #f7b4a5;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -151,6 +153,8 @@
     
     /** Custom **/
     --ion-color-highlight: #140b14;
+    --ion-color-header-patient: #3d280b;
+    --ion-color-header-staff: #532600;
   }
 
   /*

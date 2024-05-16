@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonContent, RefresherCustomEvent } from '@ionic/angular';
 import { Subscription } from 'rxjs';
@@ -30,13 +30,13 @@ import { TrailService } from 'src/app/services/trail.service';
   templateUrl: './home-patient.page.html',
   styleUrls: ['./home-patient.page.scss'],
 })
-export class HomePatientPage implements OnInit, OnDestroy {
+export class HomePatientPage implements OnInit, AfterViewInit, OnDestroy {
   userData: UserData | undefined;
   clinics: Clinic[] = [];
   doctors: Doctor[] = [];
   filteredClinics: Clinic[] = [];
   favoriteClinics: Clinic[] = [];
-  loadClinics: boolean = false;
+  loadClinics: boolean = true;
   selectedClinic: Clinic | undefined;
   userDataSubs: Subscription | undefined;
   clinicsSubs: Subscription | undefined;
@@ -69,10 +69,16 @@ export class HomePatientPage implements OnInit, OnDestroy {
 
       this.userData = userData;
       this._globalService.hideLoader();
-
-      this.getFavoriteClinics();
     });
   }
+  
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.onSearch('near me');
+      this.getFavoriteClinics();
+    }, 1000);
+  }
+
   async onRefresh(event: RefresherCustomEvent){
     this.reloadData();
     event.target.complete();

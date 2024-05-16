@@ -191,6 +191,12 @@ export class BookingHistoryPage implements OnInit, ViewDidLeave, OnDestroy {
   };
 
   onCancelBooking(booking: Booking){
+    const dateDifference = this._globalService.getDatesDifference(booking.bookingDate, new Date());
+    if(dateDifference < 1) {
+      this._globalService.showCloseAlert("You cannot cancel your booking on the same day.");
+      return;
+    }
+
     this._globalService.showAlert(
       AlertTypeEnum.CONFIRM, 
       'Please state your reason',

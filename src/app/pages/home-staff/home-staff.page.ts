@@ -79,6 +79,8 @@ export class HomeStaffPage implements OnInit, OnDestroy {
   }
   
   fetchBookings(){
+    if(!this.userData?.clinicId) return;
+
     this.bookingSubs = this._bookingService.fetchBookingsByClinicIdAsync(this.userData?.clinicId!)
       .subscribe({
         next: (bookings: Booking[]) => {

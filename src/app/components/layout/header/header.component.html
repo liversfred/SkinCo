@@ -1,10 +1,13 @@
-<ion-header>
+<ion-header [ngClass]="{ 
+  'patient-header': userData && userData.role?.name === roles.PATIENT,
+  'staff-header': userData && userData.role?.name === roles.STAFF
+ }">
   <ion-toolbar>
     <ion-buttons slot="start" class="ion-margin-start link" (click)="onLogoClicked()">
       <ion-avatar>
         <ion-img src="../../../assets/logos/company-logo.png"  alt="company icon"></ion-img>
       </ion-avatar>
-      <ion-text size="ion-text-large" color="primary">SkinCo</ion-text>
+      <ion-text size="ion-text-large" color="primary">SkinCo <span *ngIf="!_platformService.screenXS()">&nbsp;&nbsp;|&nbsp;&nbsp; Welcome, {{ userData?.person?.firstName }}</span></ion-text>
     </ion-buttons>
     <ion-buttons class="toolbar-nav" slot="end" *ngIf="_platformService.isDesktop()">
       <ion-button tab="home" [routerLink]="routes.HOME_ADMIN" *ngIf="userData && userData.role?.name === roles.ADMIN">
