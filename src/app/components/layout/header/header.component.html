@@ -40,6 +40,7 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
+      <ion-text color="primary" style="font-size: 15px;" *ngIf="_platformService.screenXS()">Hi, {{ userData?.person?.firstName }}&nbsp;&nbsp;</ion-text>
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
