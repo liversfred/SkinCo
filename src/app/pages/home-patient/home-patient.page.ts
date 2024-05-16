@@ -56,7 +56,7 @@ export class HomePatientPage implements OnInit, OnDestroy {
     private _templateService: TemplateService,
     private _router: Router
     ) { }
-
+    
   async ngOnInit() {
     this._globalService.showLoader('Page loading...');
     await this.fetchDoctors();
@@ -68,13 +68,14 @@ export class HomePatientPage implements OnInit, OnDestroy {
       if(userData.role?.name !== Roles.PATIENT) this._router.navigateByUrl(RouteConstants.UNAUTHORIZED);
 
       this.userData = userData;
-      
-      setTimeout(() => {
-        this.onSearch('near me');
-      }, 3000);
 
       this.getFavoriteClinics();
       this._globalService.hideLoader();
+      
+      setTimeout(() => {
+        if(this.mapComponent && this.mapComponent?.currentLocation) this.onSearch('near me');
+        else this.onSearch('');
+      }, 2000);
     });
   }
 
@@ -124,7 +125,6 @@ export class HomePatientPage implements OnInit, OnDestroy {
   async onSearch(event: any){
     this._globalService.showLoader('Fetching clinics...');
     const searchQuery = event.toLowerCase();
-    this.mapComponent?.setZoom(15);
     
     if(searchQuery === '' && this.loadClinics) {
       this.filteredClinics = this.clinics;
@@ -157,6 +157,8 @@ export class HomePatientPage implements OnInit, OnDestroy {
     
     await this.updateMarkers();
     this._globalService.hideLoader();
+    
+    if(this.mapComponent) this.mapComponent?.setZoom(15);
   }
 
   async updateMarkers(){
