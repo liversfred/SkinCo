@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonContent, RefresherCustomEvent } from '@ionic/angular';
 import { Subscription } from 'rxjs';
@@ -30,7 +30,7 @@ import { TrailService } from 'src/app/services/trail.service';
   templateUrl: './home-patient.page.html',
   styleUrls: ['./home-patient.page.scss'],
 })
-export class HomePatientPage implements OnInit, AfterViewInit, OnDestroy {
+export class HomePatientPage implements OnInit, OnDestroy {
   userData: UserData | undefined;
   clinics: Clinic[] = [];
   doctors: Doctor[] = [];
@@ -68,15 +68,14 @@ export class HomePatientPage implements OnInit, AfterViewInit, OnDestroy {
       if(userData.role?.name !== Roles.PATIENT) this._router.navigateByUrl(RouteConstants.UNAUTHORIZED);
 
       this.userData = userData;
+      
+      setTimeout(() => {
+        this.onSearch('near me');
+      }, 3000);
+
+      this.getFavoriteClinics();
       this._globalService.hideLoader();
     });
-  }
-  
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.onSearch('near me');
-      this.getFavoriteClinics();
-    }, 1000);
   }
 
   async onRefresh(event: RefresherCustomEvent){
